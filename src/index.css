@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+/* Primary UI font for body copy */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -242,8 +244,11 @@ body {
 /* Button hover effects */
 @layer components {
   .btn {
+    /* Ensure readable default sizing and visible focus */
     @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 no-select;
+    @apply text-sm sm:text-base leading-none;
     @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/90 focus-visible:ring-offset-gray-900;
   }
 
   .btn-primary {
@@ -274,6 +279,18 @@ body {
   .game-card {
     @apply bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-4;
     @apply border-2 border-white/50;
+  }
+
+  /* High-contrast text shadow helper for light-on-bright backgrounds */
+  .text-contrast-shadow {
+    text-shadow: 0 1px 1px rgba(0,0,0,0.6);
+  }
+
+  /* Pixel label with minimum accessible size */
+  .pixel-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px; /* maintain readability for pixel font */
+    letter-spacing: 1px;
   }
 }
 
@@ -511,7 +528,7 @@ body {
   border-radius: 0;
   padding: 12px 16px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 12px; /* bump for readability */
   line-height: 1.6;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
 }
@@ -577,6 +594,12 @@ body {
   transition: all 0.1s;
   font-family: 'Press Start 2P', monospace;
   text-transform: uppercase;
+  outline: none;
+}
+
+.arcade-button:focus-visible {
+  /* Highly visible keyboard focus */
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 0 6px rgba(0,0,0,0.6), 0 6px 0 #000, 0 8px 8px rgba(0,0,0,0.4);
 }
 
 .arcade-button:active {

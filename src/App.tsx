@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MainMenu } from './screens/MainMenu';
 import { YearSelection } from './screens/YearSelection';
@@ -16,7 +16,7 @@ type Screen = 'menu' | 'year-selection' | 'about' | 'game';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
-  const { currentYear, currentStage, currentLevel, setYear, setPrescription, resetLevel } = useGameStore();
+  const { currentStage, setYear, setPrescription, resetLevel } = useGameStore();
 
   const handleStartGame = () => {
     setCurrentScreen('year-selection');

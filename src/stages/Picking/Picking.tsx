@@ -91,12 +91,12 @@ export const Picking: React.FC = () => {
               </motion.div>
               <div>
                 <h3 
-                  className="text-sm sm:text-base font-bold text-white mb-1"
-                  style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}
+                  className="text-white mb-1 pixel-label font-bold text-contrast-shadow"
+                  style={{ fontFamily: "'Press Start 2P', monospace" }}
                 >
                   PICKING BASKET
                 </h3>
-                <p className="text-xs sm:text-sm text-cyan-300" style={{ fontFamily: "'VT323', monospace" }}>
+                <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
                   Selected: {selectedMedications.length} / {requiredMedIds.length}
                 </p>
               </div>
@@ -108,8 +108,8 @@ export const Picking: React.FC = () => {
                 selectedMedications.length === 0
                   ? 'bg-gray-500 opacity-50 cursor-not-allowed'
                   : 'bg-gradient-to-r from-green-500 to-emerald-600'
-              } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto`}
-              style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '8px' }}
+              } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm`}
+              style={{ fontFamily: "'Press Start 2P', monospace" }}
               whileHover={selectedMedications.length > 0 ? { scale: 1.05 } : {}}
               whileTap={selectedMedications.length > 0 ? { scale: 0.95 } : {}}
             >
@@ -153,8 +153,8 @@ export const Picking: React.FC = () => {
         <div className="game-screen p-4 sm:p-6 relative">
           <div className="scanline" />
           <h4 
-            className="font-bold mb-3 flex items-center gap-2 text-white"
-            style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}
+            className="font-bold mb-3 flex items-center gap-2 text-white pixel-label text-contrast-shadow"
+            style={{ fontFamily: "'Press Start 2P', monospace" }}
           >
             <span className="text-2xl">📋</span>
             PRESCRIPTION
@@ -171,13 +171,13 @@ export const Picking: React.FC = () => {
                   className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 p-3 rounded-lg border-2 border-indigo-500/30 flex flex-col xs:flex-row justify-between gap-2"
                 >
                   <span 
-                    className="font-bold text-yellow-300 text-xs sm:text-sm"
+                    className="font-bold text-yellow-300 text-sm sm:text-base"
                     style={{ fontFamily: "'VT323', monospace" }}
                   >
                     {med.genericName} {med.strength}
                   </span>
                   <span 
-                    className="text-xs text-white/80"
+                    className="text-sm text-white/90"
                     style={{ fontFamily: "'VT323', monospace" }}
                   >
                     {medItem.dosageInstruction} {medItem.frequency}
@@ -233,8 +233,8 @@ export const Picking: React.FC = () => {
                 <div className="absolute top-2 right-2 w-2 h-2 bg-white/40" />
                 
                 <h4 
-                  className="text-white font-bold uppercase tracking-wide flex items-center gap-2 text-sm sm:text-base"
-                  style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}
+                  className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow"
+                  style={{ fontFamily: "'Press Start 2P', monospace" }}
                 >
                   <motion.span 
                     className="text-2xl sm:text-3xl"
@@ -275,23 +275,23 @@ export const Picking: React.FC = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <p 
-                              className="font-bold text-gray-800 text-xs sm:text-sm mb-1"
-                              style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}
+                              className="font-bold text-gray-900 text-sm sm:text-base mb-1"
+                              style={{ fontFamily: "'VT323', monospace" }}
                             >
                               {med.genericName}
                             </p>
                             {med.brandName && (
-                              <p className="text-[10px] sm:text-xs text-gray-500 mb-1" style={{ fontFamily: "'VT323', monospace" }}>
+                              <p className="text-xs sm:text-sm text-gray-600 mb-1" style={{ fontFamily: "'VT323', monospace" }}>
                                 ({med.brandName})
                               </p>
                             )}
-                            <p className="text-xs sm:text-sm text-gray-700 font-bold" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-sm sm:text-base text-gray-800 font-bold" style={{ fontFamily: "'VT323', monospace" }}>
                               {med.strength}
                             </p>
-                            <p className="text-[10px] sm:text-xs text-gray-600 mt-1" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-xs sm:text-sm text-gray-700 mt-1" style={{ fontFamily: "'VT323', monospace" }}>
                               {med.dosageForm}
                             </p>
-                            <p className="text-[8px] sm:text-xs text-gray-500 mt-2" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-2" style={{ fontFamily: "'VT323', monospace" }}>
                               {med.drugClass}
                             </p>
                           </div>

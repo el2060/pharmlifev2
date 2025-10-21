@@ -52,7 +52,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
             <div className="flex items-center gap-2 sm:gap-3">
               <motion.button
                 onClick={handleHomeClick}
-                className="arcade-button bg-red-500 text-white px-2 sm:px-3 py-2 text-[8px] sm:text-xs flex items-center gap-1 sm:gap-2 flex-shrink-0 min-h-[40px]"
+                className="arcade-button bg-red-500 text-white px-2 sm:px-3 py-2 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 flex-shrink-0 min-h-[44px]"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 style={{ fontFamily: "'Press Start 2P', monospace" }}
@@ -75,7 +75,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                     }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   />
-                  <span className="font-bold text-white text-sm sm:text-lg truncate">
+                  <span className="font-bold text-white text-sm sm:text-lg truncate text-contrast-shadow">
                     {stageName}
                   </span>
                 </div>
@@ -97,8 +97,8 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                   <Star className="text-yellow-900" size={14} fill="currentColor" />
                 </motion.div>
                 <div style={{ fontFamily: "'Press Start 2P', monospace" }} className="min-w-0">
-                  <p className="text-yellow-900 text-[8px] sm:text-xs leading-none">SCORE</p>
-                  <p className="font-bold text-white text-xs sm:text-lg leading-none mt-0.5">{score}</p>
+                  <p className="text-yellow-900 text-xs sm:text-sm leading-none">SCORE</p>
+                  <p className="font-bold text-white text-sm sm:text-lg leading-none mt-0.5 text-contrast-shadow">{score}</p>
                 </div>
               </motion.div>
 
@@ -117,8 +117,8 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                   <Zap className="text-yellow-300" size={14} fill="currentColor" />
                 </motion.div>
                 <div style={{ fontFamily: "'Press Start 2P', monospace" }} className="min-w-0">
-                  <p className="text-purple-200 text-[8px] sm:text-xs leading-none">Rx</p>
-                  <p className="font-bold text-white text-xs sm:text-lg leading-none mt-0.5">{rxPoints}</p>
+                  <p className="text-purple-100 text-xs sm:text-sm leading-none">Rx</p>
+                  <p className="font-bold text-white text-sm sm:text-lg leading-none mt-0.5 text-contrast-shadow">{rxPoints}</p>
                 </div>
               </motion.div>
 
@@ -159,13 +159,13 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <p 
-                  className="text-green-900 text-[8px] sm:text-xs leading-none"
+                  className="text-green-900 text-xs sm:text-sm leading-none"
                   style={{ fontFamily: "'Press Start 2P', monospace" }}
                 >
                   LVL
                 </p>
                 <motion.p 
-                  className="font-bold text-white text-lg sm:text-2xl leading-none mt-0.5"
+                  className="font-bold text-white text-lg sm:text-2xl leading-none mt-0.5 text-contrast-shadow"
                   style={{ fontFamily: "'Press Start 2P', monospace" }}
                   key={playerLevel}
                   initial={{ scale: 1.5, color: '#FFD700' }}

@@ -14,7 +14,6 @@ export const Dispensing: React.FC = () => {
     useGameStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -40,7 +39,6 @@ export const Dispensing: React.FC = () => {
     setSelectedAnswer(answerIndex);
     const correct = answerIndex === currentQuestion.correctAnswer;
     setIsCorrect(correct);
-    setShowResult(true);
 
     if (correct) {
       setCorrectAnswers(correctAnswers + 1);
@@ -52,7 +50,6 @@ export const Dispensing: React.FC = () => {
   };
 
   const handleContinue = () => {
-    setShowResult(false);
     setSelectedAnswer(null);
 
     if (currentQuestionIndex < allQuestions.length - 1) {
