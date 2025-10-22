@@ -4,27 +4,14 @@ import { CheckCircle, XCircle, User, Shield, FileText } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Modal } from '../../components/Modal';
-import { Hint } from '../../components/Hint';
 import { useGameStore } from '../../store/gameStore';
-import { InvalidReason } from '../../types/game.types';
 import { getMedicationById } from '../../data/medications';
-
-const invalidReasonLabels: Record<InvalidReason, string> = {
-  'missing-signature': 'Missing doctor signature',
-  'expired-date': 'Expired prescription date',
-  'incomplete-dosage': 'Incomplete dosage instructions',
-  'patient-mismatch': 'Patient details do not match',
-  'illegible-handwriting': 'Illegible handwriting',
-  'missing-date': 'Missing prescription date',
-};
 
 export const Receiving: React.FC = () => {
   const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
   const [step, setStep] = useState<'identity' | 'validation' | 'complete'>('identity');
   const [identityChecked, setIdentityChecked] = useState(false);
   const [allergyChecked, setAllergyChecked] = useState(false);
-  const [validationChoice, setValidationChoice] = useState<boolean | null>(null);
-  const [selectedReason, setSelectedReason] = useState<InvalidReason | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
@@ -95,8 +82,6 @@ export const Receiving: React.FC = () => {
       nextStage();
     } else {
       // Reset for retry
-      setValidationChoice(null);
-      setSelectedReason(null);
       setShowResult(false);
     }
   };
