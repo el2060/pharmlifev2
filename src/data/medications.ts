@@ -18,6 +18,19 @@ export const medications: Medication[] = [
       'Take this only when necessary',
       'Do not exceed recommended dose',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for your pain and fever',
+        alternatives: ['This is for diabetes', 'This is for your infection', 'This is for diarrhoea']
+      },
+      {
+        question: 'When should you take this medication?',
+        correctAnswer: 'Take this only when necessary',
+        alternatives: ['Complete the course', '', '']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature, away from moisture',
     warnings: ['Do not use if allergic to paracetamol', 'Avoid alcohol while taking this medication'],
   },
@@ -36,6 +49,19 @@ export const medications: Medication[] = [
       'Take this only when necessary',
       'Do not exceed 4000mg per day',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for your pain and fever',
+        alternatives: ['This is for diabetes', 'This is for your infection', 'This is for diarrhoea']
+      },
+      {
+        question: 'When should you take this medication?',
+        correctAnswer: 'Take this only when necessary',
+        alternatives: ['Complete the course', '', '']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature, away from moisture',
     warnings: ['Do not use if allergic to paracetamol', 'Avoid alcohol while taking this medication'],
   },
@@ -55,6 +81,19 @@ export const medications: Medication[] = [
       'Take this only when necessary',
       'Take with food to reduce stomach upset',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for your pain and fever',
+        alternatives: ['This is for diabetes', 'This is for your infection', 'This is for diarrhoea']
+      },
+      {
+        question: 'When should you take this medication?',
+        correctAnswer: 'Take this only when necessary',
+        alternatives: ['Complete the course', '', '']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Not suitable during pregnancy (third trimester)', 'Avoid with blood thinners'],
   },
@@ -76,6 +115,19 @@ export const medications: Medication[] = [
       'Complete the course',
       'Take with or without food',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for your infection',
+        alternatives: ['This is for diabetes', 'This is for giddiness', '']
+      },
+      {
+        question: 'How should you take this medication?',
+        correctAnswer: 'Complete the course',
+        alternatives: ['This can cause drowsiness', 'This can cause red eyes', 'This can cause hearing loss']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Inform doctor if allergic to penicillin', 'This can cause drowsiness'],
   },
@@ -94,6 +146,19 @@ export const medications: Medication[] = [
       'Complete the course',
       'Do not stop even if feeling better',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for your infection',
+        alternatives: ['This is for diabetes', 'This is for giddiness', '']
+      },
+      {
+        question: 'How should you take this medication?',
+        correctAnswer: 'Complete the course',
+        alternatives: ['This can cause drowsiness', 'This can cause red eyes', 'This can cause hearing loss']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Report any rash immediately', 'This can cause drowsiness'],
   },
@@ -115,6 +180,19 @@ export const medications: Medication[] = [
       'Chew the tablet before swallowing',
       'Take after meals or when symptoms occur',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is to protect your stomach',
+        alternatives: ['This is for your constipation', 'This is for diarrhoea', 'This is for cough']
+      },
+      {
+        question: 'How should you take this medication?',
+        correctAnswer: 'Chew the tablet before swallowing',
+        alternatives: ['This may cause drowsiness', 'This is a non-drowsy tablet', 'This is for the pain']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Do not take continuously for more than 2 weeks without consulting doctor'],
   },
@@ -135,6 +213,19 @@ export const medications: Medication[] = [
       'This may cause drowsiness. Do not drive.',
       'Take only when necessary',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for runny nose',
+        alternatives: ['This is for your blocked nose', 'This is to reduce inflammation in your sinus', 'This is to help you sleep']
+      },
+      {
+        question: 'What are the precautions for this medication?',
+        correctAnswer: 'This may cause drowsiness. Do not drive.',
+        alternatives: ['This is a non-drowsy tablet', 'This is for the pain', 'Do not take continuously for more than 5 days in a row']
+      }
+    ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Avoid alcohol as it may increase drowsiness', 'Do not take continuously for more than 5 days in a row'],
   },
@@ -153,6 +244,19 @@ export const medications: Medication[] = [
       'Use when necessary',
       'Shake well before use',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is for cough',
+        alternatives: ['This is for runny nose', 'This is for pain', 'This is for constipation']
+      },
+      {
+        question: 'When should you take this medication?',
+        correctAnswer: 'Use when necessary',
+        alternatives: ['This may cause sleep loss', 'Complete the course of this medication', '']
+      }
+    ],
+    packingUnit: 'btl',
     storage: 'Store at room temperature',
     warnings: ['Do not exceed recommended dose', 'Avoid with other cough medications'],
   },
@@ -172,11 +276,24 @@ export const medications: Medication[] = [
       'Use when necessary',
       'Shake the canister before inhaling',
     ],
+    counselingQuestions: [
+      {
+        question: 'What is this medication for?',
+        correctAnswer: 'This is to open your airways',
+        alternatives: ['This is to reduce inflammation in your airways', 'Rinse your mouth after using', 'Do not use a spacer with this']
+      },
+      {
+        question: 'When should you take this medication?',
+        correctAnswer: 'Use when necessary',
+        alternatives: ['Do not shake the canister before inhaling', 'Use regularly', '']
+      }
+    ],
+    packingUnit: 'pc',
     storage: 'Store at room temperature, do not puncture or burn',
     warnings: ['If needing more than usual, consult doctor immediately'],
   },
 
-  // Additional medications (keeping some from original for variety)
+  // Additional medications
   {
     id: 'med-008',
     genericName: 'Omeprazole',
@@ -193,6 +310,7 @@ export const medications: Medication[] = [
       'Swallow whole, do not crush or chew',
       'May take 1-4 days to feel full effect',
     ],
+    packingUnit: 'cap',
     storage: 'Store in original container, protected from moisture',
     warnings: ['Long-term use may affect bone density'],
   },
@@ -212,6 +330,7 @@ export const medications: Medication[] = [
       'Take once daily',
       'Can be taken with or without food',
     ],
+    packingUnit: 'tab',
     storage: 'Store at room temperature',
     warnings: ['Avoid alcohol as it may increase drowsiness'],
   },

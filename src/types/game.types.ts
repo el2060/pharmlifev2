@@ -21,6 +21,12 @@ export type InvalidReason =
   | 'illegible-handwriting'
   | 'missing-date';
 
+export interface CounselingQuestionSimple {
+  question: string;
+  correctAnswer: string;
+  alternatives: string[];
+}
+
 export interface Medication {
   id: string;
   genericName: string;
@@ -33,6 +39,8 @@ export interface Medication {
   commonUses: string[];
   sideEffects: string[];
   counselingPoints: string[];
+  counselingQuestions?: CounselingQuestionSimple[];
+  packingUnit?: string;
   storage: string;
   warnings: string[];
 }

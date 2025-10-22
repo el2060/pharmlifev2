@@ -34,156 +34,91 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
 
   return (
     <>
-      {/* Retro Game HUD */}
-      <div className="game-screen p-2 sm:p-3 mb-3 sm:mb-4 relative overflow-hidden">
-        {/* Animated scanline effect */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px)',
-          }}
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-        />
-
+      {/* Pokemon Red Style HUD */}
+      <div className="poke-menu p-3 sm:p-4 mb-4 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
         <div className="container-custom mx-auto relative z-10">
-          <div className="grid grid-cols-1 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {/* Top Row: Stage & Home */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3">
               <motion.button
                 onClick={handleHomeClick}
-                className="arcade-button bg-red-500 text-white px-2 sm:px-3 py-2 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 flex-shrink-0 min-h-[44px]"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ fontFamily: "'Press Start 2P', monospace" }}
+                className="bg-poke-red text-poke-white px-4 py-3 text-base font-bold flex items-center gap-2 flex-shrink-0 min-h-[56px] border-4 border-poke-black"
+                whileTap={{ scale: 0.98 }}
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  boxShadow: 'inset -2px -2px 0 0 #C80000, inset 2px 2px 0 0 #FF4444, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                }}
               >
-                <Home size={12} className="sm:hidden" />
-                <Home size={14} className="hidden sm:block" />
+                <Home size={16} />
                 <span className="hidden xs:inline">HOME</span>
               </motion.button>
 
-              <div 
-                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 px-3 sm:px-4 py-2 rounded border-3 sm:border-4 border-purple-900 shadow-lg min-h-[40px] flex items-center"
-                style={{ fontFamily: "'VT323', monospace" }}
+              <div
+                className="flex-1 poke-textbox px-4 py-3 min-h-[56px] flex items-center"
+                style={{ fontFamily: "'Press Start 2P', monospace" }}
               >
-                <div className="flex items-center gap-2 w-full">
-                  <motion.div
-                    className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0"
-                    animate={{ 
-                      opacity: [1, 0.5, 1],
-                      scale: [1, 1.2, 1] 
-                    }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                  <span className="font-bold text-white text-sm sm:text-lg truncate text-contrast-shadow">
+                <div className="flex items-center gap-3 w-full">
+                  <span className="text-poke-black">▶</span>
+                  <span className="font-bold text-poke-black text-sm sm:text-base truncate">
                     {stageName}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Row: Stats */}
-            <div className="flex gap-1.5 sm:gap-2 justify-between items-center">
+            {/* Bottom Row: Stats - Pokemon Style */}
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
               {/* Score Display */}
-              <motion.div
-                className="bg-gradient-to-br from-yellow-400 to-yellow-600 px-2 sm:px-4 py-1.5 sm:py-2 rounded border-3 sm:border-4 border-yellow-700 shadow-lg flex items-center gap-1 sm:gap-2 flex-1"
-                whileHover={{ scale: 1.05 }}
+              <div
+                className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
+                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
               >
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="flex-shrink-0"
-                >
-                  <Star className="text-yellow-900" size={14} fill="currentColor" />
-                </motion.div>
-                <div style={{ fontFamily: "'Press Start 2P', monospace" }} className="min-w-0">
-                  <p className="text-yellow-900 text-xs sm:text-sm leading-none">SCORE</p>
-                  <p className="font-bold text-white text-sm sm:text-lg leading-none mt-0.5 text-contrast-shadow">{score}</p>
+                <div className="flex items-center gap-2">
+                  <Star className="text-poke-dark-yellow" size={16} fill="currentColor" />
+                  <p className="text-poke-black text-xs leading-tight font-bold">SCORE</p>
                 </div>
-              </motion.div>
+                <p className="font-bold text-poke-black text-base sm:text-lg leading-tight">{score}</p>
+              </div>
 
               {/* Rx Points Display */}
-              <motion.div
-                className="bg-gradient-to-br from-purple-500 to-purple-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded border-3 sm:border-4 border-purple-900 shadow-lg flex items-center gap-1 sm:gap-2 flex-1"
-                whileHover={{ scale: 1.05 }}
+              <div
+                className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
+                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
               >
-                <motion.div
-                  animate={{ 
-                    y: [0, -3, 0],
-                  }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="flex-shrink-0"
-                >
-                  <Zap className="text-yellow-300" size={14} fill="currentColor" />
-                </motion.div>
-                <div style={{ fontFamily: "'Press Start 2P', monospace" }} className="min-w-0">
-                  <p className="text-purple-100 text-xs sm:text-sm leading-none">Rx</p>
-                  <p className="font-bold text-white text-sm sm:text-lg leading-none mt-0.5 text-contrast-shadow">{rxPoints}</p>
+                <div className="flex items-center gap-2">
+                  <Zap className="text-poke-blue" size={16} fill="currentColor" />
+                  <p className="text-poke-black text-xs leading-tight font-bold">Rx</p>
                 </div>
-              </motion.div>
+                <p className="font-bold text-poke-black text-base sm:text-lg leading-tight">{rxPoints}</p>
+              </div>
 
               {/* Hearts Display */}
-              <div className="bg-gradient-to-br from-pink-400 to-red-500 px-2 sm:px-3 py-1.5 sm:py-2 rounded border-3 sm:border-4 border-red-700 shadow-lg hidden xs:block">
-                <div className="flex gap-0.5 sm:gap-1">
-                  <AnimatePresence>
-                    {[...Array(Math.min(3, hearts))].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Heart 
-                          size={12} 
-                          className="text-white sm:w-4 sm:h-4" 
-                          fill="currentColor"
-                        />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+              <div className="border-2 border-poke-black px-3 py-2 flex items-center justify-center" style={{ background: '#FFFFFF' }}>
+                <div className="flex gap-1">
+                  {[...Array(Math.min(3, hearts))].map((_, i) => (
+                    <Heart
+                      key={i}
+                      size={16}
+                      className="text-poke-red"
+                      fill="currentColor"
+                    />
+                  ))}
                 </div>
               </div>
 
               {/* Player Level */}
-              <motion.div
-                className="bg-gradient-to-br from-green-400 to-green-600 px-2 sm:px-4 py-1.5 sm:py-2 rounded border-3 sm:border-4 border-green-800 shadow-lg text-center min-w-[60px] sm:min-w-[80px]"
-                whileHover={{ scale: 1.05 }}
-                animate={{
-                  boxShadow: [
-                    '0 0 10px rgba(74, 222, 128, 0.5)',
-                    '0 0 20px rgba(74, 222, 128, 0.8)',
-                    '0 0 10px rgba(74, 222, 128, 0.5)',
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
+              <div
+                className="border-2 border-poke-black px-3 py-2 text-center"
+                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
               >
-                <p 
-                  className="text-green-900 text-xs sm:text-sm leading-none"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
-                >
-                  LVL
-                </p>
-                <motion.p 
-                  className="font-bold text-white text-lg sm:text-2xl leading-none mt-0.5 text-contrast-shadow"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
-                  key={playerLevel}
-                  initial={{ scale: 1.5, color: '#FFD700' }}
-                  animate={{ scale: 1, color: '#FFFFFF' }}
-                  transition={{ duration: 0.5 }}
-                >
+                <p className="text-poke-black text-xs leading-tight font-bold">LVL</p>
+                <p className="font-bold text-poke-black text-xl sm:text-2xl leading-tight mt-1">
                   {playerLevel}
-                </motion.p>
-              </motion.div>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Pixel decoration corners */}
-        <div className="absolute top-1 sm:top-2 left-1 sm:left-2 w-3 h-3 sm:w-4 sm:h-4 border-t-2 sm:border-t-4 border-l-2 sm:border-l-4 border-white/30" />
-        <div className="absolute top-1 sm:top-2 right-1 sm:right-2 w-3 h-3 sm:w-4 sm:h-4 border-t-2 sm:border-t-4 border-r-2 sm:border-r-4 border-white/30" />
-        <div className="absolute bottom-1 sm:bottom-2 left-1 sm:left-2 w-3 h-3 sm:w-4 sm:h-4 border-b-2 sm:border-b-4 border-l-2 sm:border-l-4 border-white/30" />
-        <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 w-3 h-3 sm:w-4 sm:h-4 border-b-2 sm:border-b-4 border-r-2 sm:border-r-4 border-white/30" />
       </div>
 
       {/* Confirmation Modal */}

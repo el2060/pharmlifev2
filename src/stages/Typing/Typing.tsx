@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Printer, CheckCircle, XCircle } from 'lucide-react';
-import { Button } from '../../components/Button';
-import { Card } from '../../components/Card';
 import { Modal } from '../../components/Modal';
 import { Hint } from '../../components/Hint';
 import { useGameStore } from '../../store/gameStore';
@@ -21,6 +19,9 @@ export const Typing: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [showCounselingQuiz, setShowCounselingQuiz] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string>('');
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -83,19 +84,15 @@ export const Typing: React.FC = () => {
 
   const handleContinue = () => {
     if (isCorrect) {
-      if (currentMedIndex < currentPrescription.medications.length - 1) {
-        // More medications to label
-        setCurrentMedIndex(currentMedIndex + 1);
-        setLabelData({
-          quantity: '',
-          dosageForm: '',
-          frequency: '',
-          specialInstructions: '',
-        });
+      // Show counseling quiz if medication has questions
+      if (medication?.counselingQuestions && medication.counselingQuestions.length > 0) {
         setShowResult(false);
+        setShowCounselingQuiz(true);
+        setCurrentQuestionIndex(0);
+        setSelectedAnswer('');
       } else {
-        // All medications labeled
-        nextStage();
+        // No questions, proceed to next med or stage
+        proceedToNext();
       }
     } else {
       // Retry
@@ -109,6 +106,51 @@ export const Typing: React.FC = () => {
     }
   };
 
+  const proceedToNext = () => {
+    if (currentMedIndex < currentPrescription.medications.length - 1) {
+      // More medications to label
+      setCurrentMedIndex(currentMedIndex + 1);
+      setLabelData({
+        quantity: '',
+        dosageForm: '',
+        frequency: '',
+        specialInstructions: '',
+      });
+      setShowResult(false);
+      setShowCounselingQuiz(false);
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer('');
+    } else {
+      // All medications labeled
+      nextStage();
+    }
+  };
+
+  const handleAnswerSubmit = () => {
+    const currentQuestion = medication?.counselingQuestions?.[currentQuestionIndex];
+    if (!currentQuestion) return;
+
+    const isAnswerCorrect = selectedAnswer === currentQuestion.correctAnswer;
+
+    if (isAnswerCorrect) {
+      addScore(20);
+      addRxPoints(10);
+
+      // Check if there are more questions
+      if (medication.counselingQuestions && currentQuestionIndex < medication.counselingQuestions.length - 1) {
+        // Next question
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedAnswer('');
+      } else {
+        // All questions answered correctly
+        proceedToNext();
+      }
+    } else {
+      // Wrong answer - show feedback and allow retry
+      setSelectedAnswer('');
+    }
+  };
+
   return (
     <div className="container-custom mx-auto p-4 max-w-6xl">
       <motion.div
@@ -116,17 +158,26 @@ export const Typing: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-4 md:space-y-6"
       >
-        {/* Progress Indicator */}
+        {/* Pokemon-style Progress Indicator */}
         {currentPrescription.medications.length > 1 && (
-          <div className="bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg">
-            <p className="text-xs sm:text-sm text-gray-600 mb-2" style={{ fontFamily: "'VT323', monospace" }}>
-              Medication {currentMedIndex + 1} of {currentPrescription.medications.length}
+          <div
+            className="border-4 border-poke-black p-4"
+            style={{
+              background: '#FFFFFF',
+              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
+              fontFamily: "'Press Start 2P', monospace"
+            }}
+          >
+            <p className="text-poke-black text-sm mb-3 font-bold">
+              MEDICATION {currentMedIndex + 1} / {currentPrescription.medications.length}
             </p>
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full border-2 border-poke-black h-6" style={{ background: '#FFFFFF' }}>
               <div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all"
+                className="h-full transition-all"
                 style={{
                   width: `${((currentMedIndex + 1) / currentPrescription.medications.length) * 100}%`,
+                  background: '#3075D8',
+                  boxShadow: 'inset -2px -2px 0 0 #1A4A8A'
                 }}
               />
             </div>
@@ -134,73 +185,90 @@ export const Typing: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          {/* Left: Prescription */}
-          <Card>
-            <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2" style={{ fontFamily: "'VT323', monospace" }}>
+          {/* Left: Prescription - Pokemon Style */}
+          <div
+            className="border-4 border-poke-black p-4 sm:p-6"
+            style={{
+              background: '#FFFFFF',
+              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+            }}
+          >
+            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>
               <span className="text-2xl">📋</span>
-              Prescription
+              PRESCRIPTION
             </h3>
 
-            <div className="prescription-paper p-3 sm:p-4 rounded-lg space-y-3">
+            <div className="poke-textbox p-4 space-y-4 mb-4">
               <div>
-                <p className="text-xs sm:text-sm text-gray-600">Medication:</p>
-                <p className="font-bold text-base sm:text-lg">{medication.genericName}</p>
-                <p className="text-sm sm:text-base text-gray-700">{medication.strength}</p>
+                <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>MEDICATION:</p>
+                <p className="font-bold text-base text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{medication.genericName}</p>
+                <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{medication.strength}</p>
               </div>
 
-              <div className="border-t pt-3">
-                <p className="text-xs sm:text-sm text-gray-600">Instructions:</p>
-                <p className="font-mono text-base sm:text-lg font-bold break-words">
+              <div className="border-t-2 border-poke-black pt-4">
+                <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>INSTRUCTIONS:</p>
+                <p className="text-base font-bold text-poke-black break-words" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                   {currentMed.dosageInstruction} {currentMed.frequency}
                 </p>
                 {currentMed.duration && (
-                  <p className="text-xs sm:text-sm text-gray-600 mt-1">Duration: {currentMed.duration}</p>
+                  <p className="text-sm text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>Duration: {currentMed.duration}</p>
                 )}
               </div>
 
               {currentMed.specialInstructions && (
-                <div className="border-t pt-3">
-                  <p className="text-xs sm:text-sm text-gray-600">Special Instructions:</p>
-                  <p className="text-xs sm:text-sm">{currentMed.specialInstructions}</p>
+                <div className="border-t-2 border-poke-black pt-4">
+                  <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>SPECIAL:</p>
+                  <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{currentMed.specialInstructions}</p>
                 </div>
               )}
             </div>
 
-            {/* Abbreviation Helper */}
-            <div className="mt-4 bg-blue-50 p-3 rounded-lg">
-              <p className="text-xs font-semibold text-blue-800 mb-2">Quick Reference:</p>
-              <div className="grid grid-cols-2 gap-1 sm:gap-2 text-xs">
+            {/* Abbreviation Helper - Pokemon Style */}
+            <div className="border-4 border-poke-black p-3" style={{ background: '#58A8F8' }}>
+              <p className="text-sm font-bold text-poke-black mb-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>QUICK REF:</p>
+              <div className="grid grid-cols-2 gap-2 text-xs" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                 {Object.entries(medicalAbbreviations)
                   .slice(0, 8)
                   .map(([abbr, meaning]) => (
-                    <div key={abbr} className="flex gap-1 items-start">
+                    <div key={abbr} className="flex gap-1 items-start text-poke-black">
                       <span className="font-bold flex-shrink-0">{abbr}:</span>
-                      <span className="text-gray-600 text-[10px] sm:text-xs leading-tight">{meaning}</span>
+                      <span className="leading-relaxed">{meaning}</span>
                     </div>
                   ))}
               </div>
             </div>
-          </Card>
+          </div>
 
-          {/* Right: Label Builder */}
-          <Card>
-            <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2" style={{ fontFamily: "'VT323', monospace" }}>
-              <Printer className="text-purple-500" size={20} />
-              Label Builder
+          {/* Right: Label Builder - Pokemon Style */}
+          <div
+            className="border-4 border-poke-black p-4 sm:p-6"
+            style={{
+              background: '#FFFFFF',
+              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+            }}
+          >
+            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+              <Printer className="text-poke-blue" size={20} />
+              LABEL BUILD
             </h3>
 
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-4">
               {/* Quantity */}
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Quantity per dose:
+                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  QUANTITY:
                 </label>
                 <select
                   value={labelData.quantity}
                   onChange={(e) => setLabelData({ ...labelData, quantity: e.target.value })}
-                  className="w-full p-3 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none min-h-[44px]"
+                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    background: '#FFFFFF',
+                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
+                  }}
                 >
-                  <option value="">Select...</option>
+                  <option value="">SELECT...</option>
                   {getQuantityOptions().map((num) => (
                     <option key={num} value={num}>
                       {num}
@@ -213,18 +281,23 @@ export const Typing: React.FC = () => {
 
               {/* Dosage Form */}
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Dosage form:
+                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  FORM:
                 </label>
                 <select
                   value={labelData.dosageForm}
                   onChange={(e) => setLabelData({ ...labelData, dosageForm: e.target.value })}
-                  className="w-full p-3 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none min-h-[44px]"
+                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    background: '#FFFFFF',
+                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
+                  }}
                 >
-                  <option value="">Select...</option>
+                  <option value="">SELECT...</option>
                   {dosageFormOptions.map((form) => (
                     <option key={form} value={form}>
-                      {form}
+                      {form.toUpperCase()}
                     </option>
                   ))}
                 </select>
@@ -232,44 +305,52 @@ export const Typing: React.FC = () => {
 
               {/* Frequency */}
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Frequency:
+                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  FREQUENCY:
                 </label>
                 <select
                   value={labelData.frequency}
                   onChange={(e) => setLabelData({ ...labelData, frequency: e.target.value })}
-                  className="w-full p-3 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none min-h-[44px]"
+                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    background: '#FFFFFF',
+                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
+                  }}
                 >
-                  <option value="">Select...</option>
+                  <option value="">SELECT...</option>
                   {frequencyOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
-                      {opt.value} ({opt.abbr})
+                      {opt.abbr.toUpperCase()} - {opt.value}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Label Preview */}
+              {/* Label Preview - Pokemon Style */}
               {labelData.quantity && labelData.dosageForm && labelData.frequency && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white border-2 border-dashed border-blue-300 p-3 sm:p-4 rounded-lg"
+                  className="poke-textbox p-4"
                 >
-                  <p className="text-xs text-gray-500 mb-2">Label Preview:</p>
-                  <p className="font-bold text-sm sm:text-base">
-                    {medication.genericName} {medication.strength}
+                  <p className="text-xs text-poke-black mb-3 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>PREVIEW:</p>
+                  <p className="font-bold text-sm text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                    {medication.genericName}
                   </p>
-                  <p className="mt-2 text-sm sm:text-base break-words">
+                  <p className="text-xs text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                    {medication.strength}
+                  </p>
+                  <p className="mt-3 text-sm text-poke-black break-words" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                     Take {labelData.quantity} {labelData.dosageForm}(s) {labelData.frequency}
                   </p>
                   {currentMed.specialInstructions && (
-                    <p className="text-xs sm:text-sm mt-1 text-gray-600">{currentMed.specialInstructions}</p>
+                    <p className="text-xs text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>{currentMed.specialInstructions}</p>
                   )}
                 </motion.div>
               )}
 
-              {/* Hints - Hidden on mobile by default, expandable */}
+              {/* Hints - Pokemon Style */}
               <div className="block">
                 <Hint
                   title="Need help with the label?"
@@ -283,35 +364,43 @@ export const Typing: React.FC = () => {
                 />
               </div>
 
-              {/* Print Button - Touch friendly */}
+              {/* Print Button - Pokemon Style */}
               <motion.button
                 onClick={handlePrintLabel}
                 disabled={!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting}
-                className={`w-full py-4 px-6 rounded-lg text-sm sm:text-base font-bold flex items-center justify-center gap-2 min-h-[52px] transition-all ${
+                className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${
                   !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg hover:shadow-xl active:scale-95'
+                    ? 'text-poke-gray cursor-not-allowed'
+                    : 'text-poke-white'
                 }`}
-                style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}
-                whileTap={{ scale: 0.95 }}
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  background: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
+                    ? '#888888'
+                    : '#3075D8',
+                  boxShadow: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
+                    ? 'inset -2px -2px 0 0 #606060, inset 2px 2px 0 0 #AAAAAA'
+                    : 'inset -2px -2px 0 0 #1A4A8A, inset 2px 2px 0 0 #58A8F8, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                }}
+                whileTap={{ scale: 0.98 }}
               >
                 {isPrinting ? (
                   <>
                     <div className="spinner w-5 h-5 border-2" />
-                    Printing...
+                    PRINTING...
                   </>
                 ) : (
                   <>
-                    <Printer size={24} />
+                    <Printer size={20} />
                     PRINT LABEL
                   </>
                 )}
               </motion.button>
             </div>
-          </Card>
+          </div>
         </div>
 
-        {/* Result Modal */}
+        {/* Result Modal - Pokemon Style */}
         <Modal isOpen={showResult} onClose={() => {}} showCloseButton={false}>
           <div className="text-center">
             {isCorrect ? (
@@ -319,40 +408,146 @@ export const Typing: React.FC = () => {
                 <motion.div
                   initial={{ scale: 0, rotate: -45 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"
+                  className="mx-auto mb-6"
                 >
-                  <CheckCircle size={48} className="text-green-500" />
+                  <CheckCircle size={64} className="text-pharm-green mx-auto" fill="currentColor" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-green-600 mb-2">Perfect!</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-xl font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  PERFECT!
+                </h3>
+                <p className="text-poke-black mb-4 text-base" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                   Label created correctly!
                 </p>
-                <p className="text-sm text-gray-500 mb-6">+25 Rx Points</p>
+                <div className="border-4 border-poke-black p-3 mb-6" style={{ background: '#FFD700' }}>
+                  <p className="text-poke-black font-bold text-base" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                    +25 Rx Points
+                  </p>
+                </div>
               </>
             ) : (
               <>
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4 animate-shake"
+                  className="mx-auto mb-6 animate-shake"
                 >
-                  <XCircle size={48} className="text-red-500" />
+                  <XCircle size={64} className="text-poke-red mx-auto" fill="currentColor" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-red-600 mb-2">Incorrect Label</h3>
-                <p className="text-gray-600 mb-4">
-                  Please check the prescription instructions carefully and try again.
+                <h3 className="text-xl font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  INCORRECT!
+                </h3>
+                <p className="text-poke-black mb-6 text-sm leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  Check the prescription instructions and try again.
                 </p>
               </>
             )}
-            <Button variant={isCorrect ? 'success' : 'primary'} onClick={handleContinue} fullWidth>
+            <motion.button
+              onClick={handleContinue}
+              className="w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black text-poke-white"
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                background: isCorrect ? '#00A85E' : '#3075D8',
+                boxShadow: isCorrect
+                  ? 'inset -2px -2px 0 0 #006B3A, inset 2px 2px 0 0 #00E57B, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                  : 'inset -2px -2px 0 0 #1A4A8A, inset 2px 2px 0 0 #58A8F8, 4px 4px 0 0 rgba(0,0,0,0.3)'
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
               {isCorrect ? (
                 currentMedIndex < currentPrescription.medications.length - 1
-                  ? 'Next Medication →'
-                  : 'Continue to Picking →'
+                  ? 'NEXT MED ▶'
+                  : 'TO PICKING ▶'
               ) : (
-                'Try Again'
+                '◀ TRY AGAIN'
               )}
-            </Button>
+            </motion.button>
+          </div>
+        </Modal>
+
+        {/* Counseling Quiz Modal - Pokemon Style */}
+        <Modal isOpen={showCounselingQuiz} onClose={() => {}} showCloseButton={false}>
+          <div className="text-center">
+            {medication?.counselingQuestions && medication.counselingQuestions.length > 0 && (
+              <>
+                <h3 className="text-lg font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  COUNSELING QUIZ
+                </h3>
+                <div className="border-4 border-poke-black p-3 mb-4" style={{ background: '#FFD700' }}>
+                  <p className="text-poke-black text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                    Q{currentQuestionIndex + 1}/{medication.counselingQuestions.length}
+                  </p>
+                </div>
+
+                <p className="text-poke-black mb-6 text-sm leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  {medication.counselingQuestions[currentQuestionIndex]?.question}
+                </p>
+
+                {/* Answer Options */}
+                <div className="space-y-3 mb-6">
+                  {/* Correct Answer */}
+                  <motion.button
+                    onClick={() => setSelectedAnswer(medication.counselingQuestions![currentQuestionIndex].correctAnswer)}
+                    className={`w-full p-4 border-4 border-poke-black text-left ${
+                      selectedAnswer === medication.counselingQuestions![currentQuestionIndex].correctAnswer
+                        ? 'bg-poke-blue text-poke-white'
+                        : 'bg-white text-poke-black'
+                    }`}
+                    style={{
+                      fontFamily: "'Press Start 2P', monospace",
+                      fontSize: '12px',
+                      lineHeight: '1.6',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {medication.counselingQuestions![currentQuestionIndex].correctAnswer}
+                  </motion.button>
+
+                  {/* Alternative Answers */}
+                  {medication.counselingQuestions![currentQuestionIndex].alternatives
+                    .filter(alt => alt.trim() !== '')
+                    .map((alternative, idx) => (
+                      <motion.button
+                        key={idx}
+                        onClick={() => setSelectedAnswer(alternative)}
+                        className={`w-full p-4 border-4 border-poke-black text-left ${
+                          selectedAnswer === alternative
+                            ? 'bg-poke-red text-poke-white'
+                            : 'bg-white text-poke-black'
+                        }`}
+                        style={{
+                          fontFamily: "'Press Start 2P', monospace",
+                          fontSize: '12px',
+                          lineHeight: '1.6',
+                          boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {alternative}
+                      </motion.button>
+                    ))}
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  onClick={handleAnswerSubmit}
+                  disabled={!selectedAnswer}
+                  className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${
+                    !selectedAnswer ? 'text-poke-gray cursor-not-allowed' : 'text-poke-white'
+                  }`}
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    background: !selectedAnswer ? '#888888' : '#00A85E',
+                    boxShadow: !selectedAnswer
+                      ? 'inset -2px -2px 0 0 #606060, inset 2px 2px 0 0 #AAAAAA'
+                      : 'inset -2px -2px 0 0 #006B3A, inset 2px 2px 0 0 #00E57B, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                  }}
+                  whileTap={{ scale: !selectedAnswer ? 1 : 0.98 }}
+                >
+                  SUBMIT ▶
+                </motion.button>
+              </>
+            )}
           </div>
         </Modal>
       </motion.div>

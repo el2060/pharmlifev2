@@ -10,11 +10,24 @@ export default {
         'xs': '475px',
       },
       colors: {
-        'pharm-blue': '#4A90E2',
-        'pharm-green': '#7ED321',
-        'pharm-orange': '#F5A623',
-        'pharm-red': '#D0021B',
-        'pharm-purple': '#9013FE',
+        // Pokemon Red Palette
+        'poke-red': '#FF0000',
+        'poke-dark-red': '#C80000',
+        'poke-yellow': '#FFD700',
+        'poke-dark-yellow': '#C8A000',
+        'poke-blue': '#3075D8',
+        'poke-light-blue': '#58A8F8',
+        'poke-black': '#000000',
+        'poke-white': '#FFFFFF',
+        'poke-gray': '#606060',
+        'poke-dark-gray': '#303030',
+        'poke-border': '#202020',
+        'poke-text': '#000000', // Changed to pure black for maximum contrast
+        // Pharmacy context colors
+        'pharm-green': '#00A85E', // Darker for better contrast
+        'pharm-pill-blue': '#2E5FA8',
+        'pharm-pill-pink': '#D81B60',
+        'pharm-pill-orange': '#E65100',
       },
       fontFamily: {
         'pixel': ['"Press Start 2P"', 'monospace'],

@@ -23,37 +23,51 @@ export const Modal: React.FC<ModalProps> = ({
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 modal-backdrop z-40"
+            className="fixed inset-0 z-40"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Pokemon-style Modal Dialog Box */}
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ type: 'tween', duration: 0.15 }}
           >
-            <div className="card max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+            <div className="poke-textbox max-w-md w-full max-h-[90vh] overflow-y-auto relative">
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="absolute top-3 right-3 p-2 bg-poke-red text-poke-white border-2 border-poke-black hover:bg-poke-dark-red transition-colors"
                   aria-label="Close modal"
+                  style={{
+                    boxShadow: 'inset -1px -1px 0 0 #880000, inset 1px 1px 0 0 #FF4444'
+                  }}
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               )}
 
               {title && (
-                <h2 className="text-2xl font-bold mb-4 pr-8">{title}</h2>
+                <h2
+                  className="text-lg sm:text-xl font-bold mb-4 pr-12 text-poke-black"
+                  style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}
+                >
+                  {title}
+                </h2>
               )}
 
-              <div>{children}</div>
+              <div
+                className="text-poke-black"
+                style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px', lineHeight: '1.8' }}
+              >
+                {children}
+              </div>
             </div>
           </motion.div>
         </>
