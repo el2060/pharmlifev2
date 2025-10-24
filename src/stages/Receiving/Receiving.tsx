@@ -501,14 +501,16 @@ export const Receiving: React.FC = () => {
                 <motion.button
                   onClick={() => handleFieldCheck('signature', !currentPrescription.doctorSignature)}
                   disabled={checkedFields.has('signature')}
-                  className="w-full border-4 border-poke-black p-4 text-left"
+                  className="w-full border-4 border-poke-black p-4 sm:p-5 text-left relative overflow-hidden"
                   style={{
                     background: checkedFields.has('signature')
                       ? (currentPrescription.doctorSignature ? '#90EE90' : '#FFB6C1')
                       : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
+                    transition: 'all 0.3s ease'
                   }}
-                  whileTap={{ scale: checkedFields.has('signature') ? 1 : 0.98 }}
+                  whileHover={!checkedFields.has('signature') ? { scale: 1.02, boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 6px 6px 0 0 rgba(0,0,0,0.3)' } : {}}
+                  whileTap={{ scale: checkedFields.has('signature') ? 1 : 0.97 }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">

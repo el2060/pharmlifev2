@@ -43,13 +43,13 @@ export const Typing: React.FC = () => {
     { value: 'when necessary', abbr: 'prn' },
   ];
 
-  const dosageFormOptions = ['tablet', 'capsule', 'liquid', 'inhaler', 'topical'];
+  const dosageFormOptions = ['tablet', 'capsule', 'liquid', 'syrup', 'inhaler', 'topical'];
 
   // Generate quantity options based on medication type
   const getQuantityOptions = () => {
     const form = medication.dosageForm;
-    if (form === 'liquid') {
-      // For liquids, allow ml values
+    if (form === 'liquid' || form === 'syrup') {
+      // For liquids/syrups, allow ml values
       return [5, 10, 15, 20, 25, 30];
     } else if (form === 'inhaler') {
       // For inhalers, allow puff values
@@ -272,7 +272,7 @@ export const Typing: React.FC = () => {
                   {getQuantityOptions().map((num) => (
                     <option key={num} value={num}>
                       {num}
-                      {medication.dosageForm === 'liquid' ? ' ml' : ''}
+                      {(medication.dosageForm === 'liquid' || medication.dosageForm === 'syrup') ? ' ml' : ''}
                       {medication.dosageForm === 'inhaler' ? ' puff' + (num > 1 ? 's' : '') : ''}
                     </option>
                   ))}

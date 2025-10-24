@@ -807,3 +807,134 @@ body {
     max-width: 1280px;
   }
 }
+
+/* Mobile-First Enhancements */
+@media (max-width: 640px) {
+  /* Larger tap targets for mobile */
+  button, .arcade-button, .btn {
+    min-height: 52px;
+    font-size: 14px;
+    padding: 14px 18px;
+  }
+
+  /* Improved readability */
+  .pixel-label {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  /* Better spacing for cards */
+  .card, .game-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Compact pharmacy characters for mobile */
+  .character-pharmacist,
+  .character-patient {
+    transform: scale(0.85);
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, .card, .arcade-button {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+  outline: 3px solid #FFD700;
+  outline-offset: 3px;
+}
+
+/* Medication pill animation */
+@keyframes pill-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(-5deg); }
+  50% { transform: translateY(-15px) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.pill-bounce {
+  animation: pill-bounce 0.6s ease-in-out;
+}
+
+/* Success checkmark animation */
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.checkmark-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: checkmark-draw 0.5s ease-out forwards;
+}
+
+/* Prescription stamp effect */
+@keyframes stamp-appear {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.stamp-appear {
+  animation: stamp-appear 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Notification badge pulse */
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* Gradient shimmer effect for rewards */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  /* Keep the retro Pokemon style in light mode for authenticity */
+  body {
+    background: #F8F8F8;
+  }
+}

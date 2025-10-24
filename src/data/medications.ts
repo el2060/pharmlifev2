@@ -233,7 +233,7 @@ export const medications: Medication[] = [
     id: 'med-006',
     genericName: 'Dextromethorphan',
     strength: '15mg/5ml',
-    dosageForm: 'liquid',
+    dosageForm: 'syrup',
     category: 'respiratory',
     drugClass: 'Cough Suppressant',
     mechanismOfAction: 'Acts on the cough center in the brain',

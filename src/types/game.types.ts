@@ -2,7 +2,7 @@ export type YearLevel = 1 | 2 | 3;
 
 export type GameStage = 'receiving' | 'typing' | 'picking' | 'dispensing';
 
-export type DosageForm = 'tablet' | 'capsule' | 'liquid' | 'topical' | 'inhaler' | 'injection';
+export type DosageForm = 'tablet' | 'capsule' | 'liquid' | 'syrup' | 'topical' | 'inhaler' | 'injection';
 
 export type MedicationCategory =
   | 'analgesic'
