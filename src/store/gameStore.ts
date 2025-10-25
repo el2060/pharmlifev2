@@ -50,11 +50,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   setPrescription: (prescription) => set({ currentPrescription: prescription }),
 
-  addScore: (points) => set((state) => ({ score: state.score + points })),
+  addScore: (points) => set((state) => ({
+    score: Math.max(0, state.score + points) // Prevent negative scores
+  })),
 
   addRxPoints: (points) => {
     set((state) => {
-      const newRxPoints = state.rxPoints + points;
+      const newRxPoints = Math.max(0, state.rxPoints + points); // Prevent negative Rx Points
       return {
         rxPoints: newRxPoints,
         playerLevel: getPlayerLevel(newRxPoints),

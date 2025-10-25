@@ -9,7 +9,7 @@ import {
   signatureVerificationScenario,
 } from './scenarios';
 
-// Rx #1 - Valid Rx (Ibuprofen)
+// Rx #1 - Valid Rx (Ibuprofen) - Patient has Paracetamol allergy but correctly prescribed Ibuprofen
 const rx1: Prescription = {
   id: 'rx-001',
   patientName: 'Mr Tan Ah Beng',
@@ -20,7 +20,7 @@ const rx1: Prescription = {
   date: '2025-02-02',
   medications: [
     {
-      medicationId: 'med-002',
+      medicationId: 'med-002', // Ibuprofen (safe alternative)
       quantity: 1,
       dosageInstruction: '1 tab',
       frequency: 'bd',
@@ -29,6 +29,7 @@ const rx1: Prescription = {
     },
   ],
   isValid: true,
+  // No scenario - this is a correctly managed allergy case (good example)
 };
 
 // Rx #2 - Valid Rx (Multiple medications)
@@ -125,6 +126,7 @@ const rx4: Prescription = {
 };
 
 // Additional prescriptions for variety
+// Rx #5 - Simple valid prescription (for Year 1 Level 1 - Tutorial level, keep simple)
 const rx5: Prescription = {
   id: 'rx-005',
   patientName: 'Sarah Tan',
@@ -144,6 +146,7 @@ const rx5: Prescription = {
     },
   ],
   isValid: true,
+  // No scenario for tutorial level - keep it simple for first-time players
 };
 
 const rx6: Prescription = {
@@ -267,61 +270,70 @@ const rx10: Prescription = {
 
 // Level data combining prescriptions with metadata
 export const levels: LevelData[] = [
-  // Year 1 Levels - Basic
+  // Year 1 Levels - Basic (Progressive difficulty with scenarios)
   {
     id: 'level-1-1',
     year: 1,
     chapterNumber: 1,
     title: 'First Day Fundamentals',
-    description: 'Learn the basics of prescription validation',
-    prescription: rx5, // Simple valid prescription
+    description: 'Learn the basics - simple valid prescription',
+    prescription: rx5, // Simple valid prescription (no scenario - tutorial)
     difficulty: 'basic',
   },
   {
     id: 'level-1-2',
     year: 1,
     chapterNumber: 2,
-    title: 'Spot the Missing Signature',
-    description: 'Identify invalid prescriptions',
-    prescription: rx6, // Missing signature
+    title: 'Missing Signature Challenge',
+    description: 'What should you do when signature is missing?',
+    prescription: rx6, // Missing signature WITH SCENARIO
     difficulty: 'basic',
   },
   {
     id: 'level-1-3',
     year: 1,
     chapterNumber: 3,
-    title: 'Date Detective',
-    description: 'Check prescription dates carefully',
-    prescription: rx7, // Expired date
+    title: 'Expired Prescription Dilemma',
+    description: 'Patient says doctor approved it - what do you do?',
+    prescription: rx7, // Expired date WITH SCENARIO
     difficulty: 'basic',
   },
   {
     id: 'level-1-4',
     year: 1,
     chapterNumber: 4,
-    title: 'Allergy Alert',
-    description: 'Watch out for patient allergies',
-    prescription: rx1, // Patient allergic to paracetamol (using ibuprofen correctly)
+    title: 'Professional Decision Making',
+    description: 'IC number doesn\'t match - verify the patient',
+    prescription: rx8, // Identity mismatch WITH SCENARIO
     difficulty: 'basic',
   },
 
-  // Year 2 Levels - Intermediate
+  // Year 2 Levels - Intermediate (Complex scenarios)
   {
     id: 'level-2-1',
     year: 2,
     chapterNumber: 1,
-    title: 'Multiple Medications',
-    description: 'Handle prescriptions with multiple drugs',
-    prescription: rx2, // Three medications
+    title: 'Signature Verification',
+    description: 'Unclear signature - is it genuine?',
+    prescription: rx9, // Signature verification scenario
     difficulty: 'intermediate',
   },
   {
     id: 'level-2-2',
     year: 2,
     chapterNumber: 2,
-    title: 'Incomplete Information',
-    description: 'Identify missing prescription details',
-    prescription: rx4, // Missing duration
+    title: 'Missing Duration Crisis',
+    description: 'Patient knows the duration but prescription is incomplete',
+    prescription: rx4, // Missing duration WITH SCENARIO
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'level-2-3',
+    year: 2,
+    chapterNumber: 3,
+    title: 'Multiple Medications',
+    description: 'Complex prescription with 3 medications',
+    prescription: rx2, // Three medications (no scenario - already complex)
     difficulty: 'intermediate',
   },
 
@@ -369,6 +381,15 @@ export const levels: LevelData[] = [
     title: 'Signature Verification',
     description: 'Verify authenticity of unclear prescription signature',
     prescription: rx9, // Signature verification
+    difficulty: 'advanced',
+  },
+  {
+    id: 'level-3-6',
+    year: 3,
+    chapterNumber: 6,
+    title: 'Correct Allergy Management',
+    description: 'Patient has allergy but prescription uses safe alternative',
+    prescription: rx1, // Correctly managed allergy (educational example)
     difficulty: 'advanced',
   },
 ];

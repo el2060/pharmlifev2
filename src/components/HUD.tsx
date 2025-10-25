@@ -108,12 +108,14 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
 
               {/* Player Level */}
               <div
-                className="border-2 border-poke-black px-3 py-2 text-center"
+                className="border-2 border-poke-black px-2 py-2 flex flex-col justify-center"
                 style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
               >
-                <p className="text-poke-black text-xs leading-tight font-bold">LVL</p>
-                <p className="font-bold text-poke-black text-xl sm:text-2xl leading-tight mt-1">
-                  {playerLevel}
+                <p className="text-poke-black text-[8px] sm:text-xs leading-tight font-bold text-center mb-1">RANK</p>
+                <p className="font-bold text-poke-black text-[8px] sm:text-[10px] leading-tight text-center break-words">
+                  {playerLevel.split(' ').map((word, i) => (
+                    <span key={i} className="block">{word}</span>
+                  ))}
                 </p>
               </div>
             </div>
