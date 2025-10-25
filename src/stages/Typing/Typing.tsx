@@ -474,20 +474,20 @@ export const Typing: React.FC = () => {
                 </h3>
 
                 {/* Show Consequence */}
-                <div className="bg-red-100 border-4 border-red-600 p-3 sm:p-4 mb-3 sm:mb-4 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                <div className="bg-red-100 border-4 border-red-600 p-4 sm:p-5 mb-3 sm:mb-4 rounded text-left">
+                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
                     CONSEQUENCE:
                   </p>
-                  <p className="text-xs sm:text-sm text-red-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                  <p className="text-sm sm:text-base text-red-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
                     Patient followed your incorrect label and took the wrong dosage. This could lead to treatment failure or adverse effects!
                   </p>
                 </div>
 
-                <div className="bg-yellow-100 border-4 border-yellow-600 p-3 sm:p-4 mb-4 sm:mb-6 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                <div className="bg-yellow-100 border-4 border-yellow-600 p-4 sm:p-5 mb-4 sm:mb-6 rounded text-left">
+                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
                     💡 LEARNING POINT:
                   </p>
-                  <p className="text-xs sm:text-sm text-yellow-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                  <p className="text-sm sm:text-base text-yellow-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
                     Always double-check prescription instructions before printing labels. When patients question the label, take it seriously and review carefully!
                   </p>
                 </div>
@@ -531,47 +531,47 @@ export const Typing: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px', lineHeight: '1.4' }}>
+            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px', lineHeight: '1.6' }}>
               PATIENT QUESTION
             </h3>
 
-            <div className="border-4 border-yellow-600 bg-yellow-100 p-3 sm:p-4 mb-4 sm:mb-6 rounded">
-              <p className="text-poke-black text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+            <div className="border-4 border-yellow-600 bg-yellow-100 p-4 sm:p-5 mb-4 sm:mb-6 rounded">
+              <p className="text-poke-black text-sm sm:text-base leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
                 "{patientQuestion}"
               </p>
             </div>
 
-            <p className="text-[10px] sm:text-xs mb-3 sm:mb-4 text-gray-600" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.4' }}>
+            <p className="text-[11px] sm:text-sm mb-3 sm:mb-4 text-gray-600" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}>
               How do you respond?
             </p>
 
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-3 sm:space-y-4">
               <button
                 onClick={() => handlePatientDialogueResponse('recheck')}
-                className="w-full p-3 sm:p-4 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors"
+                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors"
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '9px',
-                  lineHeight: '1.6',
+                  fontSize: '10px',
+                  lineHeight: '1.8',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                 }}
               >
                 "Let me double-check that for you..."<br/>
-                <span className="text-[8px] sm:text-xs text-green-700">(Review the prescription again)</span>
+                <span className="text-[9px] sm:text-xs text-green-700">(Review the prescription again)</span>
               </button>
 
               <button
                 onClick={() => handlePatientDialogueResponse('insist')}
-                className="w-full p-3 sm:p-4 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors"
+                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors"
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '9px',
-                  lineHeight: '1.6',
+                  fontSize: '10px',
+                  lineHeight: '1.8',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                 }}
               >
                 "I'm sure this is correct."<br/>
-                <span className="text-[8px] sm:text-xs text-red-700">(Insist label is right)</span>
+                <span className="text-[9px] sm:text-xs text-red-700">(Insist label is right)</span>
               </button>
             </div>
           </div>
