@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Info, Award, Star } from 'lucide-react';
+import { Play, Info, Award, Star, HelpCircle } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
+import { Modal } from '../components/Modal';
+import { Button } from '../components/Button';
 
 interface MainMenuProps {
   onStartGame: () => void;
@@ -10,6 +12,7 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) => {
   const { rxPoints, playerLevel } = useGameStore();
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   return (
     <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
@@ -76,6 +79,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             </motion.button>
 
             <motion.button
+              onClick={() => setShowHowToPlay(true)}
+              className="w-full border-4 border-poke-black text-base sm:text-lg flex items-center justify-between px-6 py-4 text-poke-white"
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                background: '#FFB100',
+                boxShadow: 'inset -2px -2px 0 0 #C88800, inset 2px 2px 0 0 #FFD700, 4px 4px 0 0 rgba(0,0,0,0.3)'
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center gap-3">
+                <span>▶</span>
+                <span>HOW TO PLAY</span>
+              </span>
+              <HelpCircle size={20} />
+            </motion.button>
+
+            <motion.button
               onClick={onShowAbout}
               className="w-full btn-secondary text-base sm:text-lg flex items-center justify-between px-6 py-4"
               whileTap={{ scale: 0.98 }}
@@ -136,6 +156,101 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
           </div>
         </div>
       </motion.div>
+
+      {/* How to Play Modal */}
+      <Modal
+        isOpen={showHowToPlay}
+        onClose={() => setShowHowToPlay(false)}
+        title="📖 HOW TO PLAY"
+      >
+        <div className="space-y-4" style={{ fontFamily: "'VT323', monospace" }}>
+          {/* Game Flow */}
+          <div className="bg-blue-50 border-4 border-blue-500 p-3 rounded">
+            <p className="font-bold text-blue-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+              🎮 GAME FLOW
+            </p>
+            <p className="text-sm leading-relaxed text-blue-900">
+              <strong>4 Stages per Level:</strong><br/>
+              📥 Receiving → ⌨️ Typing → 📦 Picking → 💊 Dispensing
+            </p>
+          </div>
+
+          {/* Stages Explained */}
+          <div className="space-y-2">
+            <div className="border-2 border-gray-300 p-2 rounded">
+              <p className="font-bold text-sm">📥 RECEIVING</p>
+              <p className="text-xs text-gray-700">Verify patient identity, check prescription validity. Make professional decisions!</p>
+            </div>
+            <div className="border-2 border-gray-300 p-2 rounded">
+              <p className="font-bold text-sm">⌨️ TYPING</p>
+              <p className="text-xs text-gray-700">Create medication labels. Match dosage, form, and frequency exactly.</p>
+            </div>
+            <div className="border-2 border-gray-300 p-2 rounded">
+              <p className="font-bold text-sm">📦 PICKING</p>
+              <p className="text-xs text-gray-700">Select correct medications from pharmacy shelves. Check strength carefully!</p>
+            </div>
+            <div className="border-2 border-gray-300 p-2 rounded">
+              <p className="font-bold text-sm">💊 DISPENSING</p>
+              <p className="text-xs text-gray-700">Counsel the patient. Answer questions about medication use and safety.</p>
+            </div>
+          </div>
+
+          {/* Decision Making */}
+          <div className="bg-yellow-50 border-4 border-yellow-500 p-3 rounded">
+            <p className="font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+              ⚡ INTERACTIVE DECISIONS
+            </p>
+            <p className="text-sm leading-relaxed text-yellow-900">
+              From <strong>Level 1-2 onwards</strong>, you'll face real scenarios requiring professional judgment.<br/>
+              <strong>Choose wisely</strong> - wrong decisions have consequences!
+            </p>
+          </div>
+
+          {/* Scoring */}
+          <div className="bg-green-50 border-4 border-green-500 p-3 rounded">
+            <p className="font-bold text-green-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+              ⭐ SCORING SYSTEM
+            </p>
+            <div className="text-sm space-y-1 text-green-900">
+              <p><strong>Score:</strong> Resets each level. Shows your current performance.</p>
+              <p><strong>Rx Points:</strong> Never reset! Accumulate to unlock ranks.</p>
+              <p className="text-red-700"><strong>⚠️ WARNING:</strong> Bad decisions = NEGATIVE points!</p>
+            </div>
+          </div>
+
+          {/* Ranks */}
+          <div className="border-4 border-purple-500 p-3 rounded bg-purple-50">
+            <p className="font-bold text-purple-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+              🏆 PLAYER RANKS
+            </p>
+            <div className="text-xs space-y-1 text-purple-900">
+              <p>🟢 0-99: <strong>Pharmacy Trainee</strong></p>
+              <p>🔵 100-299: <strong>Junior Pharmacist</strong></p>
+              <p>🟣 300-599: <strong>Pharmacist</strong></p>
+              <p>🟠 600-999: <strong>Senior Pharmacist</strong></p>
+              <p>🔴 1000+: <strong>Chief Pharmacist</strong></p>
+            </div>
+          </div>
+
+          {/* Quick Tips */}
+          <div className="bg-gray-100 border-2 border-gray-400 p-3 rounded">
+            <p className="font-bold text-gray-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+              💡 QUICK TIPS
+            </p>
+            <ul className="text-xs space-y-1 text-gray-800 list-disc list-inside">
+              <li>Always verify TWO identifiers (name + IC)</li>
+              <li>Read prescriptions carefully - details matter!</li>
+              <li>When in doubt, call the doctor</li>
+              <li>Patient safety always comes first</li>
+              <li>Learn from wrong answers - read explanations!</li>
+            </ul>
+          </div>
+
+          <Button onClick={() => setShowHowToPlay(false)} fullWidth variant="primary">
+            GOT IT! LET'S PLAY
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };
