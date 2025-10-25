@@ -163,55 +163,55 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
         onClose={() => setShowHowToPlay(false)}
         title="📖 HOW TO PLAY"
       >
-        <div className="space-y-4" style={{ fontFamily: "'VT323', monospace" }}>
+        <div className="space-y-3 sm:space-y-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
           {/* Game Flow */}
-          <div className="bg-blue-50 border-4 border-blue-500 p-3 rounded">
-            <p className="font-bold text-blue-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+          <div className="bg-blue-50 border-4 border-blue-500 p-2 sm:p-3 rounded">
+            <p className="font-bold text-blue-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
               🎮 GAME FLOW
             </p>
-            <p className="text-sm leading-relaxed text-blue-900">
+            <p className="text-[9px] sm:text-xs leading-relaxed text-blue-900">
               <strong>4 Stages per Level:</strong><br/>
               📥 Receiving → ⌨️ Typing → 📦 Picking → 💊 Dispensing
             </p>
           </div>
 
           {/* Stages Explained */}
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-sm">📥 RECEIVING</p>
-              <p className="text-xs text-gray-700">Verify patient identity, check prescription validity. Make professional decisions!</p>
+              <p className="font-bold text-[9px] sm:text-xs">📥 RECEIVING</p>
+              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Verify patient identity, check prescription validity. Make professional decisions!</p>
             </div>
             <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-sm">⌨️ TYPING</p>
-              <p className="text-xs text-gray-700">Create medication labels. Match dosage, form, and frequency exactly.</p>
+              <p className="font-bold text-[9px] sm:text-xs">⌨️ TYPING</p>
+              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Create medication labels. Match dosage, form, and frequency exactly.</p>
             </div>
             <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-sm">📦 PICKING</p>
-              <p className="text-xs text-gray-700">Select correct medications from pharmacy shelves. Check strength carefully!</p>
+              <p className="font-bold text-[9px] sm:text-xs">📦 PICKING</p>
+              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Select correct medications from pharmacy shelves. Check strength carefully!</p>
             </div>
             <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-sm">💊 DISPENSING</p>
-              <p className="text-xs text-gray-700">Counsel the patient. Answer questions about medication use and safety.</p>
+              <p className="font-bold text-[9px] sm:text-xs">💊 DISPENSING</p>
+              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Counsel the patient. Answer questions about medication use and safety.</p>
             </div>
           </div>
 
           {/* Decision Making */}
-          <div className="bg-yellow-50 border-4 border-yellow-500 p-3 rounded">
-            <p className="font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+          <div className="bg-yellow-50 border-4 border-yellow-500 p-2 sm:p-3 rounded">
+            <p className="font-bold text-yellow-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
               ⚡ INTERACTIVE DECISIONS
             </p>
-            <p className="text-sm leading-relaxed text-yellow-900">
+            <p className="text-[9px] sm:text-xs leading-relaxed text-yellow-900">
               From <strong>Level 1-2 onwards</strong>, you'll face real scenarios requiring professional judgment.<br/>
               <strong>Choose wisely</strong> - wrong decisions have consequences!
             </p>
           </div>
 
           {/* Scoring */}
-          <div className="bg-green-50 border-4 border-green-500 p-3 rounded">
-            <p className="font-bold text-green-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+          <div className="bg-green-50 border-4 border-green-500 p-2 sm:p-3 rounded">
+            <p className="font-bold text-green-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
               ⭐ SCORING SYSTEM
             </p>
-            <div className="text-sm space-y-1 text-green-900">
+            <div className="text-[9px] sm:text-xs space-y-0.5 sm:space-y-1 text-green-900 leading-relaxed">
               <p><strong>Score:</strong> Resets each level. Shows your current performance.</p>
               <p><strong>Rx Points:</strong> Never reset! Accumulate to unlock ranks.</p>
               <p className="text-red-700"><strong>⚠️ WARNING:</strong> Bad decisions = NEGATIVE points!</p>
@@ -219,11 +219,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
           </div>
 
           {/* Ranks */}
-          <div className="border-4 border-purple-500 p-3 rounded bg-purple-50">
-            <p className="font-bold text-purple-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+          <div className="border-4 border-purple-500 p-2 sm:p-3 rounded bg-purple-50">
+            <p className="font-bold text-purple-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
               🏆 PLAYER RANKS
             </p>
-            <div className="text-xs space-y-1 text-purple-900">
+            <div className="text-[8px] sm:text-[10px] space-y-0.5 sm:space-y-1 text-purple-900 leading-relaxed">
               <p>🟢 0-99: <strong>Pharmacy Trainee</strong></p>
               <p>🔵 100-299: <strong>Junior Pharmacist</strong></p>
               <p>🟣 300-599: <strong>Pharmacist</strong></p>
@@ -233,11 +233,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
           </div>
 
           {/* Quick Tips */}
-          <div className="bg-gray-100 border-2 border-gray-400 p-3 rounded">
-            <p className="font-bold text-gray-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+          <div className="bg-gray-100 border-2 border-gray-400 p-2 sm:p-3 rounded">
+            <p className="font-bold text-gray-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
               💡 QUICK TIPS
             </p>
-            <ul className="text-xs space-y-1 text-gray-800 list-disc list-inside">
+            <ul className="text-[8px] sm:text-[10px] space-y-0.5 sm:space-y-1 text-gray-800 list-disc list-inside leading-relaxed">
               <li>Always verify TWO identifiers (name + IC)</li>
               <li>Read prescriptions carefully - details matter!</li>
               <li>When in doubt, call the doctor</li>
