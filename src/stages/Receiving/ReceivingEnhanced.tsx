@@ -471,8 +471,8 @@ export const ReceivingEnhanced: React.FC = () => {
                   </div>
 
                   {checkedFields.size === 0 && (
-                    <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-yellow-100 border-2 border-yellow-600 rounded">
-                      <p className="text-[9px] sm:text-xs font-bold text-yellow-900" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.4' }}>
+                    <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-yellow-100 border-4 border-yellow-600 rounded">
+                      <p className="text-[10px] sm:text-sm font-bold text-yellow-900" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}>
                         💡 TIP: Click the button below when you're done reviewing
                       </p>
                     </div>
@@ -521,7 +521,7 @@ export const ReceivingEnhanced: React.FC = () => {
 
               {/* Question */}
               <div className="poke-menu p-3 sm:p-6">
-                <p className="text-poke-black text-sm sm:text-lg font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.5' }}>
+                <p className="text-poke-black text-sm sm:text-lg font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px', lineHeight: '1.6' }}>
                   {currentPrescription.scenario.question}
                 </p>
 
@@ -539,7 +539,7 @@ export const ReceivingEnhanced: React.FC = () => {
                       }`}
                       style={{
                         fontFamily: "'Press Start 2P', monospace",
-                        fontSize: '9px',
+                        fontSize: '10px',
                         lineHeight: '1.6',
                         boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
                         cursor: selectedAction !== '' ? 'not-allowed' : 'pointer'
@@ -548,10 +548,10 @@ export const ReceivingEnhanced: React.FC = () => {
                     >
                       <div className="flex items-start sm:items-center gap-2 sm:gap-3">
                         <div className="flex-shrink-0 pt-1 sm:pt-0">
-                          {option.action === 'call-doctor' && <Phone size={16} className="sm:w-5 sm:h-5" />}
-                          {option.action === 'ask-patient' && <User size={16} className="sm:w-5 sm:h-5" />}
-                          {option.action === 'refuse-rx' && <XCircle size={16} className="sm:w-5 sm:h-5" />}
-                          {option.action === 'accept-rx' && <CheckCircle size={16} className="sm:w-5 sm:h-5" />}
+                          {option.action === 'call-doctor' && <Phone size={18} className="sm:w-6 sm:h-6" />}
+                          {option.action === 'ask-patient' && <User size={18} className="sm:w-6 sm:h-6" />}
+                          {option.action === 'refuse-rx' && <XCircle size={18} className="sm:w-6 sm:h-6" />}
+                          {option.action === 'accept-rx' && <CheckCircle size={18} className="sm:w-6 sm:h-6" />}
                         </div>
                         <span className="flex-1 break-words">{option.text}</span>
                       </div>
@@ -586,30 +586,30 @@ export const ReceivingEnhanced: React.FC = () => {
 
                 {/* Outcome */}
                 <div className="bg-gray-100 border-4 border-gray-400 p-3 sm:p-4 mb-3 sm:mb-4 text-left">
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
                     OUTCOME:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
                     {consequence.outcome}
                   </p>
                 </div>
 
                 {/* Patient Reaction */}
                 <div className={`border-4 p-3 sm:p-4 mb-3 sm:mb-4 text-left ${consequence.isCorrect ? 'bg-green-100 border-green-600' : 'bg-red-100 border-red-600'}`}>
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
                     PATIENT REACTION:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
                     {consequence.patientReaction}
                   </p>
                 </div>
 
                 {/* Explanation */}
                 <div className="bg-blue-100 border-4 border-blue-600 p-3 sm:p-4 mb-3 sm:mb-4 text-left">
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
                     💡 LEARNING POINT:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
                     {consequence.explanation}
                   </p>
                 </div>

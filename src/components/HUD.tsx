@@ -111,8 +111,8 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                 className="border-2 border-poke-black px-2 py-2 flex flex-col justify-center"
                 style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
               >
-                <p className="text-poke-black text-[8px] sm:text-xs leading-tight font-bold text-center mb-1">RANK</p>
-                <p className="font-bold text-poke-black text-[8px] sm:text-[10px] leading-tight text-center break-words">
+                <p className="text-poke-black text-[9px] sm:text-xs leading-tight font-bold text-center mb-1">RANK</p>
+                <p className="font-bold text-poke-black text-[9px] sm:text-[11px] leading-tight text-center break-words">
                   {playerLevel.split(' ').map((word, i) => (
                     <span key={i} className="block">{word}</span>
                   ))}
