@@ -163,55 +163,55 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
         onClose={() => setShowHowToPlay(false)}
         title="📖 HOW TO PLAY"
       >
-        <div className="space-y-3 sm:space-y-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+        <div className="space-y-2 sm:space-y-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>
           {/* Game Flow */}
-          <div className="bg-blue-50 border-4 border-blue-500 p-2 sm:p-3 rounded">
-            <p className="font-bold text-blue-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
+          <div className="bg-blue-50 border-4 border-blue-500 p-3 sm:p-5 rounded">
+            <p className="font-bold text-blue-900 mb-2 text-[10px] sm:text-base">
               🎮 GAME FLOW
             </p>
-            <p className="text-[9px] sm:text-xs leading-relaxed text-blue-900">
+            <p className="text-[10px] sm:text-sm leading-relaxed text-blue-900">
               <strong>4 Stages per Level:</strong><br/>
               📥 Receiving → ⌨️ Typing → 📦 Picking → 💊 Dispensing
             </p>
           </div>
 
           {/* Stages Explained */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-[9px] sm:text-xs">📥 RECEIVING</p>
-              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Verify patient identity, check prescription validity. Make professional decisions!</p>
+          <div className="space-y-2 sm:space-y-3">
+            <div className="border-4 border-gray-400 p-3 sm:p-5 rounded" style={{ background: '#FFFFFF', boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)' }}>
+              <p className="font-bold text-[10px] sm:text-base mb-1 sm:mb-2">📥 RECEIVING</p>
+              <p className="text-[10px] sm:text-sm text-gray-700 leading-relaxed">Verify patient identity, check prescription validity. Make professional decisions!</p>
             </div>
-            <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-[9px] sm:text-xs">⌨️ TYPING</p>
-              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Create medication labels. Match dosage, form, and frequency exactly.</p>
+            <div className="border-4 border-gray-400 p-3 sm:p-5 rounded" style={{ background: '#FFFFFF', boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)' }}>
+              <p className="font-bold text-[10px] sm:text-base mb-1 sm:mb-2">⌨️ TYPING</p>
+              <p className="text-[10px] sm:text-sm text-gray-700 leading-relaxed">Create medication labels. Match dosage, form, and frequency exactly.</p>
             </div>
-            <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-[9px] sm:text-xs">📦 PICKING</p>
-              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Select correct medications from pharmacy shelves. Check strength carefully!</p>
+            <div className="border-4 border-gray-400 p-3 sm:p-5 rounded" style={{ background: '#FFFFFF', boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)' }}>
+              <p className="font-bold text-[10px] sm:text-base mb-1 sm:mb-2">📦 PICKING</p>
+              <p className="text-[10px] sm:text-sm text-gray-700 leading-relaxed">Select correct medications from pharmacy shelves. Check strength carefully!</p>
             </div>
-            <div className="border-2 border-gray-300 p-2 rounded">
-              <p className="font-bold text-[9px] sm:text-xs">💊 DISPENSING</p>
-              <p className="text-[8px] sm:text-[10px] text-gray-700 leading-relaxed">Counsel the patient. Answer questions about medication use and safety.</p>
+            <div className="border-4 border-gray-400 p-3 sm:p-5 rounded" style={{ background: '#FFFFFF', boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)' }}>
+              <p className="font-bold text-[10px] sm:text-base mb-1 sm:mb-2">💊 DISPENSING</p>
+              <p className="text-[10px] sm:text-sm text-gray-700 leading-relaxed">Counsel the patient. Answer questions about medication use and safety.</p>
             </div>
           </div>
 
           {/* Decision Making */}
-          <div className="bg-yellow-50 border-4 border-yellow-500 p-2 sm:p-3 rounded">
-            <p className="font-bold text-yellow-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
+          <div className="bg-yellow-50 border-4 border-yellow-500 p-3 sm:p-5 rounded">
+            <p className="font-bold text-yellow-900 mb-2 text-[10px] sm:text-base">
               ⚡ INTERACTIVE DECISIONS
             </p>
-            <p className="text-[9px] sm:text-xs leading-relaxed text-yellow-900">
+            <p className="text-[10px] sm:text-sm leading-relaxed text-yellow-900">
               From <strong>Level 1-2 onwards</strong>, you'll face real scenarios requiring professional judgment.<br/>
               <strong>Choose wisely</strong> - wrong decisions have consequences!
             </p>
           </div>
 
           {/* Scoring */}
-          <div className="bg-green-50 border-4 border-green-500 p-2 sm:p-3 rounded">
-            <p className="font-bold text-green-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
+          <div className="bg-green-50 border-4 border-green-500 p-3 sm:p-5 rounded">
+            <p className="font-bold text-green-900 mb-2 text-[10px] sm:text-base">
               ⭐ SCORING SYSTEM
             </p>
-            <div className="text-[9px] sm:text-xs space-y-0.5 sm:space-y-1 text-green-900 leading-relaxed">
+            <div className="text-[10px] sm:text-sm space-y-1 sm:space-y-2 text-green-900 leading-relaxed">
               <p><strong>Score:</strong> Resets each level. Shows your current performance.</p>
               <p><strong>Rx Points:</strong> Never reset! Accumulate to unlock ranks.</p>
               <p className="text-red-700"><strong>⚠️ WARNING:</strong> Bad decisions = NEGATIVE points!</p>
@@ -219,11 +219,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
           </div>
 
           {/* Ranks */}
-          <div className="border-4 border-purple-500 p-2 sm:p-3 rounded bg-purple-50">
-            <p className="font-bold text-purple-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
+          <div className="border-4 border-purple-500 p-3 sm:p-5 rounded bg-purple-50">
+            <p className="font-bold text-purple-900 mb-2 text-[10px] sm:text-base">
               🏆 PLAYER RANKS
             </p>
-            <div className="text-[8px] sm:text-[10px] space-y-0.5 sm:space-y-1 text-purple-900 leading-relaxed">
+            <div className="text-[10px] sm:text-sm space-y-1 sm:space-y-2 text-purple-900 leading-relaxed">
               <p>🟢 0-99: <strong>Pharmacy Trainee</strong></p>
               <p>🔵 100-299: <strong>Junior Pharmacist</strong></p>
               <p>🟣 300-599: <strong>Pharmacist</strong></p>
@@ -233,11 +233,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
           </div>
 
           {/* Quick Tips */}
-          <div className="bg-gray-100 border-2 border-gray-400 p-2 sm:p-3 rounded">
-            <p className="font-bold text-gray-900 mb-1 sm:mb-2 text-[9px] sm:text-[10px]">
+          <div className="bg-gray-100 border-4 border-gray-400 p-3 sm:p-5 rounded">
+            <p className="font-bold text-gray-900 mb-2 text-[10px] sm:text-base">
               💡 QUICK TIPS
             </p>
-            <ul className="text-[8px] sm:text-[10px] space-y-0.5 sm:space-y-1 text-gray-800 list-disc list-inside leading-relaxed">
+            <ul className="text-[10px] sm:text-sm space-y-1 sm:space-y-2 text-gray-800 list-disc list-inside leading-relaxed">
               <li>Always verify TWO identifiers (name + IC)</li>
               <li>Read prescriptions carefully - details matter!</li>
               <li>When in doubt, call the doctor</li>
