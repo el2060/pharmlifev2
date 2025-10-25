@@ -1,4 +1,13 @@
 import { Prescription, LevelData } from '../types/game.types';
+import {
+  rx3AllergyScenario,
+  rx4IncompleteDurationScenario,
+  allergyConflictScenario,
+  expiredRxScenario,
+  missingSigScenario,
+  identityMismatchScenario,
+  signatureVerificationScenario,
+} from './scenarios';
 
 // Rx #1 - Valid Rx (Ibuprofen)
 const rx1: Prescription = {
@@ -59,7 +68,7 @@ const rx2: Prescription = {
   isValid: true,
 };
 
-// Rx #3 - Invalid Rx (Patient allergic to medication)
+// Rx #3 - Invalid Rx (Patient allergic to medication) - ENHANCED WITH SCENARIO
 const rx3: Prescription = {
   id: 'rx-003',
   patientName: 'Mr Tan Ah Beng',
@@ -79,10 +88,11 @@ const rx3: Prescription = {
     },
   ],
   isValid: false,
-  invalidReason: 'patient-mismatch', // Using this to represent allergy mismatch
+  invalidReason: 'allergy-conflict',
+  scenario: rx3AllergyScenario,
 };
 
-// Rx #4 - Invalid Rx (Missing duration for one medication)
+// Rx #4 - Invalid Rx (Missing duration for one medication) - ENHANCED WITH SCENARIO
 const rx4: Prescription = {
   id: 'rx-004',
   patientName: 'Sivanathan Ramasamy',
@@ -111,6 +121,7 @@ const rx4: Prescription = {
   ],
   isValid: false,
   invalidReason: 'incomplete-dosage',
+  scenario: rx4IncompleteDurationScenario,
 };
 
 // Additional prescriptions for variety
@@ -154,6 +165,7 @@ const rx6: Prescription = {
   ],
   isValid: false,
   invalidReason: 'missing-signature',
+  scenario: missingSigScenario,
 };
 
 const rx7: Prescription = {
@@ -175,6 +187,82 @@ const rx7: Prescription = {
   ],
   isValid: false,
   invalidReason: 'expired-date',
+  scenario: expiredRxScenario,
+};
+
+// Rx #8 - Identity Mismatch Scenario
+const rx8: Prescription = {
+  id: 'rx-008',
+  patientName: 'Mr Tan Ah Beng',
+  patientIC: 'S0248576J', // Transposed digits: should be S0248567J
+  patientAllergies: [],
+  doctorName: 'Dr Lee',
+  doctorSignature: true,
+  date: '2025-10-22',
+  medications: [
+    {
+      medicationId: 'med-001',
+      quantity: 2,
+      dosageInstruction: '2 tabs',
+      frequency: 'tds',
+      duration: '1/52',
+      specialInstructions: 'prn',
+    },
+  ],
+  isValid: false,
+  invalidReason: 'patient-mismatch',
+  scenario: identityMismatchScenario,
+  identityMismatch: {
+    field: 'ic',
+    prescriptionValue: 'S0248576J',
+    actualValue: 'S0248567J',
+  },
+};
+
+// Rx #9 - Signature verification scenario
+const rx9: Prescription = {
+  id: 'rx-009',
+  patientName: 'Sarah Tan',
+  patientIC: 'S1234567A',
+  patientAllergies: [],
+  doctorName: 'Dr Lee Ming',
+  doctorSignature: true, // Present but questionably legible
+  date: '2025-10-24',
+  medications: [
+    {
+      medicationId: 'med-001',
+      quantity: 2,
+      dosageInstruction: '2 tabs',
+      frequency: 'tds',
+      duration: '5 days',
+      specialInstructions: 'prn',
+    },
+  ],
+  isValid: true, // Valid if verified
+  scenario: signatureVerificationScenario,
+};
+
+// Rx #10 - Allergy conflict with patient saying "no allergies"
+const rx10: Prescription = {
+  id: 'rx-010',
+  patientName: 'David Wong',
+  patientIC: 'S3456789D',
+  patientAllergies: ['Penicillin'], // System shows allergy
+  doctorName: 'Dr Tan',
+  doctorSignature: true,
+  date: '2025-10-23',
+  medications: [
+    {
+      medicationId: 'med-003b', // Amoxicillin - a penicillin antibiotic
+      quantity: 1,
+      dosageInstruction: '1 tab',
+      frequency: 'tds',
+      duration: '1/52',
+    },
+  ],
+  isValid: false,
+  invalidReason: 'allergy-conflict',
+  scenario: allergyConflictScenario,
 };
 
 // Level data combining prescriptions with metadata
@@ -254,6 +342,33 @@ export const levels: LevelData[] = [
     title: 'Complex Multi-Drug Therapy',
     description: 'Manage respiratory and infection treatments',
     prescription: rx2, // Reuse complex prescription
+    difficulty: 'advanced',
+  },
+  {
+    id: 'level-3-3',
+    year: 3,
+    chapterNumber: 3,
+    title: 'Identity Verification Challenge',
+    description: 'Two patients with the same name - ensure correct identification',
+    prescription: rx8, // Identity mismatch
+    difficulty: 'advanced',
+  },
+  {
+    id: 'level-3-4',
+    year: 3,
+    chapterNumber: 4,
+    title: 'Conflicting Information',
+    description: 'Patient verbal report contradicts system records',
+    prescription: rx10, // Allergy conflict scenario
+    difficulty: 'advanced',
+  },
+  {
+    id: 'level-3-5',
+    year: 3,
+    chapterNumber: 5,
+    title: 'Signature Verification',
+    description: 'Verify authenticity of unclear prescription signature',
+    prescription: rx9, // Signature verification
     difficulty: 'advanced',
   },
 ];

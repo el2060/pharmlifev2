@@ -23,6 +23,10 @@ export const Typing: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
 
+  // Patient dialogue state
+  const [showPatientDialogue, setShowPatientDialogue] = useState(false);
+  const [patientQuestion, setPatientQuestion] = useState('');
+
   if (!currentPrescription) {
     return <div>Loading...</div>;
   }
@@ -73,13 +77,45 @@ export const Typing: React.FC = () => {
 
       setIsCorrect(isValid);
       setIsPrinting(false);
-      setShowResult(true);
 
-      if (isValid) {
+      // If label is wrong, patient asks for confirmation
+      if (!isValid) {
+        // Patient notices something is off
+        const wrongField = labelData.quantity !== currentMed.quantity.toString() ? 'quantity' :
+                          labelData.dosageForm !== medication.dosageForm ? 'form' : 'frequency';
+
+        if (wrongField === 'quantity') {
+          setPatientQuestion(`Wait, this seems like a lot of ${medication.dosageForm}s... Are you sure about the quantity?`);
+        } else if (wrongField === 'frequency') {
+          setPatientQuestion(`The label says ${labelData.frequency}, but I think the doctor said something different...`);
+        } else {
+          setPatientQuestion(`This doesn't look right to me. Can you double-check the prescription?`);
+        }
+        setShowPatientDialogue(true);
+      } else {
+        // Label is correct - show success
+        setShowResult(true);
         addScore(60);
         addRxPoints(25);
       }
     }, 1500);
+  };
+
+  const handlePatientDialogueResponse = (response: string) => {
+    setShowPatientDialogue(false);
+    if (response === 'recheck') {
+      // Player catches their mistake
+      addScore(30); // Partial credit for catching error
+      setLabelData({
+        quantity: '',
+        dosageForm: '',
+        frequency: '',
+        specialInstructions: '',
+      });
+    } else {
+      // Player insists it's correct (wrong)
+      setShowResult(true);
+    }
   };
 
   const handleContinue = () => {
@@ -433,12 +469,28 @@ export const Typing: React.FC = () => {
                 >
                   <XCircle size={64} className="text-poke-red mx-auto" fill="currentColor" />
                 </motion.div>
-                <h3 className="text-xl font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                  INCORRECT!
+                <h3 className="text-lg sm:text-xl font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px', lineHeight: '1.3' }}>
+                  WRONG LABEL!
                 </h3>
-                <p className="text-poke-black mb-6 text-sm leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                  Check the prescription instructions and try again.
-                </p>
+
+                {/* Show Consequence */}
+                <div className="bg-red-100 border-4 border-red-600 p-3 sm:p-4 mb-3 sm:mb-4 rounded text-left">
+                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                    CONSEQUENCE:
+                  </p>
+                  <p className="text-xs sm:text-sm text-red-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                    Patient followed your incorrect label and took the wrong dosage. This could lead to treatment failure or adverse effects!
+                  </p>
+                </div>
+
+                <div className="bg-yellow-100 border-4 border-yellow-600 p-3 sm:p-4 mb-4 sm:mb-6 rounded text-left">
+                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                    💡 LEARNING POINT:
+                  </p>
+                  <p className="text-xs sm:text-sm text-yellow-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+                    Always double-check prescription instructions before printing labels. When patients question the label, take it seriously and review carefully!
+                  </p>
+                </div>
               </>
             )}
             <motion.button
@@ -461,6 +513,67 @@ export const Typing: React.FC = () => {
                 '◀ TRY AGAIN'
               )}
             </motion.button>
+          </div>
+        </Modal>
+
+        {/* Patient Dialogue Modal - When label has errors */}
+        <Modal isOpen={showPatientDialogue} onClose={() => {}} showCloseButton={false}>
+          <div className="text-center">
+            {/* Patient Avatar */}
+            <div className="mb-3 sm:mb-4 flex justify-center">
+              <div className="relative">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-200 to-blue-300 rounded-full flex items-center justify-center text-4xl sm:text-5xl border-4 border-blue-500 shadow-lg">
+                  🤔
+                </div>
+                <div className="absolute -bottom-2 -right-2 text-2xl sm:text-3xl animate-bounce">
+                  💭
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px', lineHeight: '1.4' }}>
+              PATIENT QUESTION
+            </h3>
+
+            <div className="border-4 border-yellow-600 bg-yellow-100 p-3 sm:p-4 mb-4 sm:mb-6 rounded">
+              <p className="text-poke-black text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                "{patientQuestion}"
+              </p>
+            </div>
+
+            <p className="text-[10px] sm:text-xs mb-3 sm:mb-4 text-gray-600" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.4' }}>
+              How do you respond?
+            </p>
+
+            <div className="space-y-2 sm:space-y-3">
+              <button
+                onClick={() => handlePatientDialogueResponse('recheck')}
+                className="w-full p-3 sm:p-4 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors"
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: '9px',
+                  lineHeight: '1.6',
+                  boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                }}
+              >
+                "Let me double-check that for you..."<br/>
+                <span className="text-[8px] sm:text-xs text-green-700">(Review the prescription again)</span>
+              </button>
+
+              <button
+                onClick={() => handlePatientDialogueResponse('insist')}
+                className="w-full p-3 sm:p-4 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors"
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: '9px',
+                  lineHeight: '1.6',
+                  boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                }}
+              >
+                "I'm sure this is correct."<br/>
+                <span className="text-[8px] sm:text-xs text-red-700">(Insist label is right)</span>
+              </button>
+            </div>
           </div>
         </Modal>
 

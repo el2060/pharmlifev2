@@ -19,7 +19,49 @@ export type InvalidReason =
   | 'incomplete-dosage'
   | 'patient-mismatch'
   | 'illegible-handwriting'
-  | 'missing-date';
+  | 'missing-date'
+  | 'allergy-conflict'
+  | 'drug-interaction';
+
+export type PharmacistAction =
+  | 'accept-rx'
+  | 'call-doctor'
+  | 'refuse-rx'
+  | 'ask-patient'
+  | 'check-references';
+
+export interface ScenarioDecision {
+  id: string;
+  situation: string;
+  question: string;
+  options: DecisionOption[];
+  correctAction: string;
+  consequences: {
+    [key: string]: ConsequenceResult;
+  };
+}
+
+export interface DecisionOption {
+  id: string;
+  text: string;
+  action: PharmacistAction;
+}
+
+export interface ConsequenceResult {
+  outcome: string;
+  patientReaction: string;
+  scoreImpact: number;
+  rxPointsImpact: number;
+  isCorrect: boolean;
+  explanation: string;
+}
+
+export interface PatientDialogue {
+  id: string;
+  text: string;
+  mood?: 'happy' | 'neutral' | 'angry' | 'confused' | 'worried';
+  triggerCondition?: string;
+}
 
 export interface CounselingQuestionSimple {
   question: string;
@@ -65,6 +107,13 @@ export interface Prescription {
   medications: PrescriptionItem[];
   isValid: boolean;
   invalidReason?: InvalidReason;
+  scenario?: ScenarioDecision;
+  patientDialogues?: PatientDialogue[];
+  identityMismatch?: {
+    field: 'name' | 'ic';
+    prescriptionValue: string;
+    actualValue: string;
+  };
 }
 
 export interface Patient {

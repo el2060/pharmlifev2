@@ -6,9 +6,17 @@ import { Card } from '../../components/Card';
 import { Modal } from '../../components/Modal';
 import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
+import { ReceivingEnhanced } from './ReceivingEnhanced';
 
 export const Receiving: React.FC = () => {
   const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
+
+  // If prescription has a scenario, use the enhanced interactive version
+  if (currentPrescription?.scenario) {
+    return <ReceivingEnhanced />;
+  }
+
+  // Otherwise, use the original simplified version
   const [step, setStep] = useState<'identity' | 'validation' | 'complete'>('identity');
   const [identityChecked, setIdentityChecked] = useState(false);
   const [allergyChecked, setAllergyChecked] = useState(false);
