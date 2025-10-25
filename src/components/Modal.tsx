@@ -33,13 +33,13 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Pokemon-style Modal Dialog Box */}
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ type: 'tween', duration: 0.15 }}
           >
-            <div className="poke-textbox max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+            <div className="poke-textbox max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
               {showCloseButton && (
                 <button
                   onClick={onClose}
