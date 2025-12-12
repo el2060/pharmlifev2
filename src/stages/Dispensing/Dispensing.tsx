@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Award } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
 
 export const Dispensing: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel, score, rxPoints } =
-    useGameStore();
+  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel } = useGameStore();
   const [counselingStarted, setCounselingStarted] = useState(false);
   const [counselingComplete, setCounselingComplete] = useState(false);
 
