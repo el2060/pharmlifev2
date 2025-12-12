@@ -141,7 +141,7 @@ export const Picking: React.FC = () => {
                 </h3>
                 <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
                   Selected: {selectedMedications.length} / {requiredMedIds.length}
-                className="mx-auto max-w-5xl"
+                </p>
               </div>
             </div>
             <motion.button
@@ -190,29 +190,6 @@ export const Picking: React.FC = () => {
               })}
             </motion.div>
           )}
-        </div>
-
-        {/* Prescription Reference */}
-                  <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
-                    Selected: {selectedMedications.length} / {requiredMedIds.length}
-            className="font-bold mb-3 flex items-center gap-2 text-white pixel-label text-contrast-shadow"
-            style={{ fontFamily: "'Press Start 2P', monospace" }}
-          >
-                    className="font-bold text-yellow-300 text-sm sm:text-base"
-                    style={{ fontFamily: "'VT323', monospace" }}
-                  >
-                    {med.genericName} {med.strength}
-                  </span>
-                  <span 
-                    className="text-sm text-white/90"
-                    style={{ fontFamily: "'VT323', monospace" }}
-                  >
-                    {medItem.dosageInstruction} {medItem.frequency}
-                  </span>
-                </motion.div>
-              ) : null;
-            })}
-          </div>
         </div>
 
         {/* Hints */}
