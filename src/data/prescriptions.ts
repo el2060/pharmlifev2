@@ -268,6 +268,73 @@ const rx10: Prescription = {
   scenario: allergyConflictScenario,
 };
 
+// Additional Year 1 cases for gameplay variety
+// Rx #11 - Year 1 Level 5: Valid prescription with Ibuprofen
+const rx11: Prescription = {
+  id: 'rx-011',
+  patientName: 'Mrs Wong Mei Lin',
+  patientIC: 'S2345678E',
+  patientAllergies: [],
+  doctorName: 'Dr Lim Seng',
+  doctorSignature: true,
+  date: '2025-11-01',
+  medications: [
+    {
+      medicationId: 'med-002',
+      quantity: 2,
+      dosageInstruction: '1 tab',
+      frequency: 'bd',
+      duration: '5 days',
+      specialInstructions: 'prn',
+    },
+  ],
+  isValid: true,
+};
+
+// Rx #12 - Year 1 Level 6: Invalid - expired date
+const rx12: Prescription = {
+  id: 'rx-012',
+  patientName: 'Mr Pillai Ravi',
+  patientIC: 'S4567890F',
+  patientAllergies: [],
+  doctorName: 'Dr Kumar',
+  doctorSignature: true,
+  date: '2024-11-15', // Expired - more than 1 year old
+  medications: [
+    {
+      medicationId: 'med-005',
+      quantity: 1,
+      dosageInstruction: '1 tab',
+      frequency: 'bd',
+      duration: '7 days',
+    },
+  ],
+  isValid: false,
+  invalidReason: 'expired-date',
+};
+
+// Rx #13 - Year 1 Level 7: Valid prescription with GI medication
+const rx13: Prescription = {
+  id: 'rx-013',
+  patientName: 'Mr Gomez Luis',
+  patientIC: 'S6789012G',
+  patientAllergies: ['Sulfonamides'],
+  doctorName: 'Dr Fernandes',
+  doctorSignature: true,
+  date: '2025-11-10',
+  medications: [
+    {
+      medicationId: 'med-006',
+      quantity: 1,
+      dosageInstruction: '10ml',
+      frequency: 'tds',
+      duration: '5 days',
+      specialInstructions: 'prn',
+    },
+  ],
+  isValid: true,
+};
+
 // Level data combining prescriptions with metadata
 export const levels: LevelData[] = [
   // Year 1 Levels - Basic (Progressive difficulty with scenarios)
@@ -305,6 +372,33 @@ export const levels: LevelData[] = [
     title: 'Professional Decision Making',
     description: 'IC number doesn\'t match - verify the patient',
     prescription: rx8, // Identity mismatch WITH SCENARIO
+    difficulty: 'basic',
+  },
+  {
+    id: 'level-1-5',
+    year: 1,
+    chapterNumber: 5,
+    title: 'Managing Pain Relief',
+    description: 'Dispensing pain medication safely',
+    prescription: rx11, // Valid Ibuprofen prescription
+    difficulty: 'basic',
+  },
+  {
+    id: 'level-1-6',
+    year: 1,
+    chapterNumber: 6,
+    title: 'Date Awareness',
+    description: 'Check prescription dates carefully',
+    prescription: rx12, // Expired prescription
+    difficulty: 'basic',
+  },
+  {
+    id: 'level-1-7',
+    year: 1,
+    chapterNumber: 7,
+    title: 'Digestive Health',
+    description: 'Liquid medication for GI treatment',
+    prescription: rx13, // Valid GI medication
     difficulty: 'basic',
   },
 

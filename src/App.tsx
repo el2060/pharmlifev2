@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MainMenu } from './screens/MainMenu';
 import { YearSelection } from './screens/YearSelection';
@@ -14,9 +14,14 @@ import { YearLevel } from './types/game.types';
 
 type Screen = 'menu' | 'year-selection' | 'about' | 'game';
 
+// Helper function to get level data based on year and chapter number
+const getLevelData = (year: YearLevel, chapterNumber: number) => {
+  return levels.find((l) => l.year === year && l.chapterNumber === chapterNumber);
+};
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
-  const { currentStage, setYear, setPrescription, resetLevel } = useGameStore();
+  const { currentYear, currentLevel, currentStage, setYear, setPrescription, resetLevel } = useGameStore();
 
   const handleStartGame = () => {
     setCurrentScreen('year-selection');
@@ -38,13 +43,23 @@ function App() {
   const handleSelectYear = (year: YearLevel) => {
     setYear(year);
 
-    // Load first level for selected year
-    const levelData = levels.find((l) => l.year === year);
+    // Load first level for selected year (Chapter 1)
+    const levelData = getLevelData(year, 1);
     if (levelData) {
       setPrescription(levelData.prescription);
       setCurrentScreen('game');
     }
   };
+
+  // Load prescription when currentLevel changes
+  React.useEffect(() => {
+    if (currentScreen === 'game') {
+      const levelData = getLevelData(currentYear, currentLevel);
+      if (levelData) {
+        setPrescription(levelData.prescription);
+      }
+    }
+  }, [currentLevel, currentScreen, currentYear, setPrescription]);
 
   const renderStage = () => {
     switch (currentStage) {
