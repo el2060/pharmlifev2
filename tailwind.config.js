@@ -37,6 +37,7 @@ export default {
       },
       fontFamily: {
         'pixel': ['"Press Start 2P"', 'monospace'],
+        'sans': ['Poppins', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'game': ['Poppins', 'sans-serif'],
       },
       animation: {

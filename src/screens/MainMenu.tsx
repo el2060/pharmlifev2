@@ -13,12 +13,9 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) => {
   const { rxPoints, playerLevel } = useGameStore();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
-  const uiFont = { fontFamily: "'Inter', 'Poppins', sans-serif" };
 
   return (
-    <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
-      {/* Pokemon-style pixelated border effect */}
-      <div className="absolute inset-0 pointer-events-none border-8 border-poke-black" />
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)' }}>
 
       <motion.div
         className="w-full max-w-6xl xl:max-w-7xl relative z-10"
@@ -26,8 +23,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Pokemon Red Title Screen */}
-        <div className="poke-menu p-6 sm:p-8 lg:p-10 mb-6 lg:mb-8" style={{ background: '#FFFFFF' }}>
+        {/* Game Title Screen */}
+        <div className="poke-menu p-6 sm:p-8 lg:p-10 mb-6 lg:mb-8" style={{ background: '#ffffff', boxShadow: '0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02)' }}>
           {/* Title */}
           <div className="text-center mb-8">
             <motion.div
@@ -39,27 +36,27 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             </motion.div>
 
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-poke-red"
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 tracking-tight"
               style={{
-                fontFamily: "'Press Start 2P', monospace",
-                textShadow: '4px 4px 0 rgba(0,0,0,0.25)',
-                lineHeight: '1.5'
+                background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: 'none'
               }}
             >
               PHARM LIFE
             </h1>
 
             <p
-              className="text-base sm:text-lg text-poke-text mb-6"
-              style={uiFont}
+              className="text-base sm:text-lg text-poke-text mb-6 font-medium"
             >
               Prescription Quest
             </p>
 
             {/* Blinking arrow */}
             <motion.p
-              className="text-sm sm:text-base text-poke-black pixel-blink"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
+              className="text-sm sm:text-base font-semibold text-gray-700 pixel-blink"
             >
               ▼ PRESS START ▼
             </motion.p>
@@ -82,19 +79,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
 
               <motion.button
                 onClick={() => setShowHowToPlay(true)}
-                className="w-full border-4 border-poke-black text-base sm:text-lg flex items-center justify-between px-6 py-4 text-poke-white"
+                className="w-full text-base sm:text-lg flex items-center justify-between px-6 py-4 font-semibold rounded-lg transition-all"
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
-                  background: '#FFB100',
-                  boxShadow: 'inset -2px -2px 0 0 #C88800, inset 2px 2px 0 0 #FFD700, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  color: '#ffffff',
+                  border: '2px solid rgba(217, 119, 6, 0.3)',
+                  boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
                 }}
+                whileHover={{ scale: 1.02, boxShadow: '0 6px 20px rgba(245, 158, 11, 0.4)' }}
                 whileTap={{ scale: 0.98 }}
               >
                 <span className="flex items-center gap-3">
-                  <span>▶</span>
+                  <HelpCircle size={20} />
                   <span>HOW TO PLAY</span>
                 </span>
-                <HelpCircle size={20} />
+                <span>▶</span>
               </motion.button>
 
               <motion.button
@@ -110,35 +109,35 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
               </motion.button>
             </div>
 
-            {/* Player Stats - Pokemon Style */}
+            {/* Player Stats - Modern Style */}
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={uiFont}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div
-                  className="border-2 border-poke-black px-4 py-3 h-full"
-                  style={{ ...uiFont, background: '#FFFFFF' }}
+                  className="px-4 py-3 h-full font-medium rounded-xl border transition-all hover:shadow-lg"
+                  style={{ background: '#ffffff', borderColor: '#e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
                 >
-                  <p className="text-poke-black text-xs mb-2">PLAYER</p>
+                  <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-2">PLAYER</p>
                   <div className="flex items-center justify-between">
-                    <p className="text-poke-black text-lg font-bold">{playerLevel}</p>
-                    <Award className="text-poke-dark-yellow" size={24} fill="currentColor" />
+                    <p className="text-gray-900 text-lg font-bold">{playerLevel}</p>
+                    <Award className="text-amber-500" size={24} fill="currentColor" />
                   </div>
                 </div>
 
                 <div
-                  className="border-2 border-poke-black px-4 py-3 h-full"
-                  style={{ ...uiFont, background: '#FFFFFF' }}
+                  className="px-4 py-3 h-full font-medium rounded-xl border transition-all hover:shadow-lg"
+                  style={{ background: '#ffffff', borderColor: '#e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
                 >
-                  <p className="text-poke-black text-xs mb-2">Rx POINTS</p>
+                  <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-2">Rx POINTS</p>
                   <div className="flex items-center justify-between">
-                    <p className="text-poke-black text-lg font-bold">{rxPoints}</p>
-                    <Star className="text-poke-dark-yellow" size={24} fill="currentColor" />
+                    <p className="text-gray-900 text-lg font-bold">{rxPoints}</p>
+                    <Star className="text-amber-500" size={24} fill="currentColor" />
                   </div>
                 </div>
               </div>
 
-              <div className="border-2 border-poke-black px-4 py-3" style={{ ...uiFont, background: '#F8F8F8' }}>
-                <p className="text-poke-black text-xs mb-2">SESSION TIP</p>
-                <p className="text-poke-black text-sm leading-relaxed">
+              <div className="px-4 py-3 font-medium rounded-xl border" style={{ background: '#fefce8', borderColor: '#fde047', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <p className="text-yellow-900 text-xs font-bold uppercase tracking-wide mb-2">SESSION TIP</p>
+                <p className="text-yellow-800 text-sm leading-relaxed">
                   Play in landscape on tablets or desktops to see the full retro cabinet. All UI scales fluidly across breakpoints.
                 </p>
               </div>
@@ -158,14 +157,14 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             />
           </div>
 
-          <div style={{ fontFamily: "'Press Start 2P', monospace" }}>
-            <p className="text-poke-black text-xs sm:text-sm font-bold">
+          <div className="font-medium">
+            <p className="text-gray-700 text-xs sm:text-sm font-bold">
               © 2025 PHARMLIFE
             </p>
-            <p className="text-poke-black text-[10px] sm:text-xs leading-relaxed mt-2">
+            <p className="text-gray-600 text-[10px] sm:text-xs leading-relaxed mt-2">
               Gamified Learning for Dip Pharm Sci, LSCT, NP
             </p>
-            <p className="text-poke-black text-[9px] sm:text-xs leading-relaxed mt-3 opacity-75">
+            <p className="text-gray-500 text-[9px] sm:text-xs leading-relaxed mt-3">
               Last Updated: December 12, 2025
             </p>
           </div>
@@ -178,7 +177,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
         onClose={() => setShowHowToPlay(false)}
         title="📖 HOW TO PLAY"
       >
-        <div className="space-y-2 sm:space-y-3" style={uiFont}>
+        <div className="space-y-2 sm:space-y-3 font-medium">
           {/* Game Flow */}
           <div className="bg-blue-50 border-4 border-blue-500 p-3 sm:p-5 rounded">
             <p className="font-bold text-blue-900 mb-2 text-[10px] sm:text-base">

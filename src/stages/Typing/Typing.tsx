@@ -173,7 +173,6 @@ export const Typing: React.FC = () => {
             style={{
               background: '#FFFFFF',
               boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
-              fontFamily: "'Press Start 2P', monospace"
             }}
           >
             <p className="text-poke-black text-sm mb-3 font-bold">
@@ -194,10 +193,10 @@ export const Typing: React.FC = () => {
 
         {/* Quick instruction for the stage */}
         <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
-          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" >
             TYPE THE LABEL
           </p>
-          <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <p className="text-poke-black text-xs sm:text-sm" >
             Interpret the prescription and print the medication label. Translate abbreviations before printing.
           </p>
         </div>
@@ -211,40 +210,40 @@ export const Typing: React.FC = () => {
               boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
             }}
           >
-            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" >
               <span className="text-2xl">📋</span>
               PRESCRIPTION
             </h3>
 
             <div className="poke-textbox p-4 space-y-4 mb-4">
               <div>
-                <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>MEDICATION:</p>
-                <p className="font-bold text-base text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{medication.genericName}</p>
-                <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{medication.strength}</p>
+                <p className="text-sm text-poke-black mb-2 font-bold" >MEDICATION:</p>
+                <p className="font-bold text-base text-poke-black" >{medication.genericName}</p>
+                <p className="text-sm text-poke-black" >{medication.strength}</p>
               </div>
 
               <div className="border-t-2 border-poke-black pt-4">
-                <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>INSTRUCTIONS:</p>
-                <p className="text-base font-bold text-poke-black break-words" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-sm text-poke-black mb-2 font-bold" >INSTRUCTIONS:</p>
+                <p className="text-base font-bold text-poke-black break-words" >
                   {currentMed.dosageInstruction} {currentMed.frequency}
                 </p>
                 {currentMed.duration && (
-                  <p className="text-sm text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>Duration: {currentMed.duration}</p>
+                  <p className="text-sm text-poke-black mt-2" >Duration: {currentMed.duration}</p>
                 )}
               </div>
 
               {specialInstructionLabel && (
                 <div className="border-t-2 border-poke-black pt-4">
-                  <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>SPECIAL:</p>
-                  <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{specialInstructionLabel}</p>
+                  <p className="text-sm text-poke-black mb-2 font-bold" >SPECIAL:</p>
+                  <p className="text-sm text-poke-black" >{specialInstructionLabel}</p>
                 </div>
               )}
             </div>
 
             {/* Abbreviation Helper - Pokemon Style */}
             <div className="border-4 border-poke-black p-3" style={{ background: '#58A8F8' }}>
-              <p className="text-sm font-bold text-poke-black mb-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>QUICK REF:</p>
-              <div className="grid grid-cols-2 gap-2 text-xs" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+              <p className="text-sm font-bold text-poke-black mb-3" >QUICK REF:</p>
+              <div className="grid grid-cols-2 gap-2 text-xs" >
                 {Object.entries(medicalAbbreviations)
                   .slice(0, 8)
                   .map(([abbr, meaning]) => (
@@ -265,7 +264,7 @@ export const Typing: React.FC = () => {
               boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
             }}
           >
-            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" >
               <Printer className="text-poke-blue" size={20} />
               LABEL BUILD
             </h3>
@@ -273,7 +272,7 @@ export const Typing: React.FC = () => {
             <div className="space-y-4">
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <label className="block text-sm font-bold text-poke-black mb-2" >
                   QUANTITY:
                 </label>
                 <select
@@ -281,7 +280,6 @@ export const Typing: React.FC = () => {
                   onChange={(e) => setLabelData({ ...labelData, quantity: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
                   style={{
-                    fontFamily: "'Press Start 2P', monospace",
                     background: '#FFFFFF',
                     boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
                   }}
@@ -299,7 +297,7 @@ export const Typing: React.FC = () => {
 
               {/* Dosage Form */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <label className="block text-sm font-bold text-poke-black mb-2" >
                   FORM:
                 </label>
                 <select
@@ -307,7 +305,6 @@ export const Typing: React.FC = () => {
                   onChange={(e) => setLabelData({ ...labelData, dosageForm: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
                   style={{
-                    fontFamily: "'Press Start 2P', monospace",
                     background: '#FFFFFF',
                     boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
                   }}
@@ -323,7 +320,7 @@ export const Typing: React.FC = () => {
 
               {/* Frequency */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <label className="block text-sm font-bold text-poke-black mb-2" >
                   FREQUENCY:
                 </label>
                 <select
@@ -331,7 +328,6 @@ export const Typing: React.FC = () => {
                   onChange={(e) => setLabelData({ ...labelData, frequency: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
                   style={{
-                    fontFamily: "'Press Start 2P', monospace",
                     background: '#FFFFFF',
                     boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
                   }}
@@ -352,18 +348,18 @@ export const Typing: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="poke-textbox p-4"
                 >
-                  <p className="text-xs text-poke-black mb-3 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>PREVIEW:</p>
-                  <p className="font-bold text-sm text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  <p className="text-xs text-poke-black mb-3 font-bold" >PREVIEW:</p>
+                  <p className="font-bold text-sm text-poke-black mb-2" >
                     {medication.genericName}
                   </p>
-                  <p className="text-xs text-poke-black mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  <p className="text-xs text-poke-black mb-2" >
                     {medication.strength}
                   </p>
-                  <p className="mt-3 text-sm text-poke-black break-words" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  <p className="mt-3 text-sm text-poke-black break-words" >
                     Take {labelData.quantity} {labelData.dosageForm}(s) {labelData.frequency}
                   </p>
                   {specialInstructionLabel && (
-                    <p className="text-xs text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>{specialInstructionLabel}</p>
+                    <p className="text-xs text-poke-black mt-2" >{specialInstructionLabel}</p>
                   )}
                 </motion.div>
               )}
@@ -392,7 +388,6 @@ export const Typing: React.FC = () => {
                     : 'text-poke-white'
                 }`}
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
                   background: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
                     ? '#888888'
                     : '#3075D8',
@@ -430,14 +425,14 @@ export const Typing: React.FC = () => {
                 >
                   <CheckCircle size={64} className="text-pharm-green mx-auto" fill="currentColor" />
                 </motion.div>
-                <h3 className="text-xl font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <h3 className="text-xl font-bold text-poke-black mb-4" >
                   PERFECT!
                 </h3>
-                <p className="text-poke-black mb-4 text-base" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-black mb-4 text-base" >
                   Label created correctly!
                 </p>
                 <div className="border-4 border-poke-black p-3 mb-6" style={{ background: '#FFD700' }}>
-                  <p className="text-poke-black font-bold text-base" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                  <p className="text-poke-black font-bold text-base" >
                     +25 Rx Points
                   </p>
                 </div>
@@ -451,25 +446,25 @@ export const Typing: React.FC = () => {
                 >
                   <XCircle size={64} className="text-poke-red mx-auto" fill="currentColor" />
                 </motion.div>
-                <h3 className="text-lg sm:text-xl font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px', lineHeight: '1.3' }}>
+                <h3 className="text-lg sm:text-xl font-bold text-poke-black mb-3 sm:mb-4" >
                   WRONG LABEL!
                 </h3>
 
                 {/* Show Consequence */}
                 <div className="bg-red-100 border-4 border-red-600 p-4 sm:p-5 mb-3 sm:mb-4 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
+                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" >
                     CONSEQUENCE:
                   </p>
-                  <p className="text-sm sm:text-base text-red-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <p className="text-sm sm:text-base text-red-800 leading-relaxed" >
                     Patient followed your incorrect label and took the wrong dosage. This could lead to treatment failure or adverse effects!
                   </p>
                 </div>
 
                 <div className="bg-yellow-100 border-4 border-yellow-600 p-4 sm:p-5 mb-4 sm:mb-6 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
+                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" >
                     💡 LEARNING POINT:
                   </p>
-                  <p className="text-sm sm:text-base text-yellow-800 leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <p className="text-sm sm:text-base text-yellow-800 leading-relaxed" >
                     Always double-check prescription instructions before printing labels. When patients question the label, take it seriously and review carefully!
                   </p>
                 </div>
@@ -479,7 +474,6 @@ export const Typing: React.FC = () => {
               onClick={handleContinue}
               className="w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black text-poke-white"
               style={{
-                fontFamily: "'Press Start 2P', monospace",
                 background: isCorrect ? '#00A85E' : '#3075D8',
                 boxShadow: isCorrect
                   ? 'inset -2px -2px 0 0 #006B3A, inset 2px 2px 0 0 #00E57B, 4px 4px 0 0 rgba(0,0,0,0.3)'
@@ -513,17 +507,17 @@ export const Typing: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px', lineHeight: '1.6' }}>
+            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" >
               PATIENT QUESTION
             </h3>
 
             <div className="border-4 border-yellow-600 bg-yellow-100 p-4 sm:p-5 mb-4 sm:mb-6 rounded">
-              <p className="text-poke-black text-sm sm:text-base leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
+              <p className="text-poke-black text-sm sm:text-base leading-relaxed" >
                 "{patientQuestion}"
               </p>
             </div>
 
-            <p className="text-[11px] sm:text-sm mb-3 sm:mb-4 text-gray-600" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}>
+            <p className="text-[11px] sm:text-sm mb-3 sm:mb-4 text-gray-600" >
               How do you respond?
             </p>
 
@@ -532,7 +526,6 @@ export const Typing: React.FC = () => {
                 onClick={() => handlePatientDialogueResponse('recheck')}
                 className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors"
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
                   fontSize: '10px',
                   lineHeight: '1.8',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
@@ -546,7 +539,6 @@ export const Typing: React.FC = () => {
                 onClick={() => handlePatientDialogueResponse('insist')}
                 className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors"
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
                   fontSize: '10px',
                   lineHeight: '1.8',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'

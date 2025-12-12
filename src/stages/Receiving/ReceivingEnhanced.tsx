@@ -218,7 +218,7 @@ export const ReceivingEnhanced: React.FC = () => {
                 ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110'
                 : 'bg-gray-100 text-gray-400 border-gray-300'
             }`}
-            style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}
+            
           >
             <User size={20} />
             <span className="font-semibold text-xs sm:text-base">1. IDENTITY</span>
@@ -231,7 +231,7 @@ export const ReceivingEnhanced: React.FC = () => {
                 ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110'
                 : 'bg-gray-100 text-gray-400 border-gray-300'
             }`}
-            style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}
+            
           >
             <FileText size={20} />
             <span className="font-semibold text-xs sm:text-base">2. INVESTIGATION</span>
@@ -244,7 +244,7 @@ export const ReceivingEnhanced: React.FC = () => {
                   ? 'bg-orange-500 text-white border-orange-700 shadow-lg scale-105 sm:scale-110'
                   : 'bg-gray-100 text-gray-400 border-gray-300'
               }`}
-              style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}
+              
             >
               <AlertTriangle size={20} />
               <span className="font-semibold text-xs sm:text-base">3. DECISION</span>
@@ -263,7 +263,7 @@ export const ReceivingEnhanced: React.FC = () => {
             >
               <Card>
                 <div className="game-screen p-4 sm:p-6">
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" style={{ fontFamily: "'VT323', monospace" }}>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" >
                     <User className="text-blue-500" size={24} />
                     <span className="hidden sm:inline">PATIENT ARRIVAL</span>
                     <span className="sm:hidden">PATIENT</span>
@@ -281,7 +281,7 @@ export const ReceivingEnhanced: React.FC = () => {
                           <div>
                             <p className="text-xs sm:text-sm font-bold text-gray-700 tracking-wide">REPUBLIC OF SINGAPORE</p>
                             <p className="text-[10px] sm:text-xs text-gray-600 mt-1">IDENTITY CARD NO.</p>
-                            <p className="text-base sm:text-xl font-bold text-gray-900 mt-1" style={{ fontFamily: "'Courier New', monospace" }}>
+                            <p className="text-base sm:text-xl font-bold text-gray-900 mt-1 font-mono">
                               {currentPrescription.identityMismatch?.actualValue || currentPrescription.patientIC}
                             </p>
                           </div>
@@ -332,7 +332,7 @@ export const ReceivingEnhanced: React.FC = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <Shield size={24} className="text-green-600" />
-                          <span className="font-semibold text-lg" style={{ fontFamily: "'VT323', monospace", fontSize: '20px' }}>
+                          <span className="font-semibold text-lg" >
                             VERIFY PATIENT IDENTITY
                           </span>
                         </div>
@@ -340,7 +340,7 @@ export const ReceivingEnhanced: React.FC = () => {
                           <CheckCircle className="text-green-500" size={32} />
                         )}
                       </div>
-                      <p className="text-base text-gray-600 mb-4 font-bold" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
+                      <p className="text-base text-gray-600 mb-4 font-bold" >
                         ⚠️ Check TWO identifiers: Name and IC number
                       </p>
                       <button
@@ -351,7 +351,7 @@ export const ReceivingEnhanced: React.FC = () => {
                             ? 'bg-gradient-to-r from-green-500 to-green-700'
                             : 'bg-gradient-to-r from-blue-400 to-blue-600'
                         } text-white`}
-                        style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
+                        
                       >
                         {identityVerified ? '✓ IDENTITY VERIFIED' : 'VERIFY IDENTITY'}
                       </button>
@@ -364,7 +364,7 @@ export const ReceivingEnhanced: React.FC = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <Shield size={24} className="text-red-600" />
-                          <span className="font-semibold text-lg" style={{ fontFamily: "'VT323', monospace", fontSize: '20px' }}>
+                          <span className="font-semibold text-lg" >
                             CHECK DRUG ALLERGIES
                           </span>
                         </div>
@@ -374,12 +374,12 @@ export const ReceivingEnhanced: React.FC = () => {
                       </div>
                       {currentPrescription.patientAllergies.length > 0 ? (
                         <div className="bg-red-200 border-4 border-red-600 p-4 rounded mb-4">
-                          <p className="font-semibold text-red-900 text-center" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+                          <p className="font-semibold text-red-900 text-center" >
                             ⚠️ ALLERGIES: {currentPrescription.patientAllergies.join(', ')}
                           </p>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-600 mb-4 text-center" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                        <p className="text-sm text-gray-600 mb-4 text-center" >
                           ✓ No known drug allergies
                         </p>
                       )}
@@ -391,7 +391,7 @@ export const ReceivingEnhanced: React.FC = () => {
                             ? 'bg-gradient-to-r from-green-500 to-green-700'
                             : 'bg-gradient-to-r from-orange-400 to-red-600'
                         } text-white`}
-                        style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
+                        
                       >
                         {allergyChecked ? '✓ ALLERGIES CHECKED' : 'CHECK ALLERGIES'}
                       </button>
@@ -406,7 +406,7 @@ export const ReceivingEnhanced: React.FC = () => {
                         <button
                           onClick={handleProceedToInvestigation}
                           className="arcade-button w-full py-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white"
-                          style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px' }}
+                          
                         >
                           PROCEED TO INVESTIGATION →
                         </button>
@@ -428,10 +428,10 @@ export const ReceivingEnhanced: React.FC = () => {
               className="space-y-4"
             >
               <div className="poke-textbox p-3 sm:p-4">
-                <p className="text-poke-black text-xs sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.4' }}>
+                <p className="text-poke-black text-xs sm:text-base font-bold mb-2" >
                   INVESTIGATE PRESCRIPTION
                 </p>
-                <p className="text-poke-black text-[10px] sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '9px', lineHeight: '1.4' }}>
+                <p className="text-poke-black text-[10px] sm:text-sm" >
                   Review all prescription details carefully. Look for any issues or concerns.
                 </p>
               </div>
@@ -439,11 +439,11 @@ export const ReceivingEnhanced: React.FC = () => {
               {/* Show Prescription Details */}
               <div className="poke-menu p-3 sm:p-6 space-y-3 sm:space-y-4">
                 <div className="border-4 border-poke-black p-3 sm:p-4 bg-white">
-                  <h4 className="text-xs sm:text-sm font-bold mb-3" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.4' }}>
+                  <h4 className="text-xs sm:text-sm font-bold mb-3" >
                     PRESCRIPTION DETAILS
                   </h4>
 
-                  <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm" >
                     <div className="break-words">
                       <span className="font-bold">Patient:</span> {currentPrescription.patientName}
                     </div>
@@ -477,7 +477,7 @@ export const ReceivingEnhanced: React.FC = () => {
 
                   {checkedFields.size === 0 && (
                     <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-yellow-100 border-4 border-yellow-600 rounded">
-                      <p className="text-[10px] sm:text-sm font-bold text-yellow-900" style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}>
+                      <p className="text-[10px] sm:text-sm font-bold text-yellow-900" >
                         💡 TIP: Click the button below when you're done reviewing
                       </p>
                     </div>
@@ -514,10 +514,10 @@ export const ReceivingEnhanced: React.FC = () => {
                 <div className="flex items-start gap-2 sm:gap-3 mb-3">
                   <AlertTriangle className="text-yellow-700 flex-shrink-0" size={24} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-poke-black text-sm sm:text-lg font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.4' }}>
+                    <p className="text-poke-black text-sm sm:text-lg font-bold mb-2" >
                       SITUATION
                     </p>
-                    <p className="text-poke-black text-xs sm:text-base leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                    <p className="text-poke-black text-xs sm:text-base leading-relaxed" >
                       {currentPrescription.scenario.situation}
                     </p>
                   </div>
@@ -526,7 +526,7 @@ export const ReceivingEnhanced: React.FC = () => {
 
               {/* Question */}
               <div className="poke-menu p-3 sm:p-6">
-                <p className="text-poke-black text-sm sm:text-lg font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px', lineHeight: '1.6' }}>
+                <p className="text-poke-black text-sm sm:text-lg font-bold mb-4 leading-relaxed" >
                   {currentPrescription.scenario.question}
                 </p>
 
@@ -543,7 +543,6 @@ export const ReceivingEnhanced: React.FC = () => {
                           : 'bg-white text-poke-black hover:bg-gray-100'
                       }`}
                       style={{
-                        fontFamily: "'Press Start 2P', monospace",
                         fontSize: '10px',
                         lineHeight: '1.6',
                         boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
@@ -585,46 +584,46 @@ export const ReceivingEnhanced: React.FC = () => {
                   )}
                 </motion.div>
 
-                <h3 className={`text-lg sm:text-2xl font-bold mb-2 sm:mb-3 ${consequence.isCorrect ? 'text-pharm-green' : 'text-poke-red'}`} style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px', lineHeight: '1.3' }}>
+                <h3 className={`text-lg sm:text-2xl font-bold mb-2 sm:mb-3 ${consequence.isCorrect ? 'text-pharm-green' : 'text-poke-red'}`} >
                   {consequence.isCorrect ? 'EXCELLENT!' : 'INCORRECT'}
                 </h3>
 
                 {/* Outcome */}
                 <div className="bg-gray-100 border-4 border-gray-400 p-3 sm:p-4 mb-3 sm:mb-4 text-left">
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" >
                     OUTCOME:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" >
                     {consequence.outcome}
                   </p>
                 </div>
 
                 {/* Patient Reaction */}
                 <div className={`border-4 p-3 sm:p-4 mb-3 sm:mb-4 text-left ${consequence.isCorrect ? 'bg-green-100 border-green-600' : 'bg-red-100 border-red-600'}`}>
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" >
                     PATIENT REACTION:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" >
                     {consequence.patientReaction}
                   </p>
                 </div>
 
                 {/* Explanation */}
                 <div className="bg-blue-100 border-4 border-blue-600 p-3 sm:p-4 mb-3 sm:mb-4 text-left">
-                  <p className="text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', lineHeight: '1.6' }}>
+                  <p className="text-xs sm:text-sm font-bold mb-2" >
                     💡 LEARNING POINT:
                   </p>
-                  <p className="text-xs sm:text-sm leading-relaxed" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed" >
                     {consequence.explanation}
                   </p>
                 </div>
 
                 {/* Score Impact */}
                 <div className="mb-4 sm:mb-6">
-                  <p className={`text-base sm:text-lg font-bold ${consequence.scoreImpact > 0 ? 'text-green-600' : 'text-red-600'}`} style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}>
+                  <p className={`text-base sm:text-lg font-bold ${consequence.scoreImpact > 0 ? 'text-green-600' : 'text-red-600'}`} >
                     {consequence.scoreImpact > 0 ? '+' : ''}{consequence.scoreImpact} Points
                   </p>
-                  <p className={`text-sm sm:text-base font-bold ${consequence.rxPointsImpact > 0 ? 'text-green-600' : 'text-red-600'}`} style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+                  <p className={`text-sm sm:text-base font-bold ${consequence.rxPointsImpact > 0 ? 'text-green-600' : 'text-red-600'}`} >
                     {consequence.rxPointsImpact > 0 ? '+' : ''}{consequence.rxPointsImpact} Rx Points
                   </p>
                 </div>

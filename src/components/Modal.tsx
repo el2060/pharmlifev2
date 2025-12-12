@@ -56,7 +56,7 @@ export const Modal: React.FC<ModalProps> = ({
               {title && (
                 <h2
                   className="text-lg sm:text-xl font-bold mb-4 pr-12 text-poke-black"
-                  style={{ fontFamily: "'Press Start 2P', monospace", lineHeight: '1.6' }}
+                  
                 >
                   {title}
                 </h2>
@@ -64,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({
 
               <div
                 className="text-poke-black"
-                style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px', lineHeight: '1.8' }}
+                
               >
                 {children}
               </div>

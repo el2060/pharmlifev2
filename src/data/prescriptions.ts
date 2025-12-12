@@ -82,7 +82,7 @@ const rx3: Prescription = {
     {
       medicationId: 'med-001b',
       quantity: 2,
-      dosageInstruction: '2 tabs',
+      dosageInstruction: '2 tablets (500mg)',
       frequency: 'qds',
       duration: '40 tabs',
       specialInstructions: 'prn',
@@ -139,7 +139,7 @@ const rx5: Prescription = {
     {
       medicationId: 'med-001',
       quantity: 2,
-      dosageInstruction: '2 tabs',
+      dosageInstruction: '2 tablets (500mg)',
       frequency: 'tds or qds',
       duration: '5 days',
       specialInstructions: 'prn',
@@ -206,7 +206,7 @@ const rx8: Prescription = {
     {
       medicationId: 'med-001',
       quantity: 2,
-      dosageInstruction: '2 tabs',
+      dosageInstruction: '2 tablets (500mg)',
       frequency: 'tds',
       duration: '1/52',
       specialInstructions: 'prn',
@@ -235,7 +235,7 @@ const rx9: Prescription = {
     {
       medicationId: 'med-001',
       quantity: 2,
-      dosageInstruction: '2 tabs',
+      dosageInstruction: '2 tablets (500mg)',
       frequency: 'tds',
       duration: '5 days',
       specialInstructions: 'prn',

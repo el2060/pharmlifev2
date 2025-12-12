@@ -83,7 +83,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex">
+    <div className="min-h-screen background-clinical flex">
       <div className="flex-1 mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10 xl:px-14">
       <AnimatePresence mode="wait">
         {currentScreen === 'menu' && (

@@ -20,11 +20,11 @@ interface GameStore extends GameState {
 }
 
 const getPlayerLevel = (rxPoints: number): string => {
-  if (rxPoints < 100) return 'Pharmacy Trainee';
-  if (rxPoints < 300) return 'Junior Pharmacist';
-  if (rxPoints < 600) return 'Pharmacist';
-  if (rxPoints < 1000) return 'Senior Pharmacist';
-  return 'Chief Pharmacist';
+  if (rxPoints < 100) return 'Pharmacy Intern';
+  if (rxPoints < 300) return 'Junior Pharmacy Technician';
+  if (rxPoints < 600) return 'Pharmacy Technician';
+  if (rxPoints < 1000) return 'Senior Pharmacy Technician';
+  return 'Chief Pharmacy Technician';
 };
 
 const getYearLevels = (year: YearLevel) =>

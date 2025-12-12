@@ -191,7 +191,7 @@ export const Receiving: React.FC = () => {
                 : 'bg-gray-100 text-gray-400 border-gray-300'
             }`}
             whileHover={{ scale: 1.05 }}
-            style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}
+            
           >
             <User size={16} className="sm:hidden" />
             <User size={20} className="hidden sm:block" />
@@ -213,7 +213,7 @@ export const Receiving: React.FC = () => {
                 : 'bg-gray-100 text-gray-400 border-gray-300'
             }`}
             whileHover={{ scale: 1.05 }}
-            style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}
+            
           >
             <FileText size={16} className="sm:hidden" />
             <FileText size={20} className="hidden sm:block" />
@@ -232,7 +232,7 @@ export const Receiving: React.FC = () => {
             >
               <Card>
                 <div className="game-screen p-4 sm:p-6">
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" style={{ fontFamily: "'VT323', monospace" }}>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" >
                     <User className="text-blue-500" size={24} />
                     <span className="hidden sm:inline">PATIENT ARRIVAL</span>
                     <span className="sm:hidden">PATIENT</span>
@@ -254,7 +254,7 @@ export const Receiving: React.FC = () => {
                             <div>
                               <p className="text-xs sm:text-sm font-bold text-gray-700 tracking-wide">REPUBLIC OF SINGAPORE</p>
                               <p className="text-[10px] sm:text-xs text-gray-600 mt-1">IDENTITY CARD NO.</p>
-                              <p className="text-base sm:text-xl font-bold text-gray-900 mt-1" style={{ fontFamily: "'Courier New', monospace" }}>
+                              <p className="text-base sm:text-xl font-bold text-gray-900 mt-1 font-mono">
                                 {currentPrescription.patientIC}
                               </p>
                             </div>
@@ -282,7 +282,7 @@ export const Receiving: React.FC = () => {
                             <div className="space-y-2 sm:space-y-3">
                               <div>
                                 <p className="text-[10px] sm:text-xs text-gray-600">Name</p>
-                                <p className="text-sm sm:text-lg font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Arial', sans-serif" }}>
+                                <p className="text-sm sm:text-lg font-bold text-gray-900 leading-tight">
                                   {currentPrescription.patientName.toUpperCase()}
                                 </p>
                               </div>
@@ -358,7 +358,7 @@ export const Receiving: React.FC = () => {
                         transition={{ type: 'spring', stiffness: 100, delay: 0.1 }}
                       >
                         <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION PREVIEW</p>
-                        <div className="space-y-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px' }}>
+                        <div className="space-y-2 text-poke-black" >
                           <p>Patient: {currentPrescription.patientName}</p>
                           <p>IC: {currentPrescription.patientIC}</p>
                           <p>Doctor: {currentPrescription.doctorName}</p>
@@ -378,7 +378,7 @@ export const Receiving: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-600 mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>
+                        <p className="text-xs text-gray-600 mt-3 font-medium">
                           Cross-check name/IC against the card before proceeding.
                         </p>
                       </motion.div>
@@ -394,7 +394,7 @@ export const Receiving: React.FC = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <Shield size={24} className="text-green-600" />
-                          <span className="font-semibold text-lg" style={{ fontFamily: "'VT323', monospace", fontSize: '20px' }}>
+                          <span className="font-semibold text-lg" >
                             VERIFY PATIENT IDENTITY
                           </span>
                         </div>
@@ -408,7 +408,7 @@ export const Receiving: React.FC = () => {
                           </motion.div>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                      <p className="text-sm text-gray-600 mb-4" >
                         ⚠️ Check two identifiers: Name and IC number
                       </p>
                       <motion.button
@@ -419,7 +419,7 @@ export const Receiving: React.FC = () => {
                             ? 'bg-gradient-to-r from-green-500 to-green-700' 
                             : 'bg-gradient-to-r from-blue-400 to-blue-600'
                         } text-white`}
-                        style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
+                        
                         whileHover={!identityChecked ? { scale: 1.02 } : {}}
                         whileTap={!identityChecked ? { scale: 0.98 } : {}}
                       >
@@ -437,7 +437,7 @@ export const Receiving: React.FC = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <Shield size={24} className="text-red-600" />
-                          <span className="font-semibold text-lg" style={{ fontFamily: "'VT323', monospace", fontSize: '20px' }}>
+                          <span className="font-semibold text-lg" >
                             CHECK DRUG ALLERGIES
                           </span>
                         </div>
@@ -463,12 +463,12 @@ export const Receiving: React.FC = () => {
                           }}
                           transition={{ duration: 2, repeat: Infinity }}
                         >
-                          <p className="font-semibold text-red-900 text-center" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}>
+                          <p className="font-semibold text-red-900 text-center" >
                             ⚠️ ALLERGIES: {currentPrescription.patientAllergies.join(', ')}
                           </p>
                         </motion.div>
                       ) : (
-                        <p className="text-sm text-gray-600 mb-4 text-center" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                        <p className="text-sm text-gray-600 mb-4 text-center" >
                           ✓ No known drug allergies
                         </p>
                       )}
@@ -480,7 +480,7 @@ export const Receiving: React.FC = () => {
                             ? 'bg-gradient-to-r from-green-500 to-green-700' 
                             : 'bg-gradient-to-r from-orange-400 to-red-600'
                         } text-white`}
-                        style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
+                        
                         whileHover={!allergyChecked ? { scale: 1.02 } : {}}
                         whileTap={!allergyChecked ? { scale: 0.98 } : {}}
                       >
@@ -497,7 +497,7 @@ export const Receiving: React.FC = () => {
                         <motion.button
                           onClick={handleProceedToValidation}
                           className="arcade-button w-full py-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white"
-                          style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '14px' }}
+                          
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           animate={{
@@ -530,45 +530,46 @@ export const Receiving: React.FC = () => {
             >
               {/* Instructions */}
               <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
-                <p className="text-poke-black text-sm sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-black text-sm sm:text-base font-bold mb-2" >
                   VALIDATE PRESCRIPTION
                 </p>
-                <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                  Check each field carefully. Click to verify!
+                <p className="text-poke-black text-xs sm:text-sm" >
+                  Check each field carefully. Keep the prescription visible while you tick each box.
                 </p>
               </div>
 
-              {/* Prescription reference on same screen for cross-checking */}
-              <div className="game-screen p-4 sm:p-5">
-                <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION DETAILS</p>
-                <div className="space-y-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px' }}>
-                  <p>Patient: {currentPrescription.patientName}</p>
-                  <p>IC: {currentPrescription.patientIC}</p>
-                  <p>Doctor: {currentPrescription.doctorName}</p>
-                  <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
-                  <p>Date: {currentPrescription.date}</p>
-                  <div className="pt-1">
-                    <p className="font-bold">Medications:</p>
-                    <div className="space-y-1 mt-1">
-                      {currentPrescription.medications.map((med, idx) => {
-                        const medication = getMedicationById(med.medicationId);
-                        return (
-                          <p key={idx}>
-                            • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
-                          </p>
-                        );
-                      })}
+              <div className="grid lg:grid-cols-[1.05fr_1fr] gap-4">
+                {/* Prescription reference on same screen for cross-checking */}
+                <div className="game-screen p-4 sm:p-5 h-full">
+                  <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION DETAILS</p>
+                  <div className="space-y-2 text-poke-black" >
+                    <p>Patient: {currentPrescription.patientName}</p>
+                    <p>IC: {currentPrescription.patientIC}</p>
+                    <p>Doctor: {currentPrescription.doctorName}</p>
+                    <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                    <p>Date: {currentPrescription.date}</p>
+                    <div className="pt-1">
+                      <p className="font-bold">Medications:</p>
+                      <div className="space-y-1 mt-1">
+                        {currentPrescription.medications.map((med, idx) => {
+                          const medication = getMedicationById(med.medicationId);
+                          return (
+                            <p key={idx}>
+                              • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
+                            </p>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
+                  <p className="text-xs text-gray-700 mt-3 font-medium">
+                    Reference this while ticking the 5 validation fields.
+                  </p>
                 </div>
-                <p className="text-xs text-gray-700 mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  Reference this while ticking the 5 validation fields below.
-                </p>
-              </div>
 
-              {/* Interactive Prescription Display */}
-              <div className="poke-menu p-4 sm:p-6 space-y-4" style={{ background: '#FFFFFF' }}>
-                {/* 1. Doctor Signature Check */}
+                {/* Interactive Prescription Display */}
+                <div className="poke-menu p-4 sm:p-6 space-y-4" style={{ background: '#FFFFFF' }}>
+                  {/* 1. Doctor Signature Check */}
                 <motion.button
                   onClick={() => handleFieldCheck('signature', !currentPrescription.doctorSignature)}
                   disabled={checkedFields.has('signature')}
@@ -585,10 +586,10 @@ export const Receiving: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
                         ☐ DOCTOR SIGNATURE
                       </p>
-                      <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm" >
                         Dr. {currentPrescription.doctorName}
                       </p>
                       {currentPrescription.doctorSignature && (
@@ -632,10 +633,10 @@ export const Receiving: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
                         ☐ PRESCRIPTION DATE
                       </p>
-                      <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm" >
                         {currentPrescription.date}
                       </p>
                     </div>
@@ -668,10 +669,10 @@ export const Receiving: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
                         ☐ PATIENT DETAILS
                       </p>
-                      <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm" >
                         {currentPrescription.patientName}
                       </p>
                       <p className="text-gray-600 text-xs mt-1">IC: {currentPrescription.patientIC}</p>
@@ -708,14 +709,14 @@ export const Receiving: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
                         ☐ DOSAGE COMPLETE
                       </p>
                       <div className="space-y-1">
                         {currentPrescription.medications.map((med, idx) => {
                           const medication = getMedicationById(med.medicationId);
                           return (
-                            <p key={idx} className="text-poke-black text-xs" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                            <p key={idx} className="text-poke-black text-xs" >
                               {medication?.genericName}: {med.dosageInstruction || '?'} {med.frequency || '?'} x {med.duration || '?'}
                             </p>
                           );
@@ -761,7 +762,7 @@ export const Receiving: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
                         ☐ NO ALLERGY CONFLICT
                       </p>
                       {currentPrescription.patientAllergies.length > 0 ? (
@@ -787,6 +788,7 @@ export const Receiving: React.FC = () => {
                   </div>
                 </motion.button>
               </div>
+            </div>
 
               {/* Submit Validation Button */}
               {checkedFields.size >= 5 && (
@@ -808,7 +810,7 @@ export const Receiving: React.FC = () => {
 
               {/* Progress Indicator */}
               <div className="poke-textbox p-3 text-center" style={{ background: '#FFFFFF' }}>
-                <p className="text-poke-black text-xs sm:text-sm font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-black text-xs sm:text-sm font-bold" >
                   CHECKED: {checkedFields.size} / 5 FIELDS
                 </p>
                 {foundIssues.length > 0 && (
@@ -833,15 +835,15 @@ export const Receiving: React.FC = () => {
                 >
                   <CheckCircle size={80} className="text-pharm-green" />
                 </motion.div>
-                <h3 className="text-xl sm:text-2xl font-bold text-pharm-green mb-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <h3 className="text-xl sm:text-2xl font-bold text-pharm-green mb-3" >
                   EXCELLENT!
                 </h3>
-                <p className="text-poke-black text-sm sm:text-base mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-black text-sm sm:text-base mb-4" >
                   {currentPrescription.isValid
                     ? 'All checks passed! Prescription is valid.'
                     : `You found the issue! ${foundIssues.length} error(s) detected.`}
                 </p>
-                <p className="text-poke-dark-yellow text-base sm:text-lg font-bold mb-6" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-dark-yellow text-base sm:text-lg font-bold mb-6" >
                   +30 Rx Points
                 </p>
                 {foundIssues.length > 0 && (
@@ -864,10 +866,10 @@ export const Receiving: React.FC = () => {
                 >
                   <XCircle size={80} className="text-poke-red" />
                 </motion.div>
-                <h3 className="text-xl sm:text-2xl font-bold text-poke-red mb-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <h3 className="text-xl sm:text-2xl font-bold text-poke-red mb-3" >
                   INCORRECT
                 </h3>
-                <p className="text-poke-black text-sm sm:text-base mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <p className="text-poke-black text-sm sm:text-base mb-4" >
                   {checkedFields.size < 5
                     ? 'You must check all 5 fields!'
                     : currentPrescription.isValid

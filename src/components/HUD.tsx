@@ -45,7 +45,6 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
                 className="bg-poke-red text-poke-white px-4 py-3 text-base font-bold flex items-center gap-2 flex-shrink-0 min-h-[56px] border-4 border-poke-black"
                 whileTap={{ scale: 0.98 }}
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
                   boxShadow: 'inset -2px -2px 0 0 #C80000, inset 2px 2px 0 0 #FF4444, 4px 4px 0 0 rgba(0,0,0,0.3)'
                 }}
               >
@@ -55,7 +54,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
 
               <div
                 className="flex-1 poke-textbox px-4 py-3 min-h-[56px] flex items-center"
-                style={{ fontFamily: "'Press Start 2P', monospace" }}
+                
               >
                 <div className="flex items-center gap-3 w-full">
                   <span className="text-poke-black">▶</span>
@@ -71,7 +70,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
               {/* Score Display */}
               <div
                 className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
-                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                style={{ background: '#FFFFFF' }}
               >
                 <div className="flex items-center gap-2">
                   <Star className="text-poke-dark-yellow" size={16} fill="currentColor" />
@@ -83,7 +82,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
               {/* Rx Points Display */}
               <div
                 className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
-                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                style={{ background: '#FFFFFF' }}
               >
                 <div className="flex items-center gap-2">
                   <Zap className="text-poke-blue" size={16} fill="currentColor" />
@@ -109,7 +108,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
               {/* Player Level */}
               <div
                 className="border-2 border-poke-black px-2 py-2 flex flex-col justify-center"
-                style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                style={{ background: '#FFFFFF' }}
               >
                 <p className="text-poke-black text-[9px] sm:text-xs leading-tight font-bold text-center mb-1">RANK</p>
                 <p className="font-bold text-poke-black text-[9px] sm:text-[11px] leading-tight text-center break-words">

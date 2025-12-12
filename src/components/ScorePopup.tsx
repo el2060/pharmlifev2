@@ -56,16 +56,12 @@ export const ScorePopup: React.FC<ScorePopupProps> = ({
             position: 'fixed',
             pointerEvents: 'none',
             zIndex: 9999,
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: '28px',
-            fontWeight: 'bold',
+            fontSize: '32px',
+            fontWeight: '800',
             color: colors[type].text,
             textShadow: `
-              3px 3px 0 ${colors[type].shadow},
-              -1px -1px 0 #333,
-              1px -1px 0 #333,
-              -1px 1px 0 #333,
-              1px 1px 0 #333
+              2px 2px 4px ${colors[type].shadow},
+              0 0 10px ${colors[type].shadow}
             `,
             transform: 'translateX(-50%)',
             display: 'flex',

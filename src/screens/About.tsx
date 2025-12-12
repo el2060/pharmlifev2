@@ -56,7 +56,7 @@ export const About: React.FC<AboutProps> = ({ onBack }) => {
             <BookOpen className="text-poke-blue" size={24} />
             <h2
               className="text-sm sm:text-xl font-bold text-poke-black flex-1"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
+              
             >
               GAME GUIDE
             </h2>
@@ -65,14 +65,13 @@ export const About: React.FC<AboutProps> = ({ onBack }) => {
               className="bg-poke-red text-poke-white px-3 py-2 sm:px-4 sm:py-3 border-4 border-poke-black"
               whileTap={{ scale: 0.98 }}
               style={{
-                fontFamily: "'Press Start 2P', monospace",
                 boxShadow: 'inset -2px -2px 0 0 #C80000, inset 2px 2px 0 0 #FF4444, 4px 4px 0 0 rgba(0,0,0,0.3)'
               }}
             >
               <X size={14} className="sm:w-4 sm:h-4" />
             </motion.button>
           </div>
-          <p className="text-poke-black text-[10px] sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <p className="text-poke-black text-[10px] sm:text-sm" >
             Master pharmacy workflow
           </p>
         </div>
@@ -98,18 +97,18 @@ export const About: React.FC<AboutProps> = ({ onBack }) => {
                 <div className="flex-1">
                   <h3
                     className="text-[10px] sm:text-base font-bold text-poke-black mb-1 sm:mb-2"
-                    style={{ fontFamily: "'Press Start 2P', monospace" }}
+                    
                   >
                     {stage.title}
                   </h3>
                   <div className="flex items-center gap-2 mb-1 sm:mb-2">
-                    <span className="text-poke-black text-[8px] sm:text-xs font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                    <span className="text-poke-black text-[8px] sm:text-xs font-bold" >
                       STAGE {index + 1}/4
                     </span>
                   </div>
                 </div>
               </div>
-              <p className="text-poke-black text-[10px] sm:text-sm leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+              <p className="text-poke-black text-[10px] sm:text-sm leading-relaxed" >
                 {stage.description}
               </p>
             </motion.div>
@@ -128,7 +127,7 @@ export const About: React.FC<AboutProps> = ({ onBack }) => {
             <Target className="text-poke-dark-yellow w-5 h-5 sm:w-7 sm:h-7" />
             <h3
               className="text-[10px] sm:text-base font-bold text-poke-black"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
+              
             >
               LEARNING GOALS
             </h3>
@@ -141,7 +140,7 @@ export const About: React.FC<AboutProps> = ({ onBack }) => {
                 style={{ background: '#FFFFFF' }}
               >
                 <CheckCircle className="text-pharm-green flex-shrink-0 mt-0.5 sm:mt-1" size={16} />
-                <span className="text-poke-black text-[9px] sm:text-xs leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+                <span className="text-poke-black text-[9px] sm:text-xs leading-relaxed" >
                   {objective}
                 </span>
               </div>

@@ -37,22 +37,22 @@ export const Picking: React.FC = () => {
           className="game-screen p-6 sm:p-8 text-center"
         >
           <XCircle size={80} className="text-poke-red mx-auto mb-4" fill="currentColor" />
-          <h2 className="text-2xl sm:text-3xl font-bold text-poke-red mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold text-poke-red mb-4 font-pixel">
             CANNOT PROCEED
           </h2>
-          <p className="text-lg text-white mb-6" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
+          <p className="text-lg font-medium text-white mb-6">
             ⚠️ ALLERGY CONFLICT DETECTED
           </p>
           <div className="bg-red-900 border-4 border-red-600 p-6 rounded mb-6 text-left">
-            <p className="text-white text-base" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+            <p className="text-white text-base font-medium">
               The patient has a documented allergy to one of the prescribed medications. 
               You must contact the prescribing doctor to request an alternative medication before proceeding.
             </p>
-            <p className="text-yellow-300 font-bold text-base mt-4" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+            <p className="text-yellow-300 font-bold text-base mt-4">
               This is a critical safety issue. Never dispense medications that contradict patient allergies.
             </p>
           </div>
-          <p className="text-white text-sm" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+          <p className="text-white text-sm font-medium">
             ← Go back to Receiving stage to handle this properly
           </p>
         </motion.div>
@@ -113,10 +113,10 @@ export const Picking: React.FC = () => {
       >
         {/* Quick instruction for the stage */}
         <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
-          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <p className="text-poke-black text-sm sm:text-base font-bold mb-2">
             PICK THE RIGHT MEDICATIONS
           </p>
-          <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+          <p className="text-poke-black text-xs sm:text-sm font-semibold">
             Browse the shelves, tap the correct items to add them to your basket, then verify once done.
           </p>
         </div>
@@ -133,13 +133,10 @@ export const Picking: React.FC = () => {
                 <ShoppingCart className="text-cyan-400" size={28} />
               </motion.div>
               <div>
-                <h3 
-                  className="text-white mb-1 pixel-label font-bold text-contrast-shadow"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
-                >
+                <h3 className="text-white mb-1 pixel-label font-bold text-contrast-shadow">
                   PICKING BASKET
                 </h3>
-                <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
+                <p className="text-sm sm:text-base text-cyan-200 font-medium">
                   Selected: {selectedMedications.length} / {requiredMedIds.length}
                 </p>
               </div>
@@ -151,8 +148,7 @@ export const Picking: React.FC = () => {
                 selectedMedications.length === 0
                   ? 'bg-gray-500 opacity-50 cursor-not-allowed'
                   : 'bg-gradient-to-r from-green-500 to-emerald-600'
-              } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm`}
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
+              } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm font-semibold`}
               whileHover={selectedMedications.length > 0 ? { scale: 1.05 } : {}}
               whileTap={selectedMedications.length > 0 ? { scale: 0.95 } : {}}
             >
@@ -176,7 +172,6 @@ export const Picking: React.FC = () => {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 shadow-lg text-white"
-                    style={{ fontFamily: "'VT323', monospace" }}
                   >
                     {med.genericName} {med.strength}
                     <button
@@ -210,7 +205,6 @@ export const Picking: React.FC = () => {
           <motion.h3 
             className="text-xl sm:text-2xl font-bold text-center text-white"
             style={{ 
-              fontFamily: "'Press Start 2P', monospace",
               textShadow: '3px 3px 0 rgba(0,0,0,0.3)'
             }}
             initial={{ opacity: 0, y: -20 }}
@@ -236,10 +230,7 @@ export const Picking: React.FC = () => {
                 <div className="absolute top-2 left-2 w-2 h-2 bg-white/40" />
                 <div className="absolute top-2 right-2 w-2 h-2 bg-white/40" />
                 
-                <h4 
-                  className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
-                >
+                <h4 className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow">
                   <motion.span 
                     className="text-2xl sm:text-3xl"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -278,24 +269,21 @@ export const Picking: React.FC = () => {
                         {/* Medication box visual */}
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <p 
-                              className="font-bold text-gray-900 text-sm sm:text-base mb-1"
-                              style={{ fontFamily: "'VT323', monospace" }}
-                            >
+                            <p className="font-bold text-gray-900 text-sm sm:text-base mb-1">
                               {med.genericName}
                             </p>
                             {med.brandName && (
-                              <p className="text-xs sm:text-sm text-gray-600 mb-1" style={{ fontFamily: "'VT323', monospace" }}>
+                              <p className="text-xs sm:text-sm text-gray-600 mb-1 font-medium">
                                 ({med.brandName})
                               </p>
                             )}
-                            <p className="text-sm sm:text-base text-gray-800 font-bold" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-sm sm:text-base text-gray-800 font-bold">
                               {med.strength}
                             </p>
-                            <p className="text-xs sm:text-sm text-gray-700 mt-1" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-xs sm:text-sm text-gray-700 mt-1 font-medium">
                               {med.dosageForm}
                             </p>
-                            <p className="text-xs sm:text-sm text-gray-600 mt-2" style={{ fontFamily: "'VT323', monospace" }}>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-2 font-medium">
                               {med.drugClass}
                             </p>
                           </div>
@@ -336,8 +324,7 @@ export const Picking: React.FC = () => {
             selectedMedications.length === 0
               ? 'bg-gray-500 opacity-50 cursor-not-allowed'
               : 'bg-gradient-to-r from-green-500 to-emerald-600'
-          } text-white py-4 flex items-center justify-center gap-2 text-xs sm:text-sm`}
-          style={{ fontFamily: "'Press Start 2P', monospace" }}
+          } text-white py-4 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold`}
           whileHover={selectedMedications.length > 0 ? { scale: 1.02 } : {}}
           whileTap={selectedMedications.length > 0 ? { scale: 0.98 } : {}}
         >
@@ -358,16 +345,13 @@ export const Picking: React.FC = () => {
                 >
                   <CheckCircle size={48} className="text-green-500" />
                 </motion.div>
-                <h3 
-                  className="text-xl sm:text-2xl font-bold text-green-600 mb-2"
-                  style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
-                >
+                <h3 className="text-xl sm:text-2xl font-bold text-green-600 mb-2">
                   PERFECT PICK!
                 </h3>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base" style={{ fontFamily: "'VT323', monospace" }}>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
                   You selected all the correct medications. Well done!
                 </p>
-                <p className="text-sm text-gray-500 mb-6" style={{ fontFamily: "'VT323', monospace" }}>
+                <p className="text-sm text-gray-500 mb-6 font-medium">
                   +30 Rx Points
                 </p>
               </>
@@ -380,13 +364,10 @@ export const Picking: React.FC = () => {
                 >
                   <XCircle size={48} className="text-red-500" />
                 </motion.div>
-                <h3 
-                  className="text-xl sm:text-2xl font-bold text-red-600 mb-2"
-                  style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '12px' }}
-                >
+                <h3 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
                   INCORRECT
                 </h3>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base" style={{ fontFamily: "'VT323', monospace" }}>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
                   Please review the prescription carefully and select the exact medications required.
                 </p>
               </>
@@ -397,8 +378,7 @@ export const Picking: React.FC = () => {
                 isCorrect
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600'
                   : 'bg-gradient-to-r from-blue-500 to-blue-700'
-              } text-white py-3 px-6 w-full min-h-[48px]`}
-              style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px' }}
+              } text-white py-3 px-6 w-full min-h-[48px] font-semibold`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
