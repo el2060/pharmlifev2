@@ -10,7 +10,7 @@ import { getMedicationById } from '../../data/medications';
 import { getQuestionsByMedicationId } from '../../data/questions';
 
 export const Dispensing: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, resetLevel, score, rxPoints } =
+  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel, score, rxPoints } =
     useGameStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -61,8 +61,11 @@ export const Dispensing: React.FC = () => {
   };
 
   const handleComplete = () => {
+    completeLevel();
+  };
+
+  const handleResetToMenu = () => {
     resetLevel();
-    // In a full implementation, this would navigate to next level or menu
   };
 
   return (
@@ -262,8 +265,8 @@ export const Dispensing: React.FC = () => {
               <Button variant="primary" onClick={handleComplete} fullWidth className="py-4">
                 Continue to Next Level →
               </Button>
-              <Button variant="secondary" onClick={handleComplete} fullWidth>
-                Back to Menu
+              <Button variant="secondary" onClick={handleResetToMenu} fullWidth>
+                Restart at Level 1
               </Button>
             </div>
           </div>

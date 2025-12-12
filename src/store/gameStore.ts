@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { GameState, GameStage, YearLevel, Prescription } from '../types/game.types';
+import { levels } from '../data/prescriptions';
 
 interface GameStore extends GameState {
   // Actions
@@ -10,6 +11,7 @@ interface GameStore extends GameState {
   addRxPoints: (points: number) => void;
   completeStage: (stage: GameStage) => void;
   nextStage: () => void;
+  completeLevel: () => void;
   resetLevel: () => void;
   setAllergyConflictDetected: (detected: boolean) => void;
   addSelectedMedication: (medicationId: string) => void;
@@ -23,6 +25,23 @@ const getPlayerLevel = (rxPoints: number): string => {
   if (rxPoints < 600) return 'Pharmacist';
   if (rxPoints < 1000) return 'Senior Pharmacist';
   return 'Chief Pharmacist';
+};
+
+const getYearLevels = (year: YearLevel) =>
+  levels
+    .filter((level) => level.year === year)
+    .sort((a, b) => a.chapterNumber - b.chapterNumber);
+
+const getWrappedNextLevel = (year: YearLevel, currentLevel: number) => {
+  const yearLevels = getYearLevels(year);
+  const maxLevels = yearLevels.length;
+
+  if (!maxLevels) {
+    return currentLevel;
+  }
+
+  const nextIndex = currentLevel % maxLevels;
+  return yearLevels[nextIndex]?.chapterNumber ?? currentLevel;
 };
 
 const stageOrder: GameStage[] = ['receiving', 'typing', 'picking', 'dispensing'];
@@ -80,8 +99,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     } else {
       // All stages complete, move to next level
       set((state) => ({
-        currentLevel: state.currentLevel + 1,
+        currentLevel: getWrappedNextLevel(state.currentYear, state.currentLevel),
         currentStage: 'receiving',
+        score: 0,
+        selectedMedications: [],
+        allergyConflictDetected: false,
         stageProgress: {
           receiving: false,
           typing: false,
@@ -92,9 +114,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
+  completeLevel: () =>
+    set((state) => ({
+      currentLevel: getWrappedNextLevel(state.currentYear, state.currentLevel),
+      currentStage: 'receiving',
+      score: 0,
+      selectedMedications: [],
+      allergyConflictDetected: false,
+      stageProgress: {
+        receiving: false,
+        typing: false,
+        picking: false,
+        dispensing: false,
+      },
+    })),
+
   resetLevel: () =>
     set({
       currentStage: 'receiving',
+      currentLevel: 1,
       score: 0,
       selectedMedications: [],
       allergyConflictDetected: false,

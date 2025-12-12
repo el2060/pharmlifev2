@@ -1,4 +1,4 @@
-import { Prescription, LevelData } from '../types/game.types';
+import { Prescription, LevelData, YearLevel } from '../types/game.types';
 import {
   rx3AllergyScenario,
   rx4IncompleteDurationScenario,
@@ -140,7 +140,7 @@ const rx5: Prescription = {
       medicationId: 'med-001',
       quantity: 2,
       dosageInstruction: '2 tabs',
-      frequency: 'tds',
+      frequency: 'tds or qds',
       duration: '5 days',
       specialInstructions: 'prn',
     },
@@ -336,7 +336,7 @@ const rx13: Prescription = {
 };
 
 // Level data combining prescriptions with metadata
-export const levels: LevelData[] = [
+const allLevels: LevelData[] = [
   // Year 1 Levels - Basic (Progressive difficulty with scenarios)
   {
     id: 'level-1-1',
@@ -487,6 +487,20 @@ export const levels: LevelData[] = [
     difficulty: 'advanced',
   },
 ];
+
+// Open House active catalog: Year 1 only, first three prescriptions
+const activeLevels = allLevels.filter(
+  (level) => level.year === 1 && level.chapterNumber >= 1 && level.chapterNumber <= 3,
+);
+
+// Year limits for gameplay selection and wrapping
+export const ACTIVE_LEVEL_LIMIT: Record<YearLevel, number> = {
+  1: activeLevels.length,
+  2: 0,
+  3: 0,
+};
+
+export const levels: LevelData[] = activeLevels;
 
 // Medical abbreviations dictionary
 export const medicalAbbreviations: Record<string, string> = {

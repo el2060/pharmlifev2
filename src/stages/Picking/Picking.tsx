@@ -111,6 +111,16 @@ export const Picking: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-4 sm:space-y-6"
       >
+        {/* Quick instruction for the stage */}
+        <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
+          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            PICK THE RIGHT MEDICATIONS
+          </p>
+          <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            Browse the shelves, tap the correct items to add them to your basket, then verify once done.
+          </p>
+        </div>
+
         {/* Shopping Cart */}
         <div className="game-screen p-4 sm:p-6 relative">
           <div className="scanline" />
@@ -183,27 +193,11 @@ export const Picking: React.FC = () => {
         </div>
 
         {/* Prescription Reference */}
-        <div className="game-screen p-4 sm:p-6 relative">
-          <div className="scanline" />
-          <h4 
+                  <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
+                    Selected: {selectedMedications.length} / {requiredMedIds.length}
             className="font-bold mb-3 flex items-center gap-2 text-white pixel-label text-contrast-shadow"
             style={{ fontFamily: "'Press Start 2P', monospace" }}
           >
-            <span className="text-2xl">📋</span>
-            PRESCRIPTION
-          </h4>
-          <div className="space-y-2">
-            {currentPrescription.medications.map((medItem, idx) => {
-              const med = getMedicationById(medItem.medicationId);
-              return med ? (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 p-3 rounded-lg border-2 border-indigo-500/30 flex flex-col xs:flex-row justify-between gap-2"
-                >
-                  <span 
                     className="font-bold text-yellow-300 text-sm sm:text-base"
                     style={{ fontFamily: "'VT323', monospace" }}
                   >
@@ -285,7 +279,7 @@ export const Picking: React.FC = () => {
                 </h4>
               </div>
 
-              <div className="bg-gradient-to-b from-gray-100 to-gray-200 rounded-b-lg p-3 sm:p-4 shadow-lg border-4 border-gray-300">
+              <div className="shelf-panel rounded-b-lg p-3 sm:p-4 shadow-lg border-4 border-gray-300">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                   {meds.map((med, medIndex) => {
                     const isSelected = selectedMedications.includes(med.id);
@@ -356,6 +350,23 @@ export const Picking: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Verify Button moved to bottom for natural scroll */}
+        <motion.button
+          onClick={handleSubmit}
+          disabled={selectedMedications.length === 0}
+          className={`w-full arcade-button ${
+            selectedMedications.length === 0
+              ? 'bg-gray-500 opacity-50 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-500 to-emerald-600'
+          } text-white py-4 flex items-center justify-center gap-2 text-xs sm:text-sm`}
+          style={{ fontFamily: "'Press Start 2P', monospace" }}
+          whileHover={selectedMedications.length > 0 ? { scale: 1.02 } : {}}
+          whileTap={selectedMedications.length > 0 ? { scale: 0.98 } : {}}
+        >
+          <Package size={16} />
+          <span>VERIFY SELECTION</span>
+        </motion.button>
 
         {/* Result Modal */}
         <Modal isOpen={showResult} onClose={() => {}} showCloseButton={false}>

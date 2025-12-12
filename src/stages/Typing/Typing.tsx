@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Printer, CheckCircle, XCircle } from 'lucide-react';
 import { Modal } from '../../components/Modal';
@@ -19,9 +19,6 @@ export const Typing: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
-  const [showCounselingQuiz, setShowCounselingQuiz] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string>('');
 
   // Patient dialogue state
   const [showPatientDialogue, setShowPatientDialogue] = useState(false);
@@ -47,6 +44,13 @@ export const Typing: React.FC = () => {
     { value: 'when necessary', abbr: 'prn' },
   ];
 
+  const specialInstructionLabel = useMemo(() => {
+    if (!currentMed.specialInstructions) return '';
+    const text = currentMed.specialInstructions.trim().toLowerCase();
+    if (text === 'prn') return 'when necessary';
+    return currentMed.specialInstructions;
+  }, [currentMed.specialInstructions]);
+
   const dosageFormOptions = ['tablet', 'capsule', 'liquid', 'syrup', 'inhaler', 'topical'];
 
   // Generate quantity options based on medication type
@@ -69,11 +73,15 @@ export const Typing: React.FC = () => {
 
     setTimeout(() => {
       // Validate label
-      const correctFreq = frequencyOptions.find(f => f.abbr === currentMed.frequency);
+      const expectedAbbrs = currentMed.frequency.split('or').map((part) => part.trim());
+      const allowedFrequencies = frequencyOptions
+        .filter((f) => expectedAbbrs.includes(f.abbr))
+        .map((f) => f.value);
+
       const isValid =
         labelData.quantity === currentMed.quantity.toString() &&
         labelData.dosageForm === medication.dosageForm &&
-        labelData.frequency === correctFreq?.value;
+        allowedFrequencies.includes(labelData.frequency);
 
       setIsCorrect(isValid);
       setIsPrinting(false);
@@ -120,16 +128,8 @@ export const Typing: React.FC = () => {
 
   const handleContinue = () => {
     if (isCorrect) {
-      // Show counseling quiz if medication has questions
-      if (medication?.counselingQuestions && medication.counselingQuestions.length > 0) {
-        setShowResult(false);
-        setShowCounselingQuiz(true);
-        setCurrentQuestionIndex(0);
-        setSelectedAnswer('');
-      } else {
-        // No questions, proceed to next med or stage
-        proceedToNext();
-      }
+      // Proceed straight to next step; counseling handled in Dispensing stage
+      proceedToNext();
     } else {
       // Retry
       setLabelData({
@@ -153,37 +153,9 @@ export const Typing: React.FC = () => {
         specialInstructions: '',
       });
       setShowResult(false);
-      setShowCounselingQuiz(false);
-      setCurrentQuestionIndex(0);
-      setSelectedAnswer('');
     } else {
       // All medications labeled
       nextStage();
-    }
-  };
-
-  const handleAnswerSubmit = () => {
-    const currentQuestion = medication?.counselingQuestions?.[currentQuestionIndex];
-    if (!currentQuestion) return;
-
-    const isAnswerCorrect = selectedAnswer === currentQuestion.correctAnswer;
-
-    if (isAnswerCorrect) {
-      addScore(20);
-      addRxPoints(10);
-
-      // Check if there are more questions
-      if (medication.counselingQuestions && currentQuestionIndex < medication.counselingQuestions.length - 1) {
-        // Next question
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedAnswer('');
-      } else {
-        // All questions answered correctly
-        proceedToNext();
-      }
-    } else {
-      // Wrong answer - show feedback and allow retry
-      setSelectedAnswer('');
     }
   };
 
@@ -220,6 +192,16 @@ export const Typing: React.FC = () => {
           </div>
         )}
 
+        {/* Quick instruction for the stage */}
+        <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
+          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            TYPE THE LABEL
+          </p>
+          <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            Interpret the prescription and print the medication label. Translate abbreviations before printing.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           {/* Left: Prescription - Pokemon Style */}
           <div
@@ -251,10 +233,10 @@ export const Typing: React.FC = () => {
                 )}
               </div>
 
-              {currentMed.specialInstructions && (
+              {specialInstructionLabel && (
                 <div className="border-t-2 border-poke-black pt-4">
                   <p className="text-sm text-poke-black mb-2 font-bold" style={{ fontFamily: "'Press Start 2P', monospace" }}>SPECIAL:</p>
-                  <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{currentMed.specialInstructions}</p>
+                  <p className="text-sm text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace" }}>{specialInstructionLabel}</p>
                 </div>
               )}
             </div>
@@ -380,8 +362,8 @@ export const Typing: React.FC = () => {
                   <p className="mt-3 text-sm text-poke-black break-words" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                     Take {labelData.quantity} {labelData.dosageForm}(s) {labelData.frequency}
                   </p>
-                  {currentMed.specialInstructions && (
-                    <p className="text-xs text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>{currentMed.specialInstructions}</p>
+                  {specialInstructionLabel && (
+                    <p className="text-xs text-poke-black mt-2" style={{ fontFamily: "'Press Start 2P', monospace" }}>{specialInstructionLabel}</p>
                   )}
                 </motion.div>
               )}
@@ -395,7 +377,7 @@ export const Typing: React.FC = () => {
                     "Check the 'Quick Reference' guide to translate abbreviations like 'bd', 'tds', 'om', 'on'",
                     "The quantity per dose is the number before 'tab', 'ml', or 'puffs' in the dosage instruction",
                     "The dosage form should match the medication type - tablets for pills, liquid for syrups, inhaler for puffs",
-                    "Special instructions like 'prn' (when necessary) will be shown automatically in the label preview"
+                    "Special instructions are already written out as words (e.g., 'when necessary') in the label preview"
                   ]}
                 />
               </div>
@@ -577,92 +559,6 @@ export const Typing: React.FC = () => {
           </div>
         </Modal>
 
-        {/* Counseling Quiz Modal - Pokemon Style */}
-        <Modal isOpen={showCounselingQuiz} onClose={() => {}} showCloseButton={false}>
-          <div className="text-center">
-            {medication?.counselingQuestions && medication.counselingQuestions.length > 0 && (
-              <>
-                <h3 className="text-lg font-bold text-poke-black mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                  COUNSELING QUIZ
-                </h3>
-                <div className="border-4 border-poke-black p-3 mb-4" style={{ background: '#FFD700' }}>
-                  <p className="text-poke-black text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                    Q{currentQuestionIndex + 1}/{medication.counselingQuestions.length}
-                  </p>
-                </div>
-
-                <p className="text-poke-black mb-6 text-sm leading-relaxed" style={{ fontFamily: "'Press Start 2P', monospace" }}>
-                  {medication.counselingQuestions[currentQuestionIndex]?.question}
-                </p>
-
-                {/* Answer Options */}
-                <div className="space-y-3 mb-6">
-                  {/* Correct Answer */}
-                  <motion.button
-                    onClick={() => setSelectedAnswer(medication.counselingQuestions![currentQuestionIndex].correctAnswer)}
-                    className={`w-full p-4 border-4 border-poke-black text-left ${
-                      selectedAnswer === medication.counselingQuestions![currentQuestionIndex].correctAnswer
-                        ? 'bg-poke-blue text-poke-white'
-                        : 'bg-white text-poke-black'
-                    }`}
-                    style={{
-                      fontFamily: "'Press Start 2P', monospace",
-                      fontSize: '12px',
-                      lineHeight: '1.6',
-                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {medication.counselingQuestions![currentQuestionIndex].correctAnswer}
-                  </motion.button>
-
-                  {/* Alternative Answers */}
-                  {medication.counselingQuestions![currentQuestionIndex].alternatives
-                    .filter(alt => alt.trim() !== '')
-                    .map((alternative, idx) => (
-                      <motion.button
-                        key={idx}
-                        onClick={() => setSelectedAnswer(alternative)}
-                        className={`w-full p-4 border-4 border-poke-black text-left ${
-                          selectedAnswer === alternative
-                            ? 'bg-poke-red text-poke-white'
-                            : 'bg-white text-poke-black'
-                        }`}
-                        style={{
-                          fontFamily: "'Press Start 2P', monospace",
-                          fontSize: '12px',
-                          lineHeight: '1.6',
-                          boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                        }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        {alternative}
-                      </motion.button>
-                    ))}
-                </div>
-
-                {/* Submit Button */}
-                <motion.button
-                  onClick={handleAnswerSubmit}
-                  disabled={!selectedAnswer}
-                  className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${
-                    !selectedAnswer ? 'text-poke-gray cursor-not-allowed' : 'text-poke-white'
-                  }`}
-                  style={{
-                    fontFamily: "'Press Start 2P', monospace",
-                    background: !selectedAnswer ? '#888888' : '#00A85E',
-                    boxShadow: !selectedAnswer
-                      ? 'inset -2px -2px 0 0 #606060, inset 2px 2px 0 0 #AAAAAA'
-                      : 'inset -2px -2px 0 0 #006B3A, inset 2px 2px 0 0 #00E57B, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  }}
-                  whileTap={{ scale: !selectedAnswer ? 1 : 0.98 }}
-                >
-                  SUBMIT ▶
-                </motion.button>
-              </>
-            )}
-          </div>
-        </Modal>
       </motion.div>
     </div>
   );

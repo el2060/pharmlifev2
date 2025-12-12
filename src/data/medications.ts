@@ -6,7 +6,7 @@ export const medications: Medication[] = [
     id: 'med-001',
     genericName: 'Paracetamol',
     brandName: 'Panadol',
-    strength: '250mg',
+    strength: '500mg',
     dosageForm: 'tablet',
     category: 'analgesic',
     drugClass: 'Analgesic/Antipyretic',

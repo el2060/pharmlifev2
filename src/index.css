@@ -1,7 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-/* Primary UI font for body copy */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,15 +14,12 @@
 
 body {
   margin: 0;
-  font-family: 'Press Start 2P', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: none;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  background: #F8F8F8;
+  background: #f8f8f8;
   min-height: 100vh;
   overflow-x: hidden;
   font-size: 16px; /* Ensure large, clear base font size */
@@ -99,14 +95,7 @@ body {
 }
 
 .pharmacy-shelf::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #4B3325;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  content: none;
 }
 
 .medicine-box {
@@ -294,7 +283,7 @@ body {
     @apply text-base sm:text-lg leading-tight;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
     @apply focus-visible:outline-none;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Inter', 'Poppins', sans-serif;
     border: 4px solid #000000;
     box-shadow:
       inset -2px -2px 0 0 #888888,
@@ -558,6 +547,26 @@ body {
 .shelf {
   background: linear-gradient(to bottom, #8B7355 0%, #6B5345 100%);
   box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.shelf-panel {
+  background: linear-gradient(180deg, #f5f1ea 0%, #e7dfd3 40%, #d8c9b8 100%);
+  box-shadow:
+    inset 0 8px 12px rgba(255,255,255,0.4),
+    inset 0 -6px 12px rgba(0,0,0,0.08),
+    0 6px 12px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.shelf-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.08) 0 4px, transparent 4px 12px);
+  opacity: 0.5;
 }
 
 /* Loading spinner */

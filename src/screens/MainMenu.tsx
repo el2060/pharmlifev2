@@ -13,6 +13,7 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) => {
   const { rxPoints, playerLevel } = useGameStore();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const uiFont = { fontFamily: "'Inter', 'Poppins', sans-serif" };
 
   return (
     <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
@@ -50,7 +51,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
 
             <p
               className="text-base sm:text-lg text-poke-text mb-6"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
+              style={uiFont}
             >
               Prescription Quest
             </p>
@@ -111,10 +112,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
 
             {/* Player Stats - Pokemon Style */}
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={uiFont}>
                 <div
                   className="border-2 border-poke-black px-4 py-3 h-full"
-                  style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                  style={{ ...uiFont, background: '#FFFFFF' }}
                 >
                   <p className="text-poke-black text-xs mb-2">PLAYER</p>
                   <div className="flex items-center justify-between">
@@ -125,7 +126,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
 
                 <div
                   className="border-2 border-poke-black px-4 py-3 h-full"
-                  style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                  style={{ ...uiFont, background: '#FFFFFF' }}
                 >
                   <p className="text-poke-black text-xs mb-2">Rx POINTS</p>
                   <div className="flex items-center justify-between">
@@ -135,7 +136,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
                 </div>
               </div>
 
-              <div className="border-2 border-poke-black px-4 py-3" style={{ fontFamily: "'Press Start 2P', monospace", background: '#F8F8F8' }}>
+              <div className="border-2 border-poke-black px-4 py-3" style={{ ...uiFont, background: '#F8F8F8' }}>
                 <p className="text-poke-black text-xs mb-2">SESSION TIP</p>
                 <p className="text-poke-black text-sm leading-relaxed">
                   Play in landscape on tablets or desktops to see the full retro cabinet. All UI scales fluidly across breakpoints.
@@ -177,7 +178,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
         onClose={() => setShowHowToPlay(false)}
         title="📖 HOW TO PLAY"
       >
-        <div className="space-y-2 sm:space-y-3" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+        <div className="space-y-2 sm:space-y-3" style={uiFont}>
           {/* Game Flow */}
           <div className="bg-blue-50 border-4 border-blue-500 p-3 sm:p-5 rounded">
             <p className="font-bold text-blue-900 mb-2 text-[10px] sm:text-base">
@@ -238,11 +239,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
               🏆 PLAYER RANKS
             </p>
             <div className="text-[10px] sm:text-sm space-y-1 sm:space-y-2 text-purple-900 leading-relaxed">
-              <p>🟢 0-99: <strong>Pharmacy Trainee</strong></p>
-              <p>🔵 100-299: <strong>Junior Pharmacist</strong></p>
-              <p>🟣 300-599: <strong>Pharmacist</strong></p>
-              <p>🟠 600-999: <strong>Senior Pharmacist</strong></p>
-              <p>🔴 1000+: <strong>Chief Pharmacist</strong></p>
+              <p>🟢 0-99: <strong>Pharmacy Intern</strong></p>
+              <p>🔵 100-299: <strong>Junior Pharmacy Technician</strong></p>
+              <p>🟣 300-599: <strong>Pharmacy Technician</strong></p>
+              <p>🟠 600-999: <strong>Senior Pharmacy Technician</strong></p>
+              <p>🔴 1000+: <strong>Chief Pharmacy Technician</strong></p>
             </div>
           </div>
 

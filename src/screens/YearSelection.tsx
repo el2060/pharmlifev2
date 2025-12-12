@@ -37,6 +37,7 @@ const yearData = [
 ];
 
 export const YearSelection: React.FC<YearSelectionProps> = ({ onSelectYear, onBack }) => {
+  const uiFont = { fontFamily: "'Inter', 'Poppins', sans-serif" };
   return (
     <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 lg:p-10" style={{ background: '#FFFFFF' }}>
       <motion.div
@@ -69,7 +70,7 @@ export const YearSelection: React.FC<YearSelectionProps> = ({ onSelectYear, onBa
           </div>
           <p
             className="text-poke-black text-sm sm:text-base"
-            style={{ fontFamily: "'Press Start 2P', monospace" }}
+            style={uiFont}
           >
             Choose difficulty
           </p>
@@ -109,7 +110,7 @@ export const YearSelection: React.FC<YearSelectionProps> = ({ onSelectYear, onBa
               {/* Description */}
               <p
                 className="text-poke-black text-sm mb-4 leading-relaxed"
-                style={{ fontFamily: "'Press Start 2P', monospace" }}
+                style={uiFont}
               >
                 {data.description}
               </p>
@@ -118,7 +119,7 @@ export const YearSelection: React.FC<YearSelectionProps> = ({ onSelectYear, onBa
               <div className="flex items-center justify-between">
                 <span
                   className="text-poke-black text-xs"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
+                  style={uiFont}
                 >
                   DIFFICULTY
                 </span>

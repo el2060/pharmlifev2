@@ -239,115 +239,150 @@ export const Receiving: React.FC = () => {
                   </h3>
 
                   <div className="space-y-4">
-                    {/* Singapore NRIC Card Display */}
-                    <motion.div 
-                      className="relative overflow-hidden rounded-xl shadow-2xl"
-                      initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
-                      animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                      transition={{ type: 'spring', stiffness: 100 }}
-                    >
-                      {/* NRIC Card */}
-                      <div className="bg-gradient-to-br from-pink-100 via-pink-50 to-white p-4 sm:p-6 border-4 border-pink-200 rounded-xl relative">
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <p className="text-xs sm:text-sm font-bold text-gray-700 tracking-wide">REPUBLIC OF SINGAPORE</p>
-                            <p className="text-[10px] sm:text-xs text-gray-600 mt-1">IDENTITY CARD NO.</p>
-                            <p className="text-base sm:text-xl font-bold text-gray-900 mt-1" style={{ fontFamily: "'Courier New', monospace" }}>
-                              {currentPrescription.patientIC}
-                            </p>
-                          </div>
-                          <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0">
-                            <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                              <span className="text-xl sm:text-3xl">🦁</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Card Content */}
-                        <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[120px_1fr] gap-3 sm:gap-4">
-                          {/* Photo placeholder */}
-                          <div className="aspect-[3/4] bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg border-2 border-gray-400 flex items-center justify-center overflow-hidden">
-                            <motion.div
-                              animate={{ scale: [1, 1.1, 1] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                              className="text-3xl sm:text-5xl opacity-60"
-                            >
-                              👤
-                            </motion.div>
-                          </div>
-
-                          {/* Personal Info */}
-                          <div className="space-y-2 sm:space-y-3">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      {/* Singapore NRIC Card Display */}
+                      <motion.div 
+                        className="relative overflow-hidden rounded-xl shadow-2xl"
+                        initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
+                        animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                        transition={{ type: 'spring', stiffness: 100 }}
+                      >
+                        {/* NRIC Card */}
+                        <div className="bg-gradient-to-br from-pink-100 via-pink-50 to-white p-4 sm:p-6 border-4 border-pink-200 rounded-xl relative">
+                          {/* Header */}
+                          <div className="flex justify-between items-start mb-4">
                             <div>
-                              <p className="text-[10px] sm:text-xs text-gray-600">Name</p>
-                              <p className="text-sm sm:text-lg font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Arial', sans-serif" }}>
-                                {currentPrescription.patientName.toUpperCase()}
+                              <p className="text-xs sm:text-sm font-bold text-gray-700 tracking-wide">REPUBLIC OF SINGAPORE</p>
+                              <p className="text-[10px] sm:text-xs text-gray-600 mt-1">IDENTITY CARD NO.</p>
+                              <p className="text-base sm:text-xl font-bold text-gray-900 mt-1" style={{ fontFamily: "'Courier New', monospace" }}>
+                                {currentPrescription.patientIC}
                               </p>
                             </div>
-
-                            <div className="grid grid-cols-2 gap-2">
-                              <div>
-                                <p className="text-[10px] sm:text-xs text-gray-600">Race</p>
-                                <p className="text-xs sm:text-sm font-bold text-gray-900">CHINESE</p>
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0">
+                              <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                                <span className="text-xl sm:text-3xl">🦁</span>
                               </div>
+                            </div>
+                          </div>
+
+                          {/* Card Content */}
+                          <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[120px_1fr] gap-3 sm:gap-4">
+                            {/* Photo placeholder */}
+                            <div className="aspect-[3/4] bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg border-2 border-gray-400 flex items-center justify-center overflow-hidden">
+                              <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="text-3xl sm:text-5xl opacity-60"
+                              >
+                                👤
+                              </motion.div>
+                            </div>
+
+                            {/* Personal Info */}
+                            <div className="space-y-2 sm:space-y-3">
                               <div>
-                                <p className="text-[10px] sm:text-xs text-gray-600">Sex</p>
-                                <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                  {currentPrescription.patientName.toLowerCase().includes('sarah') ||
-                                   currentPrescription.patientName.toLowerCase().includes('ms') ||
-                                   currentPrescription.patientName.toLowerCase().startsWith('mrs') ||
-                                   currentPrescription.patientName.toLowerCase().startsWith('mdm')
-                                    ? 'F'
-                                    : 'M'}
+                                <p className="text-[10px] sm:text-xs text-gray-600">Name</p>
+                                <p className="text-sm sm:text-lg font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Arial', sans-serif" }}>
+                                  {currentPrescription.patientName.toUpperCase()}
                                 </p>
                               </div>
-                            </div>
 
-                            <div>
-                              <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
-                              <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                {currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T') 
-                                  ? '15-03-1985' 
-                                  : '22-08-1992'}
-                              </p>
-                            </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <p className="text-[10px] sm:text-xs text-gray-600">Race</p>
+                                  <p className="text-xs sm:text-sm font-bold text-gray-900">CHINESE</p>
+                                </div>
+                                <div>
+                                  <p className="text-[10px] sm:text-xs text-gray-600">Sex</p>
+                                  <p className="text-xs sm:text-sm font-bold text-gray-900">
+                                    {currentPrescription.patientName.toLowerCase().includes('sarah') ||
+                                     currentPrescription.patientName.toLowerCase().includes('ms') ||
+                                     currentPrescription.patientName.toLowerCase().startsWith('mrs') ||
+                                     currentPrescription.patientName.toLowerCase().startsWith('mdm')
+                                      ? 'F'
+                                      : 'M'}
+                                  </p>
+                                </div>
+                              </div>
 
-                            <div>
-                              <p className="text-[10px] sm:text-xs text-gray-600">Country of Birth</p>
-                              <p className="text-xs sm:text-sm font-bold text-gray-900">SINGAPORE</p>
+                              <div>
+                                <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
+                                <p className="text-xs sm:text-sm font-bold text-gray-900">
+                                  {currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T') 
+                                    ? '15-03-1985' 
+                                    : '22-08-1992'}
+                                </p>
+                              </div>
+
+                              <div>
+                                <p className="text-[10px] sm:text-xs text-gray-600">Country of Birth</p>
+                                <p className="text-xs sm:text-sm font-bold text-gray-900">SINGAPORE</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Fingerprint graphic */}
+                          <div className="absolute bottom-3 right-3 w-10 h-10 sm:w-12 sm:h-12 opacity-30">
+                            <div className="w-full h-full rounded-full border-2 border-gray-400 relative">
+                              <div className="absolute inset-1 rounded-full border border-gray-400"></div>
+                              <div className="absolute inset-2 rounded-full border border-gray-400"></div>
+                            </div>
+                          </div>
+
+                          {/* Hologram effect */}
+                          <motion.div
+                            className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                            style={{
+                              background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)',
+                              backgroundSize: '200% 200%',
+                            }}
+                            animate={{
+                              backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                          />
+                        </div>
+
+                        {/* Pixel border decoration */}
+                        <div className="absolute -top-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
+                        <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
+                      </motion.div>
+
+                      {/* Prescription snapshot so ID and Rx can be compared on one screen */}
+                      <motion.div
+                        className="game-screen p-4 sm:p-5 h-full"
+                        initial={{ scale: 0.9, opacity: 0, rotateY: 15 }}
+                        animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                        transition={{ type: 'spring', stiffness: 100, delay: 0.1 }}
+                      >
+                        <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION PREVIEW</p>
+                        <div className="space-y-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px' }}>
+                          <p>Patient: {currentPrescription.patientName}</p>
+                          <p>IC: {currentPrescription.patientIC}</p>
+                          <p>Doctor: {currentPrescription.doctorName}</p>
+                          <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                          <p>Date: {currentPrescription.date}</p>
+                          <div className="pt-1">
+                            <p className="font-bold">Medications:</p>
+                            <div className="space-y-1 mt-1">
+                              {currentPrescription.medications.map((med, idx) => {
+                                const medication = getMedicationById(med.medicationId);
+                                return (
+                                  <p key={idx}>
+                                    • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
+                                  </p>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
-
-                        {/* Fingerprint graphic */}
-                        <div className="absolute bottom-3 right-3 w-10 h-10 sm:w-12 sm:h-12 opacity-30">
-                          <div className="w-full h-full rounded-full border-2 border-gray-400 relative">
-                            <div className="absolute inset-1 rounded-full border border-gray-400"></div>
-                            <div className="absolute inset-2 rounded-full border border-gray-400"></div>
-                          </div>
-                        </div>
-
-                        {/* Hologram effect */}
-                        <motion.div
-                          className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)',
-                            backgroundSize: '200% 200%',
-                          }}
-                          animate={{
-                            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-                          }}
-                          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                        />
-                      </div>
-
-                      {/* Pixel border decoration */}
-                      <div className="absolute -top-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
-                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
-                      <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
-                    </motion.div>
+                        <p className="text-xs text-gray-600 mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>
+                          Cross-check name/IC against the card before proceeding.
+                        </p>
+                      </motion.div>
+                    </div>
 
                     {/* Identity Verification with arcade button */}
                     <motion.div 
@@ -500,6 +535,34 @@ export const Receiving: React.FC = () => {
                 </p>
                 <p className="text-poke-black text-xs sm:text-sm" style={{ fontFamily: "'Press Start 2P', monospace" }}>
                   Check each field carefully. Click to verify!
+                </p>
+              </div>
+
+              {/* Prescription reference on same screen for cross-checking */}
+              <div className="game-screen p-4 sm:p-5">
+                <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION DETAILS</p>
+                <div className="space-y-2 text-poke-black" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '11px' }}>
+                  <p>Patient: {currentPrescription.patientName}</p>
+                  <p>IC: {currentPrescription.patientIC}</p>
+                  <p>Doctor: {currentPrescription.doctorName}</p>
+                  <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                  <p>Date: {currentPrescription.date}</p>
+                  <div className="pt-1">
+                    <p className="font-bold">Medications:</p>
+                    <div className="space-y-1 mt-1">
+                      {currentPrescription.medications.map((med, idx) => {
+                        const medication = getMedicationById(med.medicationId);
+                        return (
+                          <p key={idx}>
+                            • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-700 mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Reference this while ticking the 5 validation fields below.
                 </p>
               </div>
 

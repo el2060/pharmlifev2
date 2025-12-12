@@ -14,9 +14,15 @@ import { YearLevel } from './types/game.types';
 
 type Screen = 'menu' | 'year-selection' | 'about' | 'game';
 
-// Helper function to get level data based on year and chapter number
+// Helper function to get level data based on year and chapter number with safe fallback
 const getLevelData = (year: YearLevel, chapterNumber: number) => {
-  return levels.find((l) => l.year === year && l.chapterNumber === chapterNumber);
+  const yearLevels = levels
+    .filter((l) => l.year === year)
+    .sort((a, b) => a.chapterNumber - b.chapterNumber);
+
+  if (!yearLevels.length) return undefined;
+
+  return yearLevels.find((l) => l.chapterNumber === chapterNumber) ?? yearLevels[0];
 };
 
 function App() {
