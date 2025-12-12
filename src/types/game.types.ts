@@ -143,6 +143,7 @@ export interface GameState {
   playerLevel: string;
   currentPrescription: Prescription | null;
   selectedMedications: string[];
+  allergyConflictDetected: boolean;
   stageProgress: {
     receiving: boolean;
     typing: boolean;

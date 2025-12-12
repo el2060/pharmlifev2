@@ -77,7 +77,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex">
+      <div className="flex-1 mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10 xl:px-14">
       <AnimatePresence mode="wait">
         {currentScreen === 'menu' && (
           <motion.div
@@ -122,13 +123,14 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="min-h-screen"
+            className="min-h-screen space-y-6"
           >
             <HUD onBackToHome={handleBackToHome} />
-            <div className="py-6">{renderStage()}</div>
+            <div className="pb-10">{renderStage()}</div>
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -95,7 +95,7 @@ export const Receiving: React.FC = () => {
   };
 
   return (
-    <div className="container-custom mx-auto p-3 sm:p-4 max-w-4xl">
+    <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1400px]">
       {/* Pharmacy Scene Background */}
       <div className="mb-4 sm:mb-6 relative">
         <motion.div

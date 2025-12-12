@@ -17,29 +17,30 @@ const yearData = [
     difficulty: '★☆☆',
     bgColor: 'bg-pharm-green',
   },
-  {
-    year: 2 as YearLevel,
-    title: 'YEAR 2',
-    subtitle: 'Pharmacology',
-    description: 'Drug classes & counseling',
-    difficulty: '★★☆',
-    bgColor: 'bg-poke-blue',
-  },
-  {
-    year: 3 as YearLevel,
-    title: 'YEAR 3',
-    subtitle: 'Advanced',
-    description: 'Complex scenarios & customer service',
-    difficulty: '★★★',
-    bgColor: 'bg-poke-red',
-  },
+  // Year 2 and Year 3 hidden for Open House - coming soon!
+  // {
+  //   year: 2 as YearLevel,
+  //   title: 'YEAR 2',
+  //   subtitle: 'Pharmacology',
+  //   description: 'Drug classes & counseling',
+  //   difficulty: '★★☆',
+  //   bgColor: 'bg-poke-blue',
+  // },
+  // {
+  //   year: 3 as YearLevel,
+  //   title: 'YEAR 3',
+  //   subtitle: 'Advanced',
+  //   description: 'Complex scenarios & customer service',
+  //   difficulty: '★★★',
+  //   bgColor: 'bg-poke-red',
+  // },
 ];
 
 export const YearSelection: React.FC<YearSelectionProps> = ({ onSelectYear, onBack }) => {
   return (
-    <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6" style={{ background: '#FFFFFF' }}>
+    <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 lg:p-10" style={{ background: '#FFFFFF' }}>
       <motion.div
-        className="w-full max-w-4xl"
+        className="w-full max-w-6xl xl:max-w-7xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}

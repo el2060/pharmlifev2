@@ -188,7 +188,7 @@ export const Typing: React.FC = () => {
   };
 
   return (
-    <div className="container-custom mx-auto p-4 max-w-6xl">
+    <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1500px]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

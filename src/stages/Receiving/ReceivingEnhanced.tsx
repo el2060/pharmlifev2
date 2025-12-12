@@ -9,7 +9,7 @@ import { getMedicationById } from '../../data/medications';
 import { ConsequenceResult } from '../../types/game.types';
 
 export const ReceivingEnhanced: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
+  const { currentPrescription, addScore, addRxPoints, nextStage, setAllergyConflictDetected } = useGameStore();
   const [step, setStep] = useState<'identity' | 'investigation' | 'decision' | 'outcome'>('identity');
   const [identityVerified, setIdentityVerified] = useState(false);
   const [allergyChecked, setAllergyChecked] = useState(false);
@@ -49,8 +49,13 @@ export const ReceivingEnhanced: React.FC = () => {
       );
     });
 
-    if (hasConflict && !foundIssues.includes('allergy-conflict')) {
-      setFoundIssues([...foundIssues, 'allergy-conflict']);
+    if (hasConflict) {
+      // Set the flag in global state so Picking stage can use it
+      setAllergyConflictDetected(true);
+      
+      if (!foundIssues.includes('allergy-conflict')) {
+        setFoundIssues([...foundIssues, 'allergy-conflict']);
+      }
     }
   };
 
@@ -335,7 +340,7 @@ export const ReceivingEnhanced: React.FC = () => {
                           <CheckCircle className="text-green-500" size={32} />
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+                      <p className="text-base text-gray-600 mb-4 font-bold" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
                         ⚠️ Check TWO identifiers: Name and IC number
                       </p>
                       <button

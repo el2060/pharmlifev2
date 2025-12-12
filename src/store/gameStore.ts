@@ -11,6 +11,7 @@ interface GameStore extends GameState {
   completeStage: (stage: GameStage) => void;
   nextStage: () => void;
   resetLevel: () => void;
+  setAllergyConflictDetected: (detected: boolean) => void;
   addSelectedMedication: (medicationId: string) => void;
   clearSelectedMedications: () => void;
   updatePlayerLevel: () => void;
@@ -36,6 +37,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   playerLevel: 'Pharmacy Trainee',
   currentPrescription: null,
   selectedMedications: [],
+  allergyConflictDetected: false,
   stageProgress: {
     receiving: false,
     typing: false,
@@ -95,6 +97,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       currentStage: 'receiving',
       score: 0,
       selectedMedications: [],
+      allergyConflictDetected: false,
       stageProgress: {
         receiving: false,
         typing: false,
@@ -102,6 +105,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         dispensing: false,
       },
     }),
+
+  setAllergyConflictDetected: (detected) => set({ allergyConflictDetected: detected }),
 
   addSelectedMedication: (medicationId) =>
     set((state) => ({

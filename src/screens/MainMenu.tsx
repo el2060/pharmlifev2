@@ -15,18 +15,18 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   return (
-    <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
+    <div className="min-h-screen retro-bg flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
       {/* Pokemon-style pixelated border effect */}
       <div className="absolute inset-0 pointer-events-none border-8 border-poke-black" />
 
       <motion.div
-        className="w-full max-w-2xl relative z-10"
+        className="w-full max-w-6xl xl:max-w-7xl relative z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
         {/* Pokemon Red Title Screen */}
-        <div className="poke-menu p-6 sm:p-8 mb-4" style={{ background: '#FFFFFF' }}>
+        <div className="poke-menu p-6 sm:p-8 lg:p-10 mb-6 lg:mb-8" style={{ background: '#FFFFFF' }}>
           {/* Title */}
           <div className="text-center mb-8">
             <motion.div
@@ -64,71 +64,82 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             </motion.p>
           </div>
 
-          {/* Pokemon-style Menu Options */}
-          <div className="space-y-4 mb-6">
-            <motion.button
-              onClick={onStartGame}
-              className="w-full btn-primary text-base sm:text-lg flex items-center justify-between px-6 py-4"
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-poke-white">▶</span>
-                <span>START GAME</span>
-              </span>
-              <Play size={20} />
-            </motion.button>
+          {/* Pokemon-style Menu Options + Stats in wide grid */}
+          <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr] items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <motion.button
+                onClick={onStartGame}
+                className="w-full btn-primary text-base sm:text-lg flex items-center justify-between px-6 py-4"
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="text-poke-white">▶</span>
+                  <span>START GAME</span>
+                </span>
+                <Play size={20} />
+              </motion.button>
 
-            <motion.button
-              onClick={() => setShowHowToPlay(true)}
-              className="w-full border-4 border-poke-black text-base sm:text-lg flex items-center justify-between px-6 py-4 text-poke-white"
-              style={{
-                fontFamily: "'Press Start 2P', monospace",
-                background: '#FFB100',
-                boxShadow: 'inset -2px -2px 0 0 #C88800, inset 2px 2px 0 0 #FFD700, 4px 4px 0 0 rgba(0,0,0,0.3)'
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="flex items-center gap-3">
-                <span>▶</span>
-                <span>HOW TO PLAY</span>
-              </span>
-              <HelpCircle size={20} />
-            </motion.button>
+              <motion.button
+                onClick={() => setShowHowToPlay(true)}
+                className="w-full border-4 border-poke-black text-base sm:text-lg flex items-center justify-between px-6 py-4 text-poke-white"
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  background: '#FFB100',
+                  boxShadow: 'inset -2px -2px 0 0 #C88800, inset 2px 2px 0 0 #FFD700, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="flex items-center gap-3">
+                  <span>▶</span>
+                  <span>HOW TO PLAY</span>
+                </span>
+                <HelpCircle size={20} />
+              </motion.button>
 
-            <motion.button
-              onClick={onShowAbout}
-              className="w-full btn-secondary text-base sm:text-lg flex items-center justify-between px-6 py-4"
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-poke-white">▶</span>
-                <span>ABOUT</span>
-              </span>
-              <Info size={20} />
-            </motion.button>
-          </div>
-
-          {/* Player Stats - Pokemon Style */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div
-              className="border-2 border-poke-black px-4 py-3"
-              style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
-            >
-              <p className="text-poke-black text-xs mb-2">PLAYER</p>
-              <div className="flex items-center justify-between">
-                <p className="text-poke-black text-lg font-bold">{playerLevel}</p>
-                <Award className="text-poke-dark-yellow" size={24} fill="currentColor" />
-              </div>
+              <motion.button
+                onClick={onShowAbout}
+                className="w-full btn-secondary text-base sm:text-lg flex items-center justify-between px-6 py-4"
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="text-poke-white">▶</span>
+                  <span>ABOUT</span>
+                </span>
+                <Info size={20} />
+              </motion.button>
             </div>
 
-            <div
-              className="border-2 border-poke-black px-4 py-3"
-              style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
-            >
-              <p className="text-poke-black text-xs mb-2">Rx POINTS</p>
-              <div className="flex items-center justify-between">
-                <p className="text-poke-black text-lg font-bold">{rxPoints}</p>
-                <Star className="text-poke-dark-yellow" size={24} fill="currentColor" />
+            {/* Player Stats - Pokemon Style */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  className="border-2 border-poke-black px-4 py-3 h-full"
+                  style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                >
+                  <p className="text-poke-black text-xs mb-2">PLAYER</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-poke-black text-lg font-bold">{playerLevel}</p>
+                    <Award className="text-poke-dark-yellow" size={24} fill="currentColor" />
+                  </div>
+                </div>
+
+                <div
+                  className="border-2 border-poke-black px-4 py-3 h-full"
+                  style={{ fontFamily: "'Press Start 2P', monospace", background: '#FFFFFF' }}
+                >
+                  <p className="text-poke-black text-xs mb-2">Rx POINTS</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-poke-black text-lg font-bold">{rxPoints}</p>
+                    <Star className="text-poke-dark-yellow" size={24} fill="currentColor" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-2 border-poke-black px-4 py-3" style={{ fontFamily: "'Press Start 2P', monospace", background: '#F8F8F8' }}>
+                <p className="text-poke-black text-xs mb-2">SESSION TIP</p>
+                <p className="text-poke-black text-sm leading-relaxed">
+                  Play in landscape on tablets or desktops to see the full retro cabinet. All UI scales fluidly across breakpoints.
+                </p>
               </div>
             </div>
           </div>

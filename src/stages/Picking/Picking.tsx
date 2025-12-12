@@ -18,13 +18,46 @@ const categoryColors: Record<string, string> = {
 };
 
 export const Picking: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
+  const { currentPrescription, allergyConflictDetected, addScore, addRxPoints, nextStage } = useGameStore();
   const [selectedMedications, setSelectedMedications] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
+  }
+
+  // Block if allergy conflict was detected in Receiving stage
+  if (allergyConflictDetected) {
+    return (
+      <div className="container-custom mx-auto p-3 sm:p-4 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="game-screen p-6 sm:p-8 text-center"
+        >
+          <XCircle size={80} className="text-poke-red mx-auto mb-4" fill="currentColor" />
+          <h2 className="text-2xl sm:text-3xl font-bold text-poke-red mb-4" style={{ fontFamily: "'Press Start 2P', monospace" }}>
+            CANNOT PROCEED
+          </h2>
+          <p className="text-lg text-white mb-6" style={{ fontFamily: "'VT323', monospace", fontSize: '18px' }}>
+            ⚠️ ALLERGY CONFLICT DETECTED
+          </p>
+          <div className="bg-red-900 border-4 border-red-600 p-6 rounded mb-6 text-left">
+            <p className="text-white text-base" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+              The patient has a documented allergy to one of the prescribed medications. 
+              You must contact the prescribing doctor to request an alternative medication before proceeding.
+            </p>
+            <p className="text-yellow-300 font-bold text-base mt-4" style={{ fontFamily: "'VT323', monospace", fontSize: '16px' }}>
+              This is a critical safety issue. Never dispense medications that contradict patient allergies.
+            </p>
+          </div>
+          <p className="text-white text-sm" style={{ fontFamily: "'VT323', monospace", fontSize: '14px' }}>
+            ← Go back to Receiving stage to handle this properly
+          </p>
+        </motion.div>
+      </div>
+    );
   }
 
   const requiredMedIds = currentPrescription.medications.map((m) => m.medicationId);
@@ -72,7 +105,7 @@ export const Picking: React.FC = () => {
   };
 
   return (
-    <div className="container-custom mx-auto p-3 sm:p-4 max-w-6xl">
+    <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1500px]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -98,7 +131,7 @@ export const Picking: React.FC = () => {
                 </h3>
                 <p className="text-sm sm:text-base text-cyan-200" style={{ fontFamily: "'VT323', monospace" }}>
                   Selected: {selectedMedications.length} / {requiredMedIds.length}
-                </p>
+                className="mx-auto max-w-5xl"
               </div>
             </div>
             <motion.button
