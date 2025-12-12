@@ -10,7 +10,14 @@ export default {
         'xs': '475px',
       },
       colors: {
-        // Pokemon Red Palette
+        // Modern pharmacy game palette
+        'pharm-primary': '#2E5FA8',   // Deep blue
+        'pharm-secondary': '#34D399', // Emerald green
+        'pharm-accent': '#F97316',    // Orange
+        'pharm-warning': '#EF4444',   // Red
+        'pharm-success': '#10B981',   // Green
+        'pharm-neutral': '#64748B',   // Slate
+        // Legacy Pokemon palette (kept for compatibility)
         'poke-red': '#FF0000',
         'poke-dark-red': '#C80000',
         'poke-yellow': '#FFD700',
@@ -22,9 +29,8 @@ export default {
         'poke-gray': '#606060',
         'poke-dark-gray': '#303030',
         'poke-border': '#202020',
-        'poke-text': '#000000', // Changed to pure black for maximum contrast
-        // Pharmacy context colors
-        'pharm-green': '#00A85E', // Darker for better contrast
+        'poke-text': '#000000',
+        'pharm-green': '#00A85E',
         'pharm-pill-blue': '#2E5FA8',
         'pharm-pill-pink': '#D81B60',
         'pharm-pill-orange': '#E65100',

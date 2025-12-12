@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,15 +14,16 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8f8f8;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8f1f8 100%);
   min-height: 100vh;
   overflow-x: hidden;
-  font-size: 16px; /* Ensure large, clear base font size */
+  font-size: 16px;
+  color: #1a2332;
 }
 
 #root {
@@ -105,17 +106,13 @@ body {
   image-rendering: pixelated;
 }
 
-/* Pokemon-style Window/Border */
+/* Modern game-style card */
 .game-screen {
-  background: #FFFFFF;
-  border: 6px solid #000000;
-  border-radius: 0;
-  box-shadow:
-    inset 0 0 0 3px #FFFFFF,
-    inset 0 0 0 6px #888888,
-    4px 4px 0 0 rgba(0,0,0,0.4);
+  background: linear-gradient(135deg, #ffffff 0%, #f5f9fc 100%);
+  border: 2px solid rgba(46, 95, 168, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(46, 95, 168, 0.12), 0 4px 12px rgba(0,0,0,0.04);
   position: relative;
-  image-rendering: pixelated;
 }
 
 .game-screen::before {
@@ -224,13 +221,14 @@ body {
   user-select: none;
 }
 
-/* Pixel title styling - Pokemon Red style */
+/* Modern title styling */
 .pixel-title {
-  font-family: 'Press Start 2P', monospace;
-  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
-  letter-spacing: 0;
-  font-size: 20px; /* Large and clear */
-  line-height: 1.6;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #0f172a;
 }
 
 @media (min-width: 640px) {
@@ -239,28 +237,27 @@ body {
   }
 }
 
-/* Pokemon-style text box */
+/* Modern text box */
 .poke-textbox {
-  background: #FFFFFF;
-  border: 4px solid #000000;
-  box-shadow:
-    inset 0 0 0 2px #FFFFFF,
-    inset 0 0 0 4px #888888;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid rgba(46, 95, 168, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(46, 95, 168, 0.08);
   padding: 16px 20px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 16px;
-  line-height: 1.8;
-  color: #000000;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #1a2332;
   position: relative;
 }
 
-/* Pokemon menu window */
+/* Modern menu window */
 .poke-menu {
-  background: #FFFFFF;
-  border: 4px solid #000000;
-  box-shadow:
-    inset -4px -4px 0 0 #888888,
-    inset 4px 4px 0 0 #FFFFFF;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f9fc 100%);
+  border: 2px solid rgba(46, 95, 168, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(46, 95, 168, 0.12);
   position: relative;
 }
 
@@ -279,26 +276,20 @@ body {
 @layer components {
   .btn {
     /* Ensure readable default sizing and visible focus */
-    @apply px-6 py-4 font-semibold transition-all duration-100 no-select;
+    @apply px-6 py-3 font-semibold transition-all duration-200 no-select;
     @apply text-base sm:text-lg leading-tight;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
     @apply focus-visible:outline-none;
-    font-family: 'Inter', 'Poppins', sans-serif;
-    border: 4px solid #000000;
-    box-shadow:
-      inset -2px -2px 0 0 #888888,
-      inset 2px 2px 0 0 #FFFFFF,
-      4px 4px 0 0 rgba(0,0,0,0.3);
-    border-radius: 0;
-    min-height: 56px;
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    min-height: 44px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 
   .btn:active:not(:disabled) {
-    transform: translate(2px, 2px);
-    box-shadow:
-      inset -2px -2px 0 0 #888888,
-      inset 2px 2px 0 0 #FFFFFF,
-      2px 2px 0 0 rgba(0,0,0,0.3);
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
 
   .btn:focus-visible {
@@ -307,55 +298,58 @@ body {
   }
 
   .btn-primary {
-    @apply btn bg-poke-red text-poke-white;
+    @apply btn bg-gradient-to-r from-red-500 to-red-600 text-white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
   }
 
   .btn-primary:hover:not(:disabled) {
-    @apply bg-poke-dark-red;
+    @apply from-red-600 to-red-700;
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
   }
 
   .btn-secondary {
-    @apply btn bg-poke-blue text-poke-white;
+    @apply btn bg-gradient-to-r from-blue-500 to-blue-600 text-white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 
   .btn-secondary:hover:not(:disabled) {
-    @apply bg-poke-light-blue;
+    @apply from-blue-600 to-blue-700;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
   }
 
   .btn-danger {
-    @apply btn bg-poke-yellow text-poke-black;
+    @apply btn bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
   }
 
   .btn-danger:hover:not(:disabled) {
-    @apply bg-poke-dark-yellow;
+    @apply from-amber-500 to-orange-600;
+    box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4);
   }
 
   .btn-success {
-    @apply btn bg-pharm-green text-poke-white;
+    @apply btn bg-gradient-to-r from-green-500 to-emerald-600 text-white;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   }
 
   .btn-success:hover:not(:disabled) {
-    background-color: #00A862;
+    @apply from-green-600 to-emerald-700;
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
   }
 
   .card {
-    background: #FFFFFF;
-    border: 4px solid #000000;
-    box-shadow:
-      inset -3px -3px 0 0 #888888,
-      inset 3px 3px 0 0 #FFFFFF,
-      4px 4px 0 0 rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #f5f9fc 100%);
+    border: 2px solid rgba(46, 95, 168, 0.25);
+    border-radius: 12px;
     padding: 1.5rem;
-    border-radius: 0;
-    transition: all 0.15s;
+    box-shadow: 0 4px 12px rgba(46, 95, 168, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow:
-      inset -3px -3px 0 0 #888888,
-      inset 3px 3px 0 0 #FFFFFF,
-      6px 6px 0 0 rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(46, 95, 168, 0.15);
+    border-color: rgba(46, 95, 168, 0.4);
   }
 
   .game-card {
@@ -368,24 +362,26 @@ body {
     text-shadow: 0 1px 1px rgba(0,0,0,0.6);
   }
 
-  /* Pixel label with minimum accessible size */
+  /* Modern label with better readability */
   .pixel-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px; /* Increased for better mobile readability */
-    letter-spacing: 1px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 
   /* Ensure readable text on mobile */
   @media (max-width: 640px) {
     .poke-textbox,
     .speech-bubble {
-      font-size: 14px;
-      line-height: 2;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
     .btn {
       font-size: 14px;
-      padding: 14px 20px;
+      padding: 10px 16px;
     }
   }
 }
@@ -639,28 +635,21 @@ body {
 /* Pokemon-style Speech Bubble / Text Box */
 .speech-bubble {
   position: relative;
-  background: #FFFFFF;
-  border: 4px solid #000;
-  border-radius: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f9fc 100%);
+  border: 2px solid rgba(46, 95, 168, 0.3);
+  border-radius: 10px;
   padding: 16px 20px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 16px; /* Larger for readability */
-  line-height: 1.8;
-  box-shadow:
-    inset 0 0 0 2px #FFFFFF,
-    inset 0 0 0 4px #888888,
-    4px 4px 0 rgba(0,0,0,0.3);
-  color: #000000;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(46, 95, 168, 0.08);
+  color: #1a2332;
 }
 
 .speech-bubble::before {
-  content: '▼';
-  position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 12px;
-  color: #000000;
-  animation: pixel-blink 1s step-end infinite;
+  content: '';
+  display: none;
 }
 
 .speech-bubble::after {
@@ -696,37 +685,32 @@ body {
   }
 }
 
-/* Pokemon-style Button (replaces arcade button) */
+/* Modern button with better visuals */
 .arcade-button {
   position: relative;
-  border: 4px solid #000;
-  box-shadow:
-    inset -2px -2px 0 0 #888888,
-    inset 2px 2px 0 0 #FFFFFF,
-    4px 4px 0 0 rgba(0,0,0,0.4);
-  transition: all 0.1s;
-  font-family: 'Press Start 2P', monospace;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
+  font-weight: 600;
   outline: none;
-  border-radius: 0;
-  background: #FFFFFF;
-  color: #000000;
-  font-size: 16px;
-  padding: 16px 24px;
-  min-height: 56px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 14px;
+  padding: 12px 24px;
+  min-height: 44px;
 }
 
 .arcade-button:focus-visible {
-  outline: 4px dashed #FFD700;
-  outline-offset: 4px;
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
 }
 
 .arcade-button:active {
-  transform: translate(2px, 2px);
-  box-shadow:
-    inset -2px -2px 0 0 #888888,
-    inset 2px 2px 0 0 #FFFFFF,
-    2px 2px 0 0 rgba(0,0,0,0.4);
+  transform: translateY(2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 .arcade-button::before {
