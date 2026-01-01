@@ -125,7 +125,7 @@ const rx4: Prescription = {
 };
 
 // Rx #5 - Simple valid prescription (Tutorial)
-const rx5: Prescription = {
+export const rx5: Prescription = {
   id: 'rx-005',
   patientName: 'Sarah Tan',
   patientIC: 'S1234567A',
@@ -220,7 +220,7 @@ const rx8: Prescription = {
 };
 
 // Rx #9 - Signature verification scenario
-const rx9: Prescription = {
+export const rx9: Prescription = {
   id: 'rx-009',
   patientName: 'Sarah Tan',
   patientIC: 'S1234567A',
@@ -243,7 +243,7 @@ const rx9: Prescription = {
 };
 
 // Rx #10 - Allergy conflict with patient saying "no allergies"
-const rx10: Prescription = {
+export const rx10: Prescription = {
   id: 'rx-010',
   patientName: 'David Wong',
   patientIC: 'S3456789D',
@@ -266,7 +266,7 @@ const rx10: Prescription = {
 };
 
 // Rx #11 - Year 1 Level 5: Valid prescription with Ibuprofen
-const rx11: Prescription = {
+export const rx11: Prescription = {
   id: 'rx-011',
   patientName: 'Mrs Wong Mei Lin',
   patientIC: 'S2345678E',
@@ -288,7 +288,7 @@ const rx11: Prescription = {
 };
 
 // Rx #12 - Year 1 Level 6: Invalid - expired date
-const rx12: Prescription = {
+export const rx12: Prescription = {
   id: 'rx-012',
   patientName: 'Mr Pillai Ravi',
   patientIC: 'S4567890F',
@@ -310,7 +310,7 @@ const rx12: Prescription = {
 };
 
 // Rx #13 - Year 1 Level 7: Valid prescription with GI medication
-const rx13: Prescription = {
+export const rx13: Prescription = {
   id: 'rx-013',
   patientName: 'Mr Gomez Luis',
   patientIC: 'S6789012G',
