@@ -135,12 +135,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
                 </div>
               </div>
 
-              <div className="px-4 py-3 font-medium rounded-xl border" style={{ background: '#fefce8', borderColor: '#fde047', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                <p className="text-yellow-900 text-xs font-bold uppercase tracking-wide mb-2">SESSION TIP</p>
-                <p className="text-yellow-800 text-sm leading-relaxed">
-                  Play in landscape on tablets or desktops to see the full retro cabinet. All UI scales fluidly across breakpoints.
-                </p>
-              </div>
+
             </div>
           </div>
         </div>
@@ -159,13 +154,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
 
           <div className="font-medium">
             <p className="text-gray-700 text-xs sm:text-sm font-bold">
-              © 2025 PHARMLIFE
+              © 2026 PHARMLIFE
             </p>
             <p className="text-gray-600 text-[10px] sm:text-xs leading-relaxed mt-2">
               Gamified Learning for Dip Pharm Sci, LSCT, NP
             </p>
             <p className="text-gray-500 text-[9px] sm:text-xs leading-relaxed mt-3">
-              Last Updated: December 12, 2025
+              Last Updated: 01 Jan 2026
             </p>
           </div>
         </div>
@@ -184,7 +179,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
               🎮 GAME FLOW
             </p>
             <p className="text-[10px] sm:text-sm leading-relaxed text-blue-900">
-              <strong>4 Stages per Level:</strong><br/>
+              <strong>4 Stages per Level:</strong><br />
               📥 Receiving → ⌨️ Typing → 📦 Picking → 💊 Dispensing
             </p>
           </div>
@@ -215,7 +210,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
               ⚡ INTERACTIVE DECISIONS
             </p>
             <p className="text-[10px] sm:text-sm leading-relaxed text-yellow-900">
-              From <strong>Level 1-2 onwards</strong>, you'll face real scenarios requiring professional judgment.<br/>
+              From <strong>Level 1-2 onwards</strong>, you'll face real scenarios requiring professional judgment.<br />
               <strong>Choose wisely</strong> - wrong decisions have consequences!
             </p>
           </div>

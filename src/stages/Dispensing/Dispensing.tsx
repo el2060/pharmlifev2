@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { motion } from 'framer-motion';
+
 import { CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -337,7 +337,7 @@ export const Dispensing: React.FC = () => {
         )}
       </Modal>
 
-    </motion.div>
+
     </div >
   );
 };

@@ -201,8 +201,8 @@ export const Picking: React.FC = () => {
                   onClick={handleSubmit}
                   disabled={selectedMedications.length === 0}
                   className={`arcade-button ${selectedMedications.length === 0
-                      ? 'bg-gray-500 opacity-50 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-green-500 to-emerald-600'
+                    ? 'bg-gray-500 opacity-50 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-green-500 to-emerald-600'
                     } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm font-semibold`}
                   whileHover={selectedMedications.length > 0 ? { scale: 1.05 } : {}}
                   whileTap={selectedMedications.length > 0 ? { scale: 0.95 } : {}}
@@ -240,7 +240,7 @@ export const Picking: React.FC = () => {
                   })}
                 </motion.div>
               )}
-          )}
+
             </div>
           </div>
 
@@ -320,8 +320,8 @@ export const Picking: React.FC = () => {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleSelectMedication(med.id)}
                             className={`cursor-pointer p-3 sm:p-4 rounded-lg border-4 transition-all relative ${isSelected
-                                ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100 shadow-xl'
-                                : 'border-gray-300 hover:border-blue-400 bg-white shadow-md'
+                              ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100 shadow-xl'
+                              : 'border-gray-300 hover:border-blue-400 bg-white shadow-md'
                               }`}
                           >
                             {/* Medication box visual */}
@@ -380,8 +380,8 @@ export const Picking: React.FC = () => {
             onClick={handleSubmit}
             disabled={selectedMedications.length === 0}
             className={`w-full arcade-button ${selectedMedications.length === 0
-                ? 'bg-gray-500 opacity-50 cursor-not-allowed'
-                : 'bg-gradient-to-r from-green-500 to-emerald-600'
+              ? 'bg-gray-500 opacity-50 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-500 to-emerald-600'
               } text-white py-4 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold`}
             whileHover={selectedMedications.length > 0 ? { scale: 1.02 } : {}}
             whileTap={selectedMedications.length > 0 ? { scale: 0.98 } : {}}
@@ -433,8 +433,8 @@ export const Picking: React.FC = () => {
               <motion.button
                 onClick={handleContinue}
                 className={`arcade-button ${isCorrect
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                    : 'bg-gradient-to-r from-blue-500 to-blue-700'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                  : 'bg-gradient-to-r from-blue-500 to-blue-700'
                   } text-white py-3 px-6 w-full min-h-[48px] font-semibold`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -443,6 +443,7 @@ export const Picking: React.FC = () => {
               </motion.button>
             </div>
           </Modal>
+        </div>
       </motion.div>
     </div>
   );
