@@ -99,43 +99,43 @@ export const Receiving: React.FC = () => {
       {/* Pharmacy Scene Background */}
       <div className="mb-4 sm:mb-6 relative">
         <motion.div
-          className="pharmacy-counter rounded-t-xl p-4 sm:p-8 relative overflow-hidden"
+          className="pharmacy-counter rounded-t-xl p-3 sm:p-8 relative overflow-hidden"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
           {/* Pharmacy Counter Scene */}
-          <div className="flex justify-between items-end mb-4">
+          <div className="flex justify-between items-end mb-2 sm:mb-4 h-[120px] sm:h-auto">
             {/* Pharmacist Character */}
             <motion.div
-              className="relative scale-75 sm:scale-100"
-              initial={{ x: -50, opacity: 0 }}
+              className="relative scale-90 sm:scale-100 origin-bottom-left"
+              initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
               <div className="character-pharmacist" />
               <motion.div
-                className="speech-bubble mt-2 max-w-[200px] sm:max-w-xs text-[8px] sm:text-[10px] leading-tight sm:leading-normal"
+                className="speech-bubble mt-2 absolute -right-2 top-0 transform translate-x-full w-[120px] sm:static sm:w-auto sm:max-w-xs text-[9px] sm:text-xs leading-tight sm:leading-normal z-10"
                 initial={{ scale: 0, originX: 0, originY: 1 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.6, type: 'spring' }}
               >
-                {step === 'identity' && 'Welcome! Let\'s verify your identity first.'}
-                {step === 'validation' && 'Now let me check this prescription...'}
-                {step === 'complete' && 'All done! Moving to next stage.'}
+                {step === 'identity' && 'Welcome! Let\'s verify identity.'}
+                {step === 'validation' && 'Checking prescription...'}
+                {step === 'complete' && 'Done! Next stage.'}
               </motion.div>
             </motion.div>
 
             {/* Patient Character */}
             <motion.div
-              className="relative scale-75 sm:scale-100"
-              initial={{ x: 50, opacity: 0 }}
+              className="relative scale-90 sm:scale-100 origin-bottom-right"
+              initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
               <div className="character-patient" />
               <motion.div
                 className="absolute -top-6 sm:-top-8 right-0 text-2xl sm:text-3xl"
-                animate={{ 
+                animate={{
                   y: [0, -5, 0],
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -148,7 +148,7 @@ export const Receiving: React.FC = () => {
           {/* Decorative Pharmacy Elements */}
           <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-60">
             <motion.span
-              className="text-2xl sm:text-3xl"
+              className="text-xl sm:text-3xl"
               animate={{ rotate: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -158,18 +158,18 @@ export const Receiving: React.FC = () => {
         </motion.div>
 
         {/* Shelves Background */}
-        <div className="pharmacy-shelf h-16 sm:h-20 rounded-b-xl relative flex items-center justify-around px-4 sm:px-8">
+        <div className="pharmacy-shelf h-12 sm:h-20 rounded-b-xl relative flex items-center justify-around px-2 sm:px-8">
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              className="medicine-box w-8 h-8 sm:w-12 sm:h-12 rounded"
+              className="medicine-box w-6 h-6 sm:w-12 sm:h-12 rounded"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 * i }}
               whileHover={{ scale: 1.1, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="w-full h-full flex items-center justify-center text-lg sm:text-2xl">
+              <div className="w-full h-full flex items-center justify-center text-sm sm:text-2xl">
                 {['💊', '💉', '🧪', '🩹', '💊'][i]}
               </div>
             </motion.div>
@@ -185,13 +185,12 @@ export const Receiving: React.FC = () => {
         {/* Step Indicator */}
         <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
           <motion.div
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${
-              step === 'identity' 
-                ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110' 
-                : 'bg-gray-100 text-gray-400 border-gray-300'
-            }`}
+            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'identity'
+              ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110'
+              : 'bg-gray-100 text-gray-400 border-gray-300'
+              }`}
             whileHover={{ scale: 1.05 }}
-            
+
           >
             <User size={16} className="sm:hidden" />
             <User size={20} className="hidden sm:block" />
@@ -207,13 +206,12 @@ export const Receiving: React.FC = () => {
             )}
           </motion.div>
           <motion.div
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${
-              step === 'validation' 
-                ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110' 
-                : 'bg-gray-100 text-gray-400 border-gray-300'
-            }`}
+            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'validation'
+              ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110'
+              : 'bg-gray-100 text-gray-400 border-gray-300'
+              }`}
             whileHover={{ scale: 1.05 }}
-            
+
           >
             <FileText size={16} className="sm:hidden" />
             <FileText size={20} className="hidden sm:block" />
@@ -241,7 +239,7 @@ export const Receiving: React.FC = () => {
                   <div className="space-y-4">
                     <div className="grid gap-4 lg:grid-cols-2">
                       {/* Singapore NRIC Card Display */}
-                      <motion.div 
+                      <motion.div
                         className="relative overflow-hidden rounded-xl shadow-2xl"
                         initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
                         animate={{ scale: 1, opacity: 1, rotateY: 0 }}
@@ -287,7 +285,7 @@ export const Receiving: React.FC = () => {
                                 </p>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-2">
+                              <div className="grid grid-cols-2 gap-8">
                                 <div>
                                   <p className="text-[10px] sm:text-xs text-gray-600">Race</p>
                                   <p className="text-xs sm:text-sm font-bold text-gray-900">CHINESE</p>
@@ -296,9 +294,9 @@ export const Receiving: React.FC = () => {
                                   <p className="text-[10px] sm:text-xs text-gray-600">Sex</p>
                                   <p className="text-xs sm:text-sm font-bold text-gray-900">
                                     {currentPrescription.patientName.toLowerCase().includes('sarah') ||
-                                     currentPrescription.patientName.toLowerCase().includes('ms') ||
-                                     currentPrescription.patientName.toLowerCase().startsWith('mrs') ||
-                                     currentPrescription.patientName.toLowerCase().startsWith('mdm')
+                                      currentPrescription.patientName.toLowerCase().includes('ms') ||
+                                      currentPrescription.patientName.toLowerCase().startsWith('mrs') ||
+                                      currentPrescription.patientName.toLowerCase().startsWith('mdm')
                                       ? 'F'
                                       : 'M'}
                                   </p>
@@ -308,8 +306,8 @@ export const Receiving: React.FC = () => {
                               <div>
                                 <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
                                 <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                  {currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T') 
-                                    ? '15-03-1985' 
+                                  {currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T')
+                                    ? '15-03-1985'
                                     : '22-08-1992'}
                                 </p>
                               </div>
@@ -370,9 +368,10 @@ export const Receiving: React.FC = () => {
                               {currentPrescription.medications.map((med, idx) => {
                                 const medication = getMedicationById(med.medicationId);
                                 return (
-                                  <p key={idx}>
-                                    • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
-                                  </p>
+                                  <div key={idx} className="mb-2">
+                                    <p className="font-bold">• {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}:</p>
+                                    <p className="pl-3">{med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}</p>
+                                  </div>
                                 );
                               })}
                             </div>
@@ -385,7 +384,12 @@ export const Receiving: React.FC = () => {
                     </div>
 
                     {/* Identity Verification with arcade button */}
-                    <motion.div 
+                    <div className="mt-6 mb-3">
+                      <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
+                        Your Tasks
+                      </h4>
+                    </div>
+                    <motion.div
                       className="border-4 border-dashed border-green-400 bg-green-50 p-6 rounded-lg"
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -414,12 +418,11 @@ export const Receiving: React.FC = () => {
                       <motion.button
                         onClick={handleIdentityCheck}
                         disabled={identityChecked}
-                        className={`arcade-button w-full py-4 ${
-                          identityChecked 
-                            ? 'bg-gradient-to-r from-green-500 to-green-700' 
-                            : 'bg-gradient-to-r from-blue-400 to-blue-600'
-                        } text-white`}
-                        
+                        className={`arcade-button w-full py-4 ${identityChecked
+                          ? 'bg-gradient-to-r from-green-500 to-green-700'
+                          : 'bg-gradient-to-r from-blue-400 to-blue-600'
+                          } text-white`}
+
                         whileHover={!identityChecked ? { scale: 1.02 } : {}}
                         whileTap={!identityChecked ? { scale: 0.98 } : {}}
                       >
@@ -428,7 +431,7 @@ export const Receiving: React.FC = () => {
                     </motion.div>
 
                     {/* Allergy Check */}
-                    <motion.div 
+                    <motion.div
                       className="border-4 border-dashed border-red-400 bg-red-50 p-6 rounded-lg"
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -452,9 +455,9 @@ export const Receiving: React.FC = () => {
                         )}
                       </div>
                       {currentPrescription.patientAllergies.length > 0 ? (
-                        <motion.div 
+                        <motion.div
                           className="bg-red-200 border-4 border-red-600 p-4 rounded mb-4"
-                          animate={{ 
+                          animate={{
                             boxShadow: [
                               '0 0 10px rgba(220, 38, 38, 0.5)',
                               '0 0 20px rgba(220, 38, 38, 0.8)',
@@ -475,12 +478,11 @@ export const Receiving: React.FC = () => {
                       <motion.button
                         onClick={handleAllergyCheck}
                         disabled={allergyChecked}
-                        className={`arcade-button w-full py-4 ${
-                          allergyChecked 
-                            ? 'bg-gradient-to-r from-green-500 to-green-700' 
-                            : 'bg-gradient-to-r from-orange-400 to-red-600'
-                        } text-white`}
-                        
+                        className={`arcade-button w-full py-4 ${allergyChecked
+                          ? 'bg-gradient-to-r from-green-500 to-green-700'
+                          : 'bg-gradient-to-r from-orange-400 to-red-600'
+                          } text-white`}
+
                         whileHover={!allergyChecked ? { scale: 1.02 } : {}}
                         whileTap={!allergyChecked ? { scale: 0.98 } : {}}
                       >
@@ -497,7 +499,7 @@ export const Receiving: React.FC = () => {
                         <motion.button
                           onClick={handleProceedToValidation}
                           className="arcade-button w-full py-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white"
-                          
+
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           animate={{
@@ -554,9 +556,10 @@ export const Receiving: React.FC = () => {
                         {currentPrescription.medications.map((med, idx) => {
                           const medication = getMedicationById(med.medicationId);
                           return (
-                            <p key={idx}>
-                              • {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}: {med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}
-                            </p>
+                            <div key={idx} className="mb-2">
+                              <p className="font-bold">• {medication?.genericName} {medication?.strength ? `(${medication.strength})` : ''}:</p>
+                              <p className="pl-3">{med.dosageInstruction} {med.frequency}{med.specialInstructions ? ` ${med.specialInstructions}` : ''} x {med.duration}</p>
+                            </div>
                           );
                         })}
                       </div>
@@ -569,226 +572,233 @@ export const Receiving: React.FC = () => {
 
                 {/* Interactive Prescription Display */}
                 <div className="poke-menu p-4 sm:p-6 space-y-4" style={{ background: '#FFFFFF' }}>
+
+                  <div className="mb-2">
+                    <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
+                      Your Tasks
+                    </h4>
+                  </div>
+
                   {/* 1. Doctor Signature Check */}
-                <motion.button
-                  onClick={() => handleFieldCheck('signature', !currentPrescription.doctorSignature)}
-                  disabled={checkedFields.has('signature')}
-                  className="w-full border-4 border-poke-black p-4 sm:p-5 text-left relative overflow-hidden"
-                  style={{
-                    background: checkedFields.has('signature')
-                      ? (currentPrescription.doctorSignature ? '#90EE90' : '#FFB6C1')
-                      : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
-                    transition: 'all 0.3s ease'
-                  }}
-                  whileHover={!checkedFields.has('signature') ? { scale: 1.02, boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 6px 6px 0 0 rgba(0,0,0,0.3)' } : {}}
-                  whileTap={{ scale: checkedFields.has('signature') ? 1 : 0.97 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
-                        ☐ DOCTOR SIGNATURE
-                      </p>
-                      <p className="text-poke-black text-xs sm:text-sm" >
-                        Dr. {currentPrescription.doctorName}
-                      </p>
-                      {currentPrescription.doctorSignature && (
-                        <p className="italic text-gray-600 text-sm mt-1">✍️ Signed</p>
-                      )}
-                    </div>
-                    {checkedFields.has('signature') && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="flex-shrink-0"
-                      >
-                        {currentPrescription.doctorSignature ? (
-                          <CheckCircle className="text-green-600" size={32} />
-                        ) : (
-                          <XCircle className="text-red-600" size={32} />
-                        )}
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.button>
-
-                {/* 2. Prescription Date Check */}
-                <motion.button
-                  onClick={() => {
-                    const rxDate = new Date(currentPrescription.date);
-                    const today = new Date();
-                    const daysDiff = Math.floor((today.getTime() - rxDate.getTime()) / (1000 * 60 * 60 * 24));
-                    const isExpired = daysDiff > 180; // More than 6 months old
-                    handleFieldCheck('date', isExpired);
-                  }}
-                  disabled={checkedFields.has('date')}
-                  className="w-full border-4 border-poke-black p-4 text-left"
-                  style={{
-                    background: checkedFields.has('date')
-                      ? (foundIssues.includes('date') ? '#FFB6C1' : '#90EE90')
-                      : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  }}
-                  whileTap={{ scale: checkedFields.has('date') ? 1 : 0.98 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
-                        ☐ PRESCRIPTION DATE
-                      </p>
-                      <p className="text-poke-black text-xs sm:text-sm" >
-                        {currentPrescription.date}
-                      </p>
-                    </div>
-                    {checkedFields.has('date') && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="flex-shrink-0"
-                      >
-                        {!foundIssues.includes('date') ? (
-                          <CheckCircle className="text-green-600" size={32} />
-                        ) : (
-                          <XCircle className="text-red-600" size={32} />
-                        )}
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.button>
-
-                {/* 3. Patient Details Check */}
-                <motion.button
-                  onClick={() => handleFieldCheck('patient', false)} // Assuming always matches in our scenarios
-                  disabled={checkedFields.has('patient')}
-                  className="w-full border-4 border-poke-black p-4 text-left"
-                  style={{
-                    background: checkedFields.has('patient') ? '#90EE90' : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  }}
-                  whileTap={{ scale: checkedFields.has('patient') ? 1 : 0.98 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
-                        ☐ PATIENT DETAILS
-                      </p>
-                      <p className="text-poke-black text-xs sm:text-sm" >
-                        {currentPrescription.patientName}
-                      </p>
-                      <p className="text-gray-600 text-xs mt-1">IC: {currentPrescription.patientIC}</p>
-                    </div>
-                    {checkedFields.has('patient') && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                      >
-                        <CheckCircle className="text-green-600" size={32} />
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.button>
-
-                {/* 4. Dosage Instructions Check */}
-                <motion.button
-                  onClick={() => {
-                    // Check if any medication is missing duration or dosage
-                    const hasIncomplete = currentPrescription.medications.some(
-                      med => !med.duration || !med.dosageInstruction || !med.frequency
-                    );
-                    handleFieldCheck('dosage', hasIncomplete);
-                  }}
-                  disabled={checkedFields.has('dosage')}
-                  className="w-full border-4 border-poke-black p-4 text-left"
-                  style={{
-                    background: checkedFields.has('dosage')
-                      ? (foundIssues.includes('dosage') ? '#FFB6C1' : '#90EE90')
-                      : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  }}
-                  whileTap={{ scale: checkedFields.has('dosage') ? 1 : 0.98 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
-                        ☐ DOSAGE COMPLETE
-                      </p>
-                      <div className="space-y-1">
-                        {currentPrescription.medications.map((med, idx) => {
-                          const medication = getMedicationById(med.medicationId);
-                          return (
-                            <p key={idx} className="text-poke-black text-xs" >
-                              {medication?.genericName}: {med.dosageInstruction || '?'} {med.frequency || '?'} x {med.duration || '?'}
-                            </p>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    {checkedFields.has('dosage') && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                      >
-                        {!foundIssues.includes('dosage') ? (
-                          <CheckCircle className="text-green-600" size={32} />
-                        ) : (
-                          <XCircle className="text-red-600" size={32} />
-                        )}
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.button>
-
-                {/* 5. Drug Allergies Check */}
-                <motion.button
-                  onClick={() => {
-                    // Check if any prescribed medication matches patient allergies
-                    const hasAllergyConflict = currentPrescription.medications.some(med => {
-                      const medication = getMedicationById(med.medicationId);
-                      return currentPrescription.patientAllergies.some(
-                        allergy => medication?.genericName.toLowerCase().includes(allergy.toLowerCase())
-                      );
-                    });
-                    handleFieldCheck('allergies', hasAllergyConflict);
-                  }}
-                  disabled={checkedFields.has('allergies')}
-                  className="w-full border-4 border-poke-black p-4 text-left"
-                  style={{
-                    background: checkedFields.has('allergies')
-                      ? (foundIssues.includes('allergies') ? '#FFB6C1' : '#90EE90')
-                      : '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  }}
-                  whileTap={{ scale: checkedFields.has('allergies') ? 1 : 0.98 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
-                        ☐ NO ALLERGY CONFLICT
-                      </p>
-                      {currentPrescription.patientAllergies.length > 0 ? (
-                        <p className="text-red-600 text-xs font-bold">
-                          ⚠️ Allergies: {currentPrescription.patientAllergies.join(', ')}
+                  <motion.button
+                    onClick={() => handleFieldCheck('signature', !currentPrescription.doctorSignature)}
+                    disabled={checkedFields.has('signature')}
+                    className="w-full border-4 border-poke-black p-4 sm:p-5 text-left relative overflow-hidden"
+                    style={{
+                      background: checkedFields.has('signature')
+                        ? (currentPrescription.doctorSignature ? '#90EE90' : '#FFB6C1')
+                        : '#FFFFFF',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    whileHover={!checkedFields.has('signature') ? { scale: 1.02, boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 6px 6px 0 0 rgba(0,0,0,0.3)' } : {}}
+                    whileTap={{ scale: checkedFields.has('signature') ? 1 : 0.97 }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                          ☐ DOCTOR SIGNATURE
                         </p>
-                      ) : (
-                        <p className="text-gray-600 text-xs">No known allergies</p>
+                        <p className="text-poke-black text-xs sm:text-sm" >
+                          Dr. {currentPrescription.doctorName}
+                        </p>
+                        {currentPrescription.doctorSignature && (
+                          <p className="italic text-gray-600 text-sm mt-1">✍️ Signed</p>
+                        )}
+                      </div>
+                      {checkedFields.has('signature') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="flex-shrink-0"
+                        >
+                          {currentPrescription.doctorSignature ? (
+                            <CheckCircle className="text-green-600" size={32} />
+                          ) : (
+                            <XCircle className="text-red-600" size={32} />
+                          )}
+                        </motion.div>
                       )}
                     </div>
-                    {checkedFields.has('allergies') && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                      >
-                        {!foundIssues.includes('allergies') ? (
+                  </motion.button>
+
+                  {/* 2. Prescription Date Check */}
+                  <motion.button
+                    onClick={() => {
+                      const rxDate = new Date(currentPrescription.date);
+                      const today = new Date();
+                      const daysDiff = Math.floor((today.getTime() - rxDate.getTime()) / (1000 * 60 * 60 * 24));
+                      const isExpired = daysDiff > 180; // More than 6 months old
+                      handleFieldCheck('date', isExpired);
+                    }}
+                    disabled={checkedFields.has('date')}
+                    className="w-full border-4 border-poke-black p-4 text-left"
+                    style={{
+                      background: checkedFields.has('date')
+                        ? (foundIssues.includes('date') ? '#FFB6C1' : '#90EE90')
+                        : '#FFFFFF',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    }}
+                    whileTap={{ scale: checkedFields.has('date') ? 1 : 0.98 }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                          ☐ PRESCRIPTION DATE
+                        </p>
+                        <p className="text-poke-black text-xs sm:text-sm" >
+                          {currentPrescription.date}
+                        </p>
+                      </div>
+                      {checkedFields.has('date') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="flex-shrink-0"
+                        >
+                          {!foundIssues.includes('date') ? (
+                            <CheckCircle className="text-green-600" size={32} />
+                          ) : (
+                            <XCircle className="text-red-600" size={32} />
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.button>
+
+                  {/* 3. Patient Details Check */}
+                  <motion.button
+                    onClick={() => handleFieldCheck('patient', false)} // Assuming always matches in our scenarios
+                    disabled={checkedFields.has('patient')}
+                    className="w-full border-4 border-poke-black p-4 text-left"
+                    style={{
+                      background: checkedFields.has('patient') ? '#90EE90' : '#FFFFFF',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    }}
+                    whileTap={{ scale: checkedFields.has('patient') ? 1 : 0.98 }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                          ☐ PATIENT DETAILS
+                        </p>
+                        <p className="text-poke-black text-xs sm:text-sm" >
+                          {currentPrescription.patientName}
+                        </p>
+                        <p className="text-gray-600 text-xs mt-1">IC: {currentPrescription.patientIC}</p>
+                      </div>
+                      {checkedFields.has('patient') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
                           <CheckCircle className="text-green-600" size={32} />
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.button>
+
+                  {/* 4. Dosage Instructions Check */}
+                  <motion.button
+                    onClick={() => {
+                      // Check if any medication is missing duration or dosage
+                      const hasIncomplete = currentPrescription.medications.some(
+                        med => !med.duration || !med.dosageInstruction || !med.frequency
+                      );
+                      handleFieldCheck('dosage', hasIncomplete);
+                    }}
+                    disabled={checkedFields.has('dosage')}
+                    className="w-full border-4 border-poke-black p-4 text-left"
+                    style={{
+                      background: checkedFields.has('dosage')
+                        ? (foundIssues.includes('dosage') ? '#FFB6C1' : '#90EE90')
+                        : '#FFFFFF',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    }}
+                    whileTap={{ scale: checkedFields.has('dosage') ? 1 : 0.98 }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                          ☐ DOSAGE COMPLETE
+                        </p>
+                        <div className="space-y-1">
+                          {currentPrescription.medications.map((med, idx) => {
+                            const medication = getMedicationById(med.medicationId);
+                            return (
+                              <p key={idx} className="text-poke-black text-xs" >
+                                {medication?.genericName}: {med.dosageInstruction || '?'} {med.frequency || '?'} x {med.duration || '?'}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      {checkedFields.has('dosage') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
+                          {!foundIssues.includes('dosage') ? (
+                            <CheckCircle className="text-green-600" size={32} />
+                          ) : (
+                            <XCircle className="text-red-600" size={32} />
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.button>
+
+                  {/* 5. Drug Allergies Check */}
+                  <motion.button
+                    onClick={() => {
+                      // Check if any prescribed medication matches patient allergies
+                      const hasAllergyConflict = currentPrescription.medications.some(med => {
+                        const medication = getMedicationById(med.medicationId);
+                        return currentPrescription.patientAllergies.some(
+                          allergy => medication?.genericName.toLowerCase().includes(allergy.toLowerCase())
+                        );
+                      });
+                      handleFieldCheck('allergies', hasAllergyConflict);
+                    }}
+                    disabled={checkedFields.has('allergies')}
+                    className="w-full border-4 border-poke-black p-4 text-left"
+                    style={{
+                      background: checkedFields.has('allergies')
+                        ? (foundIssues.includes('allergies') ? '#FFB6C1' : '#90EE90')
+                        : '#FFFFFF',
+                      boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
+                    }}
+                    whileTap={{ scale: checkedFields.has('allergies') ? 1 : 0.98 }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                          ☐ NO ALLERGY CONFLICT
+                        </p>
+                        {currentPrescription.patientAllergies.length > 0 ? (
+                          <p className="text-red-600 text-xs font-bold">
+                            ⚠️ Allergies: {currentPrescription.patientAllergies.join(', ')}
+                          </p>
                         ) : (
-                          <XCircle className="text-red-600" size={32} />
+                          <p className="text-gray-600 text-xs">No known allergies</p>
                         )}
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.button>
+                      </div>
+                      {checkedFields.has('allergies') && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
+                          {!foundIssues.includes('allergies') ? (
+                            <CheckCircle className="text-green-600" size={32} />
+                          ) : (
+                            <XCircle className="text-red-600" size={32} />
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.button>
+                </div>
               </div>
-            </div>
 
               {/* Submit Validation Button */}
               {checkedFields.size >= 5 && (
@@ -824,7 +834,7 @@ export const Receiving: React.FC = () => {
         </AnimatePresence>
 
         {/* Result Modal */}
-        <Modal isOpen={showResult} onClose={() => {}} showCloseButton={false}>
+        <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
           <div className="text-center">
             {isCorrect ? (
               <>

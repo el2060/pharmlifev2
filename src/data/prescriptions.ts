@@ -9,27 +9,26 @@ import {
   signatureVerificationScenario,
 } from './scenarios';
 
-// Rx #1 - Valid Rx (Ibuprofen) - Patient has Paracetamol allergy but correctly prescribed Ibuprofen
+// Rx #1 - Valid Rx (Ibuprofen)
 const rx1: Prescription = {
   id: 'rx-001',
   patientName: 'Mr Tan Ah Beng',
   patientIC: 'S0248566J',
-  patientAllergies: ['Paracetamol'],
+  patientAllergies: ['Paracetamol'], // Patient is allergic to Paracetamol
   doctorName: 'Dr William Tan',
   doctorSignature: true,
   date: '2025-02-02',
   medications: [
     {
-      medicationId: 'med-002', // Ibuprofen (safe alternative)
+      medicationId: 'med-002', // Ibuprofen
       quantity: 1,
       dosageInstruction: '1 tab',
       frequency: 'bd',
-      duration: '40 tabs',
+      duration: '40 tabs', // "x 40" in screenshot, usually implies total quantity or duration days
       specialInstructions: 'prn',
     },
   ],
   isValid: true,
-  // No scenario - this is a correctly managed allergy case (good example)
 };
 
 // Rx #2 - Valid Rx (Multiple medications)
@@ -43,23 +42,23 @@ const rx2: Prescription = {
   date: '2025-04-11',
   medications: [
     {
-      medicationId: 'med-003b',
+      medicationId: 'med-003a', // Amoxicillin
       quantity: 1,
-      dosageInstruction: '1 tab',
+      dosageInstruction: '500mg',
       frequency: 'bd',
       duration: '1/52',
     },
     {
-      medicationId: 'med-005',
+      medicationId: 'med-005', // Chlorpheniramine
       quantity: 1,
-      dosageInstruction: '1 tab',
+      dosageInstruction: '4mg',
       frequency: 'on',
       duration: '1/52',
       specialInstructions: 'prn',
     },
     {
-      medicationId: 'med-006',
-      quantity: 10,
+      medicationId: 'med-006', // Dextromethorphan
+      quantity: 1,
       dosageInstruction: '10ml',
       frequency: 'tds',
       duration: '1/52',
@@ -80,9 +79,9 @@ const rx3: Prescription = {
   date: '2025-02-02',
   medications: [
     {
-      medicationId: 'med-001b',
-      quantity: 2,
-      dosageInstruction: '2 tablets (500mg)',
+      medicationId: 'med-001b', // Paracetamol 500mg
+      quantity: 1,
+      dosageInstruction: '500mg',
       frequency: 'qds',
       duration: '40 tabs',
       specialInstructions: 'prn',
@@ -93,7 +92,7 @@ const rx3: Prescription = {
   scenario: rx3AllergyScenario,
 };
 
-// Rx #4 - Invalid Rx (Missing duration for one medication) - ENHANCED WITH SCENARIO
+// Rx #4 - Missing duration for Antacid
 const rx4: Prescription = {
   id: 'rx-004',
   patientName: 'Sivanathan Ramasamy',
@@ -104,20 +103,20 @@ const rx4: Prescription = {
   date: '2025-11-28',
   medications: [
     {
-      medicationId: 'med-007',
+      medicationId: 'med-007', // Salbutamol
       quantity: 2,
       dosageInstruction: '2 puffs',
       frequency: 'tds',
-      duration: '2 inhalers',
+      duration: '2 inhalers', // Screenshot says just "2" under duration/quantity, implies quantity
       specialInstructions: 'prn',
     },
     {
-      medicationId: 'med-004',
+      medicationId: 'med-004a', // Antacid (Assuming ID)
       quantity: 1,
       dosageInstruction: '1 tab',
       frequency: 'tds',
       specialInstructions: 'prn',
-      // Missing duration - should be 1/12
+      // Missing duration/quantity - "(missing)"
     },
   ],
   isValid: false,
@@ -125,8 +124,7 @@ const rx4: Prescription = {
   scenario: rx4IncompleteDurationScenario,
 };
 
-// Additional prescriptions for variety
-// Rx #5 - Simple valid prescription (for Year 1 Level 1 - Tutorial level, keep simple)
+// Rx #5 - Simple valid prescription (Tutorial)
 const rx5: Prescription = {
   id: 'rx-005',
   patientName: 'Sarah Tan',
@@ -139,14 +137,13 @@ const rx5: Prescription = {
     {
       medicationId: 'med-001',
       quantity: 2,
-      dosageInstruction: '2 tablets (500mg)',
-      frequency: 'tds or qds',
+      dosageInstruction: '2 tablets',
+      frequency: 'tds',
       duration: '5 days',
       specialInstructions: 'prn',
     },
   ],
   isValid: true,
-  // No scenario for tutorial level - keep it simple for first-time players
 };
 
 const rx6: Prescription = {
@@ -206,7 +203,7 @@ const rx8: Prescription = {
     {
       medicationId: 'med-001',
       quantity: 2,
-      dosageInstruction: '2 tablets (500mg)',
+      dosageInstruction: '2 tablets',
       frequency: 'tds',
       duration: '1/52',
       specialInstructions: 'prn',
@@ -268,7 +265,6 @@ const rx10: Prescription = {
   scenario: allergyConflictScenario,
 };
 
-// Additional Year 1 cases for gameplay variety
 // Rx #11 - Year 1 Level 5: Valid prescription with Ibuprofen
 const rx11: Prescription = {
   id: 'rx-011',
@@ -337,160 +333,75 @@ const rx13: Prescription = {
 
 // Level data combining prescriptions with metadata
 const allLevels: LevelData[] = [
-  // Year 1 Levels - Basic (Progressive difficulty with scenarios)
+  // Year 1 Levels - Basic + The Requested 4 Levels
   {
     id: 'level-1-1',
     year: 1,
     chapterNumber: 1,
-    title: 'First Day Fundamentals',
-    description: 'Learn the basics - simple valid prescription',
-    prescription: rx5, // Simple valid prescription (no scenario - tutorial)
+    title: 'Standard Prescription',
+    description: 'Valid Rx: Ibuprofen for Mr Tan',
+    prescription: rx1,
     difficulty: 'basic',
   },
   {
     id: 'level-1-2',
     year: 1,
     chapterNumber: 2,
-    title: 'Missing Signature Challenge',
-    description: 'What should you do when signature is missing?',
-    prescription: rx6, // Missing signature WITH SCENARIO
-    difficulty: 'basic',
+    title: 'Multiple Items',
+    description: 'Valid Rx: 3 Medications for Mr Imran',
+    prescription: rx2,
+    difficulty: 'intermediate',
   },
   {
     id: 'level-1-3',
     year: 1,
     chapterNumber: 3,
-    title: 'Expired Prescription Dilemma',
-    description: 'Patient says doctor approved it - what do you do?',
-    prescription: rx7, // Expired date WITH SCENARIO
-    difficulty: 'basic',
+    title: 'Allergy Intervention',
+    description: 'Invalid: Paracetamol allergy! Call doctor.',
+    prescription: rx3,
+    difficulty: 'intermediate',
   },
   {
     id: 'level-1-4',
     year: 1,
     chapterNumber: 4,
-    title: 'Professional Decision Making',
-    description: 'IC number doesn\'t match - verify the patient',
-    prescription: rx8, // Identity mismatch WITH SCENARIO
-    difficulty: 'basic',
+    title: 'Missing Information',
+    description: 'Invalid: Missing Antacid duration.',
+    prescription: rx4,
+    difficulty: 'intermediate',
   },
   {
     id: 'level-1-5',
     year: 1,
     chapterNumber: 5,
-    title: 'Managing Pain Relief',
-    description: 'Dispensing pain medication safely',
-    prescription: rx11, // Valid Ibuprofen prescription
+    title: 'Missing Signature Challenge',
+    description: 'What should you do when signature is missing?',
+    prescription: rx6,
     difficulty: 'basic',
   },
   {
     id: 'level-1-6',
     year: 1,
     chapterNumber: 6,
-    title: 'Date Awareness',
-    description: 'Check prescription dates carefully',
-    prescription: rx12, // Expired prescription
+    title: 'Expired Prescription Dilemma',
+    description: 'Patient says doctor approved it - what do you do?',
+    prescription: rx7,
     difficulty: 'basic',
   },
   {
     id: 'level-1-7',
     year: 1,
     chapterNumber: 7,
-    title: 'Digestive Health',
-    description: 'Liquid medication for GI treatment',
-    prescription: rx13, // Valid GI medication
+    title: 'Professional Decision Making',
+    description: 'IC number doesn\'t match - verify the patient',
+    prescription: rx8,
     difficulty: 'basic',
-  },
-
-  // Year 2 Levels - Intermediate (Complex scenarios)
-  {
-    id: 'level-2-1',
-    year: 2,
-    chapterNumber: 1,
-    title: 'Signature Verification',
-    description: 'Unclear signature - is it genuine?',
-    prescription: rx9, // Signature verification scenario
-    difficulty: 'intermediate',
-  },
-  {
-    id: 'level-2-2',
-    year: 2,
-    chapterNumber: 2,
-    title: 'Missing Duration Crisis',
-    description: 'Patient knows the duration but prescription is incomplete',
-    prescription: rx4, // Missing duration WITH SCENARIO
-    difficulty: 'intermediate',
-  },
-  {
-    id: 'level-2-3',
-    year: 2,
-    chapterNumber: 3,
-    title: 'Multiple Medications',
-    description: 'Complex prescription with 3 medications',
-    prescription: rx2, // Three medications (no scenario - already complex)
-    difficulty: 'intermediate',
-  },
-
-  // Year 3 Levels - Advanced
-  {
-    id: 'level-3-1',
-    year: 3,
-    chapterNumber: 1,
-    title: 'Allergy Conflict',
-    description: 'Critical thinking - patient allergic to prescribed medication',
-    prescription: rx3, // Patient allergic to paracetamol but prescribed paracetamol
-    difficulty: 'advanced',
-  },
-  {
-    id: 'level-3-2',
-    year: 3,
-    chapterNumber: 2,
-    title: 'Complex Multi-Drug Therapy',
-    description: 'Manage respiratory and infection treatments',
-    prescription: rx2, // Reuse complex prescription
-    difficulty: 'advanced',
-  },
-  {
-    id: 'level-3-3',
-    year: 3,
-    chapterNumber: 3,
-    title: 'Identity Verification Challenge',
-    description: 'Two patients with the same name - ensure correct identification',
-    prescription: rx8, // Identity mismatch
-    difficulty: 'advanced',
-  },
-  {
-    id: 'level-3-4',
-    year: 3,
-    chapterNumber: 4,
-    title: 'Conflicting Information',
-    description: 'Patient verbal report contradicts system records',
-    prescription: rx10, // Allergy conflict scenario
-    difficulty: 'advanced',
-  },
-  {
-    id: 'level-3-5',
-    year: 3,
-    chapterNumber: 5,
-    title: 'Signature Verification',
-    description: 'Verify authenticity of unclear prescription signature',
-    prescription: rx9, // Signature verification
-    difficulty: 'advanced',
-  },
-  {
-    id: 'level-3-6',
-    year: 3,
-    chapterNumber: 6,
-    title: 'Correct Allergy Management',
-    description: 'Patient has allergy but prescription uses safe alternative',
-    prescription: rx1, // Correctly managed allergy (educational example)
-    difficulty: 'advanced',
   },
 ];
 
-// Open House active catalog: Year 1 only, first three prescriptions
+// Active catalog: Year 1
 const activeLevels = allLevels.filter(
-  (level) => level.year === 1 && level.chapterNumber >= 1 && level.chapterNumber <= 3,
+  (level) => level.year === 1,
 );
 
 // Year limits for gameplay selection and wrapping
@@ -539,3 +450,4 @@ export const convertDuration = (duration: string): string => {
   }
   return duration;
 };
+

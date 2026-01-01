@@ -54,7 +54,7 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
 
               <div
                 className="flex-1 poke-textbox px-4 py-3 min-h-[56px] flex items-center"
-                
+
               >
                 <div className="flex items-center gap-3 w-full">
                   <span className="text-poke-black">▶</span>
@@ -66,39 +66,38 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
             </div>
 
             {/* Bottom Row: Stats - Pokemon Style */}
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
               {/* Score Display */}
               <div
-                className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
+                className="border-2 border-poke-black px-1 sm:px-3 py-2 flex flex-col gap-1 col-span-1"
                 style={{ background: '#FFFFFF' }}
               >
-                <div className="flex items-center gap-2">
-                  <Star className="text-poke-dark-yellow" size={16} fill="currentColor" />
-                  <p className="text-poke-black text-xs leading-tight font-bold">SCORE</p>
+                <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start">
+                  <Star className="text-poke-dark-yellow w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" />
+                  <p className="text-poke-black text-[10px] sm:text-xs leading-tight font-bold hidden xs:block">SCORE</p>
                 </div>
-                <p className="font-bold text-poke-black text-base sm:text-lg leading-tight">{score}</p>
+                <p className="font-bold text-poke-black text-xs sm:text-lg leading-tight text-center sm:text-left">{score}</p>
               </div>
 
               {/* Rx Points Display */}
               <div
-                className="border-2 border-poke-black px-3 py-2 flex flex-col gap-1"
+                className="border-2 border-poke-black px-1 sm:px-3 py-2 flex flex-col gap-1 col-span-1"
                 style={{ background: '#FFFFFF' }}
               >
-                <div className="flex items-center gap-2">
-                  <Zap className="text-poke-blue" size={16} fill="currentColor" />
-                  <p className="text-poke-black text-xs leading-tight font-bold">Rx</p>
+                <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start">
+                  <Zap className="text-poke-blue w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" />
+                  <p className="text-poke-black text-[10px] sm:text-xs leading-tight font-bold hidden xs:block">Rx</p>
                 </div>
-                <p className="font-bold text-poke-black text-base sm:text-lg leading-tight">{rxPoints}</p>
+                <p className="font-bold text-poke-black text-xs sm:text-lg leading-tight text-center sm:text-left">{rxPoints}</p>
               </div>
 
               {/* Hearts Display */}
-              <div className="border-2 border-poke-black px-3 py-2 flex items-center justify-center" style={{ background: '#FFFFFF' }}>
-                <div className="flex gap-1">
+              <div className="border-2 border-poke-black px-1 sm:px-3 py-2 flex items-center justify-center col-span-1" style={{ background: '#FFFFFF' }}>
+                <div className="flex gap-0.5 sm:gap-1">
                   {[...Array(Math.min(3, hearts))].map((_, i) => (
                     <Heart
                       key={i}
-                      size={16}
-                      className="text-poke-red"
+                      className="text-poke-red w-3 h-3 sm:w-4 sm:h-4"
                       fill="currentColor"
                     />
                   ))}
@@ -107,18 +106,15 @@ export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
 
               {/* Player Level */}
               <div
-                className="border-2 border-poke-black px-2 py-2 flex flex-col justify-center"
+                className="border-2 border-poke-black px-1 sm:px-2 py-2 flex flex-col justify-center col-span-1"
                 style={{ background: '#FFFFFF' }}
               >
-                <p className="text-poke-black text-[9px] sm:text-xs leading-tight font-bold text-center mb-1">RANK</p>
-                <p className="font-bold text-poke-black text-[9px] sm:text-[11px] leading-tight text-center break-words">
-                  {playerLevel.split(' ').map((word, i) => (
-                    <span key={i} className="block">{word}</span>
-                  ))}
+                <p className="text-poke-black text-[8px] sm:text-[9px] leading-tight font-bold text-center mb-0.5 hidden xs:block">RANK</p>
+                <p className="font-bold text-poke-black text-[9px] sm:text-[11px] leading-tight text-center break-words line-clamp-2">
+                  {playerLevel}
                 </p>
               </div>
-            </div>
-          </div>
+            </div>          </div>
         </div>
       </div>
 

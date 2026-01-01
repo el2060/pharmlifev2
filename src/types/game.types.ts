@@ -54,6 +54,7 @@ export interface ConsequenceResult {
   rxPointsImpact: number;
   isCorrect: boolean;
   explanation: string;
+  shouldSkipRemainingStages?: boolean;
 }
 
 export interface PatientDialogue {

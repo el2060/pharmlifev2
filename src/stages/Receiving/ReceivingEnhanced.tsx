@@ -9,7 +9,7 @@ import { getMedicationById } from '../../data/medications';
 import { ConsequenceResult } from '../../types/game.types';
 
 export const ReceivingEnhanced: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, nextStage, setAllergyConflictDetected } = useGameStore();
+  const { currentPrescription, addScore, addRxPoints, nextStage, setAllergyConflictDetected, completeLevel } = useGameStore();
   const [step, setStep] = useState<'identity' | 'investigation' | 'decision' | 'outcome'>('identity');
   const [identityVerified, setIdentityVerified] = useState(false);
   const [allergyChecked, setAllergyChecked] = useState(false);
@@ -52,7 +52,7 @@ export const ReceivingEnhanced: React.FC = () => {
     if (hasConflict) {
       // Set the flag in global state so Picking stage can use it
       setAllergyConflictDetected(true);
-      
+
       if (!foundIssues.includes('allergy-conflict')) {
         setFoundIssues([...foundIssues, 'allergy-conflict']);
       }
@@ -109,7 +109,11 @@ export const ReceivingEnhanced: React.FC = () => {
 
   const handleContinue = () => {
     if (consequence?.isCorrect) {
-      nextStage();
+      if (consequence.shouldSkipRemainingStages) {
+        completeLevel();
+      } else {
+        nextStage();
+      }
     } else {
       // Reset for retry
       setSelectedAction('');
@@ -123,40 +127,40 @@ export const ReceivingEnhanced: React.FC = () => {
 
   return (
     <div className="container-custom mx-auto p-3 sm:p-4 max-w-4xl">
-      {/* Pharmacy Scene Background */}
+      {/* Pharmacy Scene Background - Mobile Optimized */}
       <div className="mb-4 sm:mb-6 relative">
         <motion.div
-          className="pharmacy-counter rounded-t-xl p-4 sm:p-8 relative overflow-hidden"
+          className="pharmacy-counter rounded-t-xl p-3 sm:p-8 relative overflow-hidden"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
           {/* Pharmacy Counter Scene */}
-          <div className="flex justify-between items-end mb-4">
+          <div className="flex justify-between items-end mb-2 sm:mb-4 h-[110px] sm:h-auto">
             {/* Pharmacist Character */}
             <motion.div
-              className="relative scale-75 sm:scale-100"
-              initial={{ x: -50, opacity: 0 }}
+              className="relative scale-90 sm:scale-100 origin-bottom-left"
+              initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
               <div className="character-pharmacist" />
               <motion.div
-                className="speech-bubble mt-2 max-w-[200px] sm:max-w-xs text-[8px] sm:text-[10px] leading-tight sm:leading-normal"
+                className="speech-bubble mt-2 absolute -right-2 top-0 transform translate-x-full w-[120px] sm:static sm:w-auto sm:max-w-xs text-[9px] sm:text-xs leading-tight sm:leading-normal z-10 shadow-lg"
                 initial={{ scale: 0, originX: 0, originY: 1 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.6, type: 'spring' }}
               >
-                {step === 'identity' && 'Welcome! Let\'s verify your identity first.'}
-                {step === 'investigation' && 'Let me carefully check this prescription...'}
-                {step === 'decision' && 'I need to make a professional decision here.'}
-                {step === 'outcome' && (consequence?.isCorrect ? 'Well done! Proper procedure followed!' : 'Let\'s review what went wrong...')}
+                {step === 'identity' && 'Welcome! Let\'s verify.'}
+                {step === 'investigation' && 'Check details carefully...'}
+                {step === 'decision' && 'Your professional decision?'}
+                {step === 'outcome' && (consequence?.isCorrect ? 'Well done! Correct.' : 'Let\'s review...')}
               </motion.div>
             </motion.div>
 
             {/* Patient Character */}
             <motion.div
-              className="relative scale-75 sm:scale-100"
-              initial={{ x: 50, opacity: 0 }}
+              className="relative scale-90 sm:scale-100 origin-bottom-right"
+              initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
@@ -176,7 +180,7 @@ export const ReceivingEnhanced: React.FC = () => {
           {/* Decorative Pharmacy Elements */}
           <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-60">
             <motion.span
-              className="text-2xl sm:text-3xl"
+              className="text-xl sm:text-3xl"
               animate={{ rotate: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -186,18 +190,18 @@ export const ReceivingEnhanced: React.FC = () => {
         </motion.div>
 
         {/* Shelves Background */}
-        <div className="pharmacy-shelf h-16 sm:h-20 rounded-b-xl relative flex items-center justify-around px-4 sm:px-8">
+        <div className="pharmacy-shelf h-12 sm:h-20 rounded-b-xl relative flex items-center justify-around px-2 sm:px-8">
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              className="medicine-box w-8 h-8 sm:w-12 sm:h-12 rounded"
+              className="medicine-box w-6 h-6 sm:w-12 sm:h-12 rounded"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 * i }}
               whileHover={{ scale: 1.1, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="w-full h-full flex items-center justify-center text-lg sm:text-2xl">
+              <div className="w-full h-full flex items-center justify-center text-sm sm:text-2xl">
                 {['💊', '💉', '🧪', '🩹', '💊'][i]}
               </div>
             </motion.div>
@@ -213,12 +217,11 @@ export const ReceivingEnhanced: React.FC = () => {
         {/* Step Indicator */}
         <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
           <motion.div
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${
-              step === 'identity'
-                ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110'
-                : 'bg-gray-100 text-gray-400 border-gray-300'
-            }`}
-            
+            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'identity'
+              ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110'
+              : 'bg-gray-100 text-gray-400 border-gray-300'
+              }`}
+
           >
             <User size={20} />
             <span className="font-semibold text-xs sm:text-base">1. IDENTITY</span>
@@ -226,12 +229,11 @@ export const ReceivingEnhanced: React.FC = () => {
           </motion.div>
 
           <motion.div
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${
-              step === 'investigation'
-                ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110'
-                : 'bg-gray-100 text-gray-400 border-gray-300'
-            }`}
-            
+            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'investigation'
+              ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110'
+              : 'bg-gray-100 text-gray-400 border-gray-300'
+              }`}
+
           >
             <FileText size={20} />
             <span className="font-semibold text-xs sm:text-base">2. INVESTIGATION</span>
@@ -239,12 +241,11 @@ export const ReceivingEnhanced: React.FC = () => {
 
           {hasScenario && (
             <motion.div
-              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${
-                step === 'decision'
-                  ? 'bg-orange-500 text-white border-orange-700 shadow-lg scale-105 sm:scale-110'
-                  : 'bg-gray-100 text-gray-400 border-gray-300'
-              }`}
-              
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'decision'
+                ? 'bg-orange-500 text-white border-orange-700 shadow-lg scale-105 sm:scale-110'
+                : 'bg-gray-100 text-gray-400 border-gray-300'
+                }`}
+
             >
               <AlertTriangle size={20} />
               <span className="font-semibold text-xs sm:text-base">3. DECISION</span>
@@ -305,7 +306,7 @@ export const ReceivingEnhanced: React.FC = () => {
                               </p>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-8">
                               <div>
                                 <p className="text-[10px] sm:text-xs text-gray-600">Race</p>
                                 <p className="text-xs sm:text-sm font-bold text-gray-900">CHINESE</p>
@@ -326,6 +327,11 @@ export const ReceivingEnhanced: React.FC = () => {
                     </motion.div>
 
                     {/* Identity Verification */}
+                    <div className="mt-6 mb-3">
+                      <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
+                        Your Tasks
+                      </h4>
+                    </div>
                     <motion.div
                       className="border-4 border-dashed border-green-400 bg-green-50 p-6 rounded-lg"
                     >
@@ -346,12 +352,11 @@ export const ReceivingEnhanced: React.FC = () => {
                       <button
                         onClick={handleIdentityVerification}
                         disabled={identityVerified}
-                        className={`arcade-button w-full py-4 ${
-                          identityVerified
-                            ? 'bg-gradient-to-r from-green-500 to-green-700'
-                            : 'bg-gradient-to-r from-blue-400 to-blue-600'
-                        } text-white`}
-                        
+                        className={`arcade-button w-full py-4 ${identityVerified
+                          ? 'bg-gradient-to-r from-green-500 to-green-700'
+                          : 'bg-gradient-to-r from-blue-400 to-blue-600'
+                          } text-white`}
+
                       >
                         {identityVerified ? '✓ IDENTITY VERIFIED' : 'VERIFY IDENTITY'}
                       </button>
@@ -386,12 +391,11 @@ export const ReceivingEnhanced: React.FC = () => {
                       <button
                         onClick={handleAllergyCheck}
                         disabled={allergyChecked}
-                        className={`arcade-button w-full py-4 ${
-                          allergyChecked
-                            ? 'bg-gradient-to-r from-green-500 to-green-700'
-                            : 'bg-gradient-to-r from-orange-400 to-red-600'
-                        } text-white`}
-                        
+                        className={`arcade-button w-full py-4 ${allergyChecked
+                          ? 'bg-gradient-to-r from-green-500 to-green-700'
+                          : 'bg-gradient-to-r from-orange-400 to-red-600'
+                          } text-white`}
+
                       >
                         {allergyChecked ? '✓ ALLERGIES CHECKED' : 'CHECK ALLERGIES'}
                       </button>
@@ -406,7 +410,7 @@ export const ReceivingEnhanced: React.FC = () => {
                         <button
                           onClick={handleProceedToInvestigation}
                           className="arcade-button w-full py-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white"
-                          
+
                         >
                           PROCEED TO INVESTIGATION →
                         </button>
@@ -465,8 +469,8 @@ export const ReceivingEnhanced: React.FC = () => {
                         {currentPrescription.medications.map((med, idx) => {
                           const medication = getMedicationById(med.medicationId);
                           return (
-                            <li key={idx} className="text-[10px] sm:text-xs leading-relaxed break-words">
-                              • {medication?.genericName} {medication?.strength}<br/>
+                            <li key={idx} className="text-[10px] sm:text-xs leading-relaxed break-words mb-2">
+                              <b>• {medication?.genericName} {medication?.strength}</b><br />
                               <span className="ml-2">{med.dosageInstruction} {med.frequency} {med.duration ? `x ${med.duration}` : '(duration missing)'}</span>
                             </li>
                           );
@@ -537,11 +541,10 @@ export const ReceivingEnhanced: React.FC = () => {
                       key={option.id}
                       onClick={() => handleActionSelect(option.id)}
                       disabled={selectedAction !== ''}
-                      className={`w-full border-4 border-poke-black p-3 sm:p-4 text-left transition-all ${
-                        selectedAction === option.id
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-poke-black hover:bg-gray-100'
-                      }`}
+                      className={`w-full border-4 border-poke-black p-3 sm:p-4 text-left transition-all ${selectedAction === option.id
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-poke-black hover:bg-gray-100'
+                        }`}
                       style={{
                         fontSize: '10px',
                         lineHeight: '1.6',
@@ -568,7 +571,7 @@ export const ReceivingEnhanced: React.FC = () => {
         </AnimatePresence>
 
         {/* Outcome Modal */}
-        <Modal isOpen={showOutcome} onClose={() => {}} showCloseButton={false}>
+        <Modal isOpen={showOutcome} onClose={() => { }} showCloseButton={false}>
           <div className="text-center">
             {consequence && (
               <>
@@ -629,7 +632,11 @@ export const ReceivingEnhanced: React.FC = () => {
                 </div>
 
                 <Button variant={consequence.isCorrect ? 'success' : 'danger'} onClick={handleContinue} fullWidth>
-                  <span className="text-xs sm:text-base">{consequence.isCorrect ? 'CONTINUE TO TYPING →' : '◀ TRY AGAIN'}</span>
+                  <span className="text-xs sm:text-base">
+                    {consequence.isCorrect
+                      ? (consequence.shouldSkipRemainingStages ? 'NEXT PATIENT →' : 'CONTINUE TO TYPING →')
+                      : '◀ TRY AGAIN'}
+                  </span>
                 </Button>
               </>
             )}

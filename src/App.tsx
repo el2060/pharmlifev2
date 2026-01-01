@@ -67,6 +67,11 @@ function App() {
     }
   }, [currentLevel, currentScreen, currentYear, setPrescription]);
 
+  // Scroll to top when stage changes
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStage, currentScreen]);
+
   const renderStage = () => {
     switch (currentStage) {
       case 'receiving':
@@ -84,58 +89,58 @@ function App() {
 
   return (
     <div className="min-h-screen background-clinical flex">
-      <div className="flex-1 mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10 xl:px-14">
-      <AnimatePresence mode="wait">
-        {currentScreen === 'menu' && (
-          <motion.div
-            key="menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <MainMenu onStartGame={handleStartGame} onShowAbout={handleShowAbout} />
-          </motion.div>
-        )}
+      <div className="flex-1 mx-auto w-full max-w-[1600px] px-3 sm:px-6 lg:px-10 xl:px-14">
+        <AnimatePresence mode="wait">
+          {currentScreen === 'menu' && (
+            <motion.div
+              key="menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <MainMenu onStartGame={handleStartGame} onShowAbout={handleShowAbout} />
+            </motion.div>
+          )}
 
-        {currentScreen === 'year-selection' && (
-          <motion.div
-            key="year-selection"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <YearSelection onSelectYear={handleSelectYear} onBack={handleBackToMenu} />
-          </motion.div>
-        )}
+          {currentScreen === 'year-selection' && (
+            <motion.div
+              key="year-selection"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <YearSelection onSelectYear={handleSelectYear} onBack={handleBackToMenu} />
+            </motion.div>
+          )}
 
-        {currentScreen === 'about' && (
-          <motion.div
-            key="about"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <About onBack={handleBackToMenu} />
-          </motion.div>
-        )}
+          {currentScreen === 'about' && (
+            <motion.div
+              key="about"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <About onBack={handleBackToMenu} />
+            </motion.div>
+          )}
 
-        {currentScreen === 'game' && (
-          <motion.div
-            key="game"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="min-h-screen space-y-6"
-          >
-            <HUD onBackToHome={handleBackToHome} />
-            <div className="pb-10">{renderStage()}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {currentScreen === 'game' && (
+            <motion.div
+              key="game"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="min-h-screen space-y-6"
+            >
+              <HUD onBackToHome={handleBackToHome} />
+              <div className="pb-10">{renderStage()}</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -425,6 +425,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
       rxPointsImpact: 75,
       isCorrect: true,
       explanation: 'Excellent intervention! You prevented a potentially fatal allergic reaction. Always verify and suggest alternatives when there are allergy conflicts.',
+      shouldSkipRemainingStages: true,
     },
     'ask-patient-confirm': {
       outcome: 'Patient confirmed: "Yes, I get terrible rashes from Paracetamol." You then refused to dispense and told patient to contact the doctor. Good catch!',
