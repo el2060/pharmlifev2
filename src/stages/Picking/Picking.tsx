@@ -235,207 +235,208 @@ export const Picking: React.FC = () => {
 
               </div>
             </div>
-
-            {/* Right Column: Shelves */}
-            <div className="space-y-6">
-
-              {/* Hints */}
-              <Hint
-                title="Need help finding medications?"
-                hints={[
-                  "Match the medication name and strength exactly - check the prescription items list above",
-                  "Shelves are organized by drug category with color coding - analgesics (red), gastrointestinal (green), respiratory (yellow), antimicrobials (purple)",
-                  "Each medication card shows the generic name, brand name (if available), strength, and dosage form",
-                  "Make sure you select the correct strength - some medications come in multiple strengths (e.g., 250mg vs 500mg)",
-                  "Your picking basket shows how many items you've selected vs how many you need - check the counter before submitting"
-                ]}
-                className="mx-auto max-w-4xl"
-              />
-
-              {/* Pharmacy Shelves */}
-              <div className="space-y-4 sm:space-y-6">
-                <motion.h3
-                  className="text-xl sm:text-2xl font-bold text-center text-white"
-                  style={{
-                    textShadow: '3px 3px 0 rgba(0,0,0,0.3)'
-                  }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  PHARMACY SHELVES
-                </motion.h3>
-
-                {Object.entries(availableMedicationsByCategory).map(([category, meds], catIndex) => (
-                  <motion.div
-                    key={category}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: catIndex * 0.1 }}
-                    className="relative"
-                  >
-                    <div
-                      className={`rounded-t-lg p-3 sm:p-4 bg-gradient-to-r ${categoryColors[category] || 'from-gray-400 to-gray-500'
-                        } shadow-lg relative overflow-hidden`}
-                    >
-                      {/* Pixel decoration */}
-                      <div className="absolute top-2 left-2 w-2 h-2 bg-white/40" />
-                      <div className="absolute top-2 right-2 w-2 h-2 bg-white/40" />
-
-                      <h4 className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow">
-                        <motion.span
-                          className="text-2xl sm:text-3xl"
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: catIndex * 0.3 }}
-                        >
-                          {category === 'analgesic' && '💊'}
-                          {category === 'gastrointestinal' && '🍃'}
-                          {category === 'cardiovascular' && '❤️'}
-                          {category === 'respiratory' && '🫁'}
-                          {category === 'antimicrobial' && '🦠'}
-                          {category === 'endocrine' && '⚡'}
-                        </motion.span>
-                        {category}
-                      </h4>
-                    </div>
-
-                    <div className="shelf-panel rounded-b-lg p-3 sm:p-4 shadow-lg border-4 border-gray-300">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                        {meds.map((med, medIndex) => {
-                          const isSelected = selectedMedications.includes(med.id);
-                          return (
-                            <motion.div
-                              key={med.id}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: catIndex * 0.1 + medIndex * 0.05 }}
-                              whileHover={{ scale: 1.05, y: -5 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleSelectMedication(med.id)}
-                              className={`cursor-pointer p-3 sm:p-4 rounded-lg border-4 transition-all relative ${isSelected
-                                ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100 shadow-xl'
-                                : 'border-gray-300 hover:border-blue-400 bg-white shadow-md'
-                                }`}
-                            >
-                              {/* Medication box visual */}
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <p className="font-bold text-gray-900 text-sm sm:text-base mb-1">
-                                    {med.genericName}
-                                  </p>
-                                  {med.brandName && (
-                                    <p className="text-xs sm:text-sm text-gray-600 mb-1 font-medium">
-                                      ({med.brandName})
-                                    </p>
-                                  )}
-                                  <p className="text-sm sm:text-base text-gray-800 font-bold">
-                                    {med.strength}
-                                  </p>
-                                  <p className="text-xs sm:text-sm text-gray-700 mt-1 font-medium">
-                                    {med.dosageForm}
-                                  </p>
-                                  <p className="text-xs sm:text-sm text-gray-600 mt-2 font-medium">
-                                    {med.drugClass}
-                                  </p>
-                                </div>
-                                {isSelected && (
-                                  <motion.div
-                                    initial={{ scale: 0, rotate: -180 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ type: 'spring' }}
-                                  >
-                                    <CheckCircle size={20} className="text-green-500 flex-shrink-0" />
-                                  </motion.div>
-                                )}
-                              </div>
-
-                              {/* Pixel corners */}
-                              {isSelected && (
-                                <>
-                                  <div className="absolute top-1 left-1 w-2 h-2 bg-green-500" />
-                                  <div className="absolute top-1 right-1 w-2 h-2 bg-green-500" />
-                                  <div className="absolute bottom-1 left-1 w-2 h-2 bg-green-500" />
-                                  <div className="absolute bottom-1 right-1 w-2 h-2 bg-green-500" />
-                                </>
-                              )}
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Verify Button moved to bottom for natural scroll */}
-            <motion.button
-              onClick={handleSubmit}
-              disabled={selectedMedications.length === 0}
-              className={`w-full arcade-button lg:col-span-2 ${selectedMedications.length === 0
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                } py-4 flex items-center justify-center gap-2 text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all`}
-              whileHover={selectedMedications.length > 0 ? { scale: 1.01 } : {}}
-              whileTap={selectedMedications.length > 0 ? { scale: 0.99 } : {}}
-            >
-              <Package size={20} />
-              <span className="tracking-wide">VERIFY SELECTION</span>
-            </motion.button>
-
-            {/* Result Modal */}
-            <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
-              <div className="text-center">
-                {isCorrect ? (
-                  <>
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: 'spring', stiffness: 200 }}
-                      className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"
-                    >
-                      <CheckCircle size={48} className="text-green-500" />
-                    </motion.div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-green-600 mb-2">
-                      PERFECT PICK!
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
-                      You selected all the correct medications. Well done!
-                    </p>
-                    <p className="text-sm text-gray-500 mb-6 font-medium">
-                      +30 Rx Points
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4 animate-shake"
-                    >
-                      <XCircle size={48} className="text-red-500" />
-                    </motion.div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
-                      INCORRECT
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
-                      Please review the prescription carefully and select the exact medications required.
-                    </p>
-                  </>
-                )}
-                <motion.button
-                  onClick={handleContinue}
-                  className={`arcade-button ${isCorrect
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                    : 'bg-gradient-to-r from-blue-500 to-blue-700'
-                    } text-white py-3 px-6 w-full min-h-[48px] font-semibold`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {isCorrect ? 'CONTINUE →' : 'TRY AGAIN'}
-                </motion.button>
-              </div>
-            </Modal>
           </div>
+
+          {/* Right Column: Shelves */}
+          <div className="space-y-6">
+
+            {/* Hints */}
+            <Hint
+              title="Need help finding medications?"
+              hints={[
+                "Match the medication name and strength exactly - check the prescription items list above",
+                "Shelves are organized by drug category with color coding - analgesics (red), gastrointestinal (green), respiratory (yellow), antimicrobials (purple)",
+                "Each medication card shows the generic name, brand name (if available), strength, and dosage form",
+                "Make sure you select the correct strength - some medications come in multiple strengths (e.g., 250mg vs 500mg)",
+                "Your picking basket shows how many items you've selected vs how many you need - check the counter before submitting"
+              ]}
+              className="mx-auto max-w-4xl"
+            />
+
+            {/* Pharmacy Shelves */}
+            <div className="space-y-4 sm:space-y-6">
+              <motion.h3
+                className="text-xl sm:text-2xl font-bold text-center text-white"
+                style={{
+                  textShadow: '3px 3px 0 rgba(0,0,0,0.3)'
+                }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                PHARMACY SHELVES
+              </motion.h3>
+
+              {Object.entries(availableMedicationsByCategory).map(([category, meds], catIndex) => (
+                <motion.div
+                  key={category}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: catIndex * 0.1 }}
+                  className="relative"
+                >
+                  <div
+                    className={`rounded-t-lg p-3 sm:p-4 bg-gradient-to-r ${categoryColors[category] || 'from-gray-400 to-gray-500'
+                      } shadow-lg relative overflow-hidden`}
+                  >
+                    {/* Pixel decoration */}
+                    <div className="absolute top-2 left-2 w-2 h-2 bg-white/40" />
+                    <div className="absolute top-2 right-2 w-2 h-2 bg-white/40" />
+
+                    <h4 className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow">
+                      <motion.span
+                        className="text-2xl sm:text-3xl"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: catIndex * 0.3 }}
+                      >
+                        {category === 'analgesic' && '💊'}
+                        {category === 'gastrointestinal' && '🍃'}
+                        {category === 'cardiovascular' && '❤️'}
+                        {category === 'respiratory' && '🫁'}
+                        {category === 'antimicrobial' && '🦠'}
+                        {category === 'endocrine' && '⚡'}
+                      </motion.span>
+                      {category}
+                    </h4>
+                  </div>
+
+                  <div className="shelf-panel rounded-b-lg p-3 sm:p-4 shadow-lg border-4 border-gray-300">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+                      {meds.map((med, medIndex) => {
+                        const isSelected = selectedMedications.includes(med.id);
+                        return (
+                          <motion.div
+                            key={med.id}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: catIndex * 0.1 + medIndex * 0.05 }}
+                            whileHover={{ scale: 1.05, y: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleSelectMedication(med.id)}
+                            className={`cursor-pointer p-3 sm:p-4 rounded-lg border-4 transition-all relative ${isSelected
+                              ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100 shadow-xl'
+                              : 'border-gray-300 hover:border-blue-400 bg-white shadow-md'
+                              }`}
+                          >
+                            {/* Medication box visual */}
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="font-bold text-gray-900 text-sm sm:text-base mb-1">
+                                  {med.genericName}
+                                </p>
+                                {med.brandName && (
+                                  <p className="text-xs sm:text-sm text-gray-600 mb-1 font-medium">
+                                    ({med.brandName})
+                                  </p>
+                                )}
+                                <p className="text-sm sm:text-base text-gray-800 font-bold">
+                                  {med.strength}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-700 mt-1 font-medium">
+                                  {med.dosageForm}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-2 font-medium">
+                                  {med.drugClass}
+                                </p>
+                              </div>
+                              {isSelected && (
+                                <motion.div
+                                  initial={{ scale: 0, rotate: -180 }}
+                                  animate={{ scale: 1, rotate: 0 }}
+                                  transition={{ type: 'spring' }}
+                                >
+                                  <CheckCircle size={20} className="text-green-500 flex-shrink-0" />
+                                </motion.div>
+                              )}
+                            </div>
+
+                            {/* Pixel corners */}
+                            {isSelected && (
+                              <>
+                                <div className="absolute top-1 left-1 w-2 h-2 bg-green-500" />
+                                <div className="absolute top-1 right-1 w-2 h-2 bg-green-500" />
+                                <div className="absolute bottom-1 left-1 w-2 h-2 bg-green-500" />
+                                <div className="absolute bottom-1 right-1 w-2 h-2 bg-green-500" />
+                              </>
+                            )}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Verify Button moved to bottom for natural scroll */}
+          <motion.button
+            onClick={handleSubmit}
+            disabled={selectedMedications.length === 0}
+            className={`w-full arcade-button lg:col-span-2 ${selectedMedications.length === 0
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+              } py-4 flex items-center justify-center gap-2 text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all`}
+            whileHover={selectedMedications.length > 0 ? { scale: 1.01 } : {}}
+            whileTap={selectedMedications.length > 0 ? { scale: 0.99 } : {}}
+          >
+            <Package size={20} />
+            <span className="tracking-wide">VERIFY SELECTION</span>
+          </motion.button>
+
+          {/* Result Modal */}
+          <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
+            <div className="text-center">
+              {isCorrect ? (
+                <>
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 200 }}
+                    className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"
+                  >
+                    <CheckCircle size={48} className="text-green-500" />
+                  </motion.div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-green-600 mb-2">
+                    PERFECT PICK!
+                  </h3>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
+                    You selected all the correct medications. Well done!
+                  </p>
+                  <p className="text-sm text-gray-500 mb-6 font-medium">
+                    +30 Rx Points
+                  </p>
+                </>
+              ) : (
+                <>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4 animate-shake"
+                  >
+                    <XCircle size={48} className="text-red-500" />
+                  </motion.div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
+                    INCORRECT
+                  </h3>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
+                    Please review the prescription carefully and select the exact medications required.
+                  </p>
+                </>
+              )}
+              <motion.button
+                onClick={handleContinue}
+                className={`arcade-button ${isCorrect
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                  : 'bg-gradient-to-r from-blue-500 to-blue-700'
+                  } text-white py-3 px-6 w-full min-h-[48px] font-semibold`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isCorrect ? 'CONTINUE →' : 'TRY AGAIN'}
+              </motion.button>
+            </div>
+          </Modal>
+        </div>
       </motion.div>
     </div>
   );
