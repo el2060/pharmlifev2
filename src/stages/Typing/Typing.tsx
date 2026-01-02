@@ -90,7 +90,7 @@ export const Typing: React.FC = () => {
       if (!isValid) {
         // Patient notices something is off
         const wrongField = labelData.quantity !== currentMed.quantity.toString() ? 'quantity' :
-                          labelData.dosageForm !== medication.dosageForm ? 'form' : 'frequency';
+          labelData.dosageForm !== medication.dosageForm ? 'form' : 'frequency';
 
         if (wrongField === 'quantity') {
           setPatientQuestion(`Wait, this seems like a lot of ${medication.dosageForm}s... Are you sure about the quantity?`);
@@ -382,11 +382,10 @@ export const Typing: React.FC = () => {
               <motion.button
                 onClick={handlePrintLabel}
                 disabled={!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting}
-                className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${
-                  !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
+                className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
                     ? 'text-poke-gray cursor-not-allowed'
                     : 'text-poke-white'
-                }`}
+                  }`}
                 style={{
                   background: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
                     ? '#888888'
@@ -414,7 +413,7 @@ export const Typing: React.FC = () => {
         </div>
 
         {/* Result Modal - Pokemon Style */}
-        <Modal isOpen={showResult} onClose={() => {}} showCloseButton={false}>
+        <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
           <div className="text-center">
             {isCorrect ? (
               <>
@@ -493,7 +492,7 @@ export const Typing: React.FC = () => {
         </Modal>
 
         {/* Patient Dialogue Modal - When label has errors */}
-        <Modal isOpen={showPatientDialogue} onClose={() => {}} showCloseButton={false}>
+        <Modal isOpen={showPatientDialogue} onClose={() => { }} showCloseButton={false}>
           <div className="text-center">
             {/* Patient Avatar */}
             <div className="mb-3 sm:mb-4 flex justify-center">
@@ -507,45 +506,43 @@ export const Typing: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-poke-black mb-3 sm:mb-4" >
+            <h3 className="text-xl sm:text-2xl font-bold text-poke-black mb-3 sm:mb-4" >
               PATIENT QUESTION
             </h3>
 
             <div className="border-4 border-yellow-600 bg-yellow-100 p-4 sm:p-5 mb-4 sm:mb-6 rounded">
-              <p className="text-poke-black text-sm sm:text-base leading-relaxed" >
+              <p className="text-poke-black text-base sm:text-lg leading-relaxed font-medium" >
                 "{patientQuestion}"
               </p>
             </div>
 
-            <p className="text-[11px] sm:text-sm mb-3 sm:mb-4 text-gray-600" >
+            <p className="text-sm sm:text-base mb-3 sm:mb-4 text-gray-600 font-bold" >
               How do you respond?
             </p>
 
             <div className="space-y-3 sm:space-y-4">
               <button
                 onClick={() => handlePatientDialogueResponse('recheck')}
-                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors"
+                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors text-sm sm:text-base font-bold"
                 style={{
-                  fontSize: '10px',
-                  lineHeight: '1.8',
+                  lineHeight: '1.5',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                 }}
               >
-                "Let me double-check that for you..."<br/>
-                <span className="text-[9px] sm:text-xs text-green-700">(Review the prescription again)</span>
+                "Let me double-check that for you..."<br />
+                <span className="text-xs sm:text-sm text-green-800 font-normal">(Review the prescription again)</span>
               </button>
 
               <button
                 onClick={() => handlePatientDialogueResponse('insist')}
-                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors"
+                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors text-sm sm:text-base font-bold"
                 style={{
-                  fontSize: '10px',
-                  lineHeight: '1.8',
+                  lineHeight: '1.5',
                   boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                 }}
               >
-                "I'm sure this is correct."<br/>
-                <span className="text-[9px] sm:text-xs text-red-700">(Insist label is right)</span>
+                "I'm sure this is correct."<br />
+                <span className="text-xs sm:text-sm text-red-800 font-normal">(Insist label is right)</span>
               </button>
             </div>
           </div>
