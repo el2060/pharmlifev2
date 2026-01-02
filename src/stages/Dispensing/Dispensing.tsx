@@ -107,7 +107,7 @@ export const Dispensing: React.FC = () => {
               >
                 💊
               </motion.div>
-              <h2 className="text-3xl font-bold text-indigo-700 mb-2 font-pixel">MEDICATIONS READY</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-700 mb-2 font-pixel">MEDICATIONS READY</h2>
               <p className="text-lg text-indigo-500">Hand over the medications and counsel the patient</p>
             </Card>
 

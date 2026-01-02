@@ -52,7 +52,7 @@ const rx2: Prescription = {
   date: getRelativeDate(5),
   medications: [
     {
-      medicationId: 'med-003a', // Amoxicillin
+      medicationId: 'med-003b', // Amoxicillin
       quantity: 1,
       dosageInstruction: '500mg',
       frequency: 'bd',
@@ -121,7 +121,7 @@ const rx4: Prescription = {
       specialInstructions: 'prn',
     },
     {
-      medicationId: 'med-004a', // Antacid (Assuming ID)
+      medicationId: 'med-004', // Antacid
       quantity: 1,
       dosageInstruction: '1 tab',
       frequency: 'tds',
