@@ -101,6 +101,8 @@ export interface Prescription {
   id: string;
   patientName: string;
   patientIC: string;
+  patientAddress?: string;
+  patientDOB?: string;
   patientAllergies: string[];
   doctorName: string;
   doctorSignature: boolean;

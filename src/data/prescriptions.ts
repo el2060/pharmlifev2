@@ -24,17 +24,19 @@ const rx1: Prescription = {
   id: 'rx-001',
   patientName: 'Mr Tan Ah Beng',
   patientIC: 'S0248566J',
-  patientAllergies: ['Paracetamol'], // Patient is allergic to Paracetamol
+  patientAddress: '1, Jalan Toa Payoh, Singapore 123456',
+  patientDOB: '12-Jan-67',
+  patientAllergies: ['Paracetamol'],
   doctorName: 'Dr William Tan',
   doctorSignature: true,
-  date: getRelativeDate(2), // Recent
+  date: '2021-02-02',
   medications: [
     {
       medicationId: 'med-002', // Ibuprofen
       quantity: 1,
-      dosageInstruction: '1 tab',
+      dosageInstruction: '1 tab', // "tab" in Rx
       frequency: 'bd',
-      duration: '40 tabs', // "x 40" in screenshot, usually implies total quantity or duration days
+      duration: '40 tabs', // "x 40"
       specialInstructions: 'prn',
     },
   ],
@@ -46,10 +48,12 @@ const rx2: Prescription = {
   id: 'rx-002',
   patientName: 'Muhammad Imran',
   patientIC: 'G4500872F',
+  patientAddress: '2 Bukit Batok Road, Singapore 338495',
+  patientDOB: '29-Mar-73',
   patientAllergies: [],
   doctorName: 'Dr Chan Yew Chan',
   doctorSignature: true,
-  date: getRelativeDate(5),
+  date: '2021-04-11',
   medications: [
     {
       medicationId: 'med-003b', // Amoxicillin
@@ -83,10 +87,12 @@ const rx3: Prescription = {
   id: 'rx-003',
   patientName: 'Mr Tan Ah Beng',
   patientIC: 'S0248566J',
+  patientAddress: '1, Jalan Toa Payoh, Singapore 123456',
+  patientDOB: '12-Jan-67',
   patientAllergies: ['Paracetamol'],
   doctorName: 'Dr William Tan',
   doctorSignature: true,
-  date: getRelativeDate(3),
+  date: '2021-02-02',
   medications: [
     {
       medicationId: 'med-001b', // Paracetamol 500mg
@@ -107,17 +113,19 @@ const rx4: Prescription = {
   id: 'rx-004',
   patientName: 'Sivanathan Ramasamy',
   patientIC: 'S8023455I',
+  patientAddress: '2 Bedok South Ave 3', // Zip omitted in ref? Image matches user provided. 2 Bedok South ...
+  patientDOB: '19-Feb-80',
   patientAllergies: [],
   doctorName: 'Dr Ang Ah Ang',
   doctorSignature: true,
-  date: getRelativeDate(10),
+  date: '2020-11-28',
   medications: [
     {
       medicationId: 'med-007', // Salbutamol
       quantity: 2,
       dosageInstruction: '2 puffs',
       frequency: 'tds',
-      duration: '2 inhalers', // Screenshot says just "2" under duration/quantity, implies quantity
+      duration: '2 inhalers',
       specialInstructions: 'prn',
     },
     {
@@ -126,7 +134,7 @@ const rx4: Prescription = {
       dosageInstruction: '1 tab',
       frequency: 'tds',
       specialInstructions: 'prn',
-      // Missing duration/quantity - "(missing)"
+      // Missing duration - validated against scenario
     },
   ],
   isValid: false,

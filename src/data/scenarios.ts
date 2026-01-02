@@ -384,7 +384,7 @@ export const typingDialogues: PatientDialogue[] = [
 // Scenario 6: RX #3 - Patient allergic to Paracetamol but prescribed it
 export const rx3AllergyScenario: ScenarioDecision = {
   id: 'scenario-rx3-allergy',
-  situation: 'The prescription is for Paracetamol 500mg. Patient record shows allergy to Paracetamol. During validation, you notice this conflict.',
+  situation: 'The prescription works for Paracetamol 500mg. Patient record shows allergy to Paracetamol. Remarks: "Patient is allergic to Paracetamol... give the dr a call - intervention".',
   question: 'You found that the patient is allergic to the prescribed medication. What should you do?',
   options: [
     {
@@ -416,15 +416,15 @@ export const rx3AllergyScenario: ScenarioDecision = {
       scoreImpact: -200,
       rxPointsImpact: -100,
       isCorrect: false,
-      explanation: 'CRITICAL ERROR! Never dispense medication that a patient is allergic to, regardless of what the prescription says. This is a medical emergency waiting to happen!',
+      explanation: 'CRITICAL WARNING: The patient is allergic to Paracetamol! Check the "Allergies" field on the Patient Card. Dispensing this could be fatal!',
     },
     'call-doctor-alternative': {
-      outcome: 'You called the doctor and explained the allergy conflict. Doctor thanked you for catching it and prescribed Ibuprofen instead. Patient received safe treatment!',
+      outcome: 'You called the doctor. Doctor confirmed: "Patient is allergic to Paracetamol, so cannot proceed." An alternative was prescribed.',
       patientReaction: 'Patient grateful you prevented a dangerous situation',
       scoreImpact: 150,
       rxPointsImpact: 75,
       isCorrect: true,
-      explanation: 'Excellent intervention! You prevented a potentially fatal allergic reaction. Always verify and suggest alternatives when there are allergy conflicts.',
+      explanation: 'Model Answer: "Patient is allergic to Paracetamol, so cannot proceed. (In such instances, usually the staff has to give the dr a call - intervention)"',
       shouldSkipRemainingStages: true,
     },
     'ask-patient-confirm': {
@@ -433,7 +433,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
       scoreImpact: 100,
       rxPointsImpact: 50,
       isCorrect: true,
-      explanation: 'Good verification, but calling the doctor to arrange an alternative would have been more helpful to the patient.',
+      explanation: 'Good verification, but there is a safer and faster way. Hint: Since the allergy is confirmed in the records, calling the doctor for an alternative is the standard procedure.',
     },
     'refuse-unsafe': {
       outcome: 'You refused without helping arrange an alternative. Patient had to make another doctor appointment, delaying treatment.',
@@ -441,7 +441,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
       scoreImpact: 20,
       rxPointsImpact: 10,
       isCorrect: false,
-      explanation: 'While refusing is correct, a good pharmacist would call the doctor to arrange alternative medication rather than just refusing.',
+      explanation: 'Refusing is safe but not helpful. Hint: The patient needs medication. Call the doctor to get a safe alternative instead.',
     },
   },
 };
@@ -449,7 +449,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
 // Scenario 7: RX #4 - Missing Duration Information
 export const rx4IncompleteDurationScenario: ScenarioDecision = {
   id: 'scenario-rx4-duration',
-  situation: 'Prescription for Antacid tablet, 1 tab tds prn. The duration/quantity field shows "(missing)". Everything else on the prescription is valid.',
+  situation: 'Prescription for Antacid tablet, 1 tab tds prn. The duration/quantity field shows "(missing)". Remarks: "1/12".',
   question: 'The prescription is missing the duration information. What is your action?',
   options: [
     {
@@ -481,15 +481,15 @@ export const rx4IncompleteDurationScenario: ScenarioDecision = {
       scoreImpact: -100,
       rxPointsImpact: -50,
       isCorrect: false,
-      explanation: 'Never assume or add information to a prescription. Missing duration = incomplete prescription requiring doctor clarification.',
+      explanation: 'Wait! Look at the "Duration" field for the Antacid. It says "(missing)". Check the Remarks field or call the doctor to confirm the intended duration.',
     },
     'call-verify-duration': {
-      outcome: 'You called the clinic. Doctor specified "1/12" (1 month as needed for indigestion). You updated the prescription legally and dispensed correctly.',
+      outcome: 'You called the clinic. Doctor specified "1/12" (1 month). You updated the prescription and dispensed correctly.',
       patientReaction: 'Patient waits briefly but receives proper medication',
       scoreImpact: 120,
       rxPointsImpact: 60,
       isCorrect: true,
-      explanation: 'Perfect! Incomplete prescriptions require prescriber clarification. You followed proper procedure and ensured patient safety.',
+      explanation: 'Model Answer: "1/12" (1 month). Incomplete prescriptions require prescriber clarification.',
     },
     'ask-patient-duration': {
       outcome: 'Patient said "I don\'t know, how much should I take?" You realized patient input isn\'t sufficient and called the doctor anyway.',
@@ -497,7 +497,7 @@ export const rx4IncompleteDurationScenario: ScenarioDecision = {
       scoreImpact: 60,
       rxPointsImpact: 30,
       isCorrect: false,
-      explanation: 'Patients typically don\'t know dosing details. You should call the doctor directly for missing prescription information.',
+      explanation: 'Patients often don\'t know the clinical details. Hint: If information is missing from the prescription, the doctor is the only one who can officially clarify it.',
     },
     'refuse-incomplete-rx': {
       outcome: 'You refused without attempting to help. Patient left frustrated and had to return to the clinic during work hours.',
@@ -505,7 +505,7 @@ export const rx4IncompleteDurationScenario: ScenarioDecision = {
       scoreImpact: -60,
       rxPointsImpact: -30,
       isCorrect: false,
-      explanation: 'While the prescription IS incomplete, simply calling the doctor would resolve it quickly. Always try to help the patient!',
+      explanation: 'Refusing closes the door on the patient. Hint: You can solve this! Call the doctor to get the missing details and help the patient.',
     },
   },
 };

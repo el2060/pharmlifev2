@@ -323,11 +323,20 @@ export const Receiving: React.FC = () => {
                               <div>
                                 <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
                                 <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                  {currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T')
+                                  {currentPrescription.patientDOB || (currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T')
                                     ? '15-03-1985'
-                                    : '22-08-1992'}
+                                    : '22-08-1992')}
                                 </p>
                               </div>
+
+                              {currentPrescription.patientAddress && (
+                                <div className="col-span-2">
+                                  <p className="text-[10px] sm:text-xs text-gray-600">Address</p>
+                                  <p className="text-xs sm:text-sm font-bold text-gray-900 leading-tight">
+                                    {currentPrescription.patientAddress}
+                                  </p>
+                                </div>
+                              )}
 
                               <div>
                                 <p className="text-[10px] sm:text-xs text-gray-600">Country of Birth</p>
@@ -379,6 +388,7 @@ export const Receiving: React.FC = () => {
                           <p>Doctor: {currentPrescription.doctorName}</p>
                           <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
                           <p>Date: {currentPrescription.date}</p>
+                          {currentPrescription.patientAddress && <p>Address: {currentPrescription.patientAddress}</p>}
                           <div className="pt-1">
                             <p className="font-bold">Medications:</p>
                             <div className="space-y-1 mt-1">

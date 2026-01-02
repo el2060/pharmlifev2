@@ -319,8 +319,19 @@ export const ReceivingEnhanced: React.FC = () => {
 
                             <div>
                               <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
-                              <p className="text-xs sm:text-sm font-bold text-gray-900">15-03-1985</p>
+                              <p className="text-xs sm:text-sm font-bold text-gray-900">
+                                {currentPrescription.patientDOB || '15-03-1985'}
+                              </p>
                             </div>
+
+                            {currentPrescription.patientAddress && (
+                              <div className="col-span-2">
+                                <p className="text-[10px] sm:text-xs text-gray-600">Address</p>
+                                <p className="text-xs sm:text-sm font-bold text-gray-900 leading-tight">
+                                  {currentPrescription.patientAddress}
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -463,6 +474,11 @@ export const ReceivingEnhanced: React.FC = () => {
                     <div>
                       <span className="font-bold">Date:</span> {currentPrescription.date}
                     </div>
+                    {currentPrescription.patientAddress && (
+                      <div className="break-words">
+                        <span className="font-bold">Address:</span> {currentPrescription.patientAddress}
+                      </div>
+                    )}
                     <div>
                       <span className="font-bold">Medications:</span>
                       <ul className="mt-2 ml-3 sm:ml-4 space-y-2">
@@ -620,6 +636,14 @@ export const ReceivingEnhanced: React.FC = () => {
                     {consequence.explanation}
                   </p>
                 </div>
+
+                {!consequence.isCorrect && (
+                  <div className="bg-yellow-100 border-2 border-yellow-600 p-3 mb-4 text-left">
+                    <p className="text-yellow-900 text-xs sm:text-sm font-bold">
+                      💡 TIP: Review the "Remarks" and patient details closely!
+                    </p>
+                  </div>
+                )}
 
                 {/* Score Impact */}
                 <div className="mb-4 sm:mb-6">
