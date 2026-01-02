@@ -141,6 +141,10 @@ function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <footer className="py-4 text-center text-sm text-gray-500/60 font-medium">
+          <p>Updated as at {__COMMIT_DATE__}</p>
+        </footer>
       </div>
     </div>
   );
