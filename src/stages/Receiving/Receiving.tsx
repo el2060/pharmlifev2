@@ -16,8 +16,8 @@ export const Receiving: React.FC = () => {
   // and doesn't involve hook calls itself other than useGameStore
 
   if (currentPrescription.scenario) {
-    return <ReceivingEnhanced />;
+    return <ReceivingEnhanced key={currentPrescription.id} />;
   }
 
-  return <ReceivingStandard />;
+  return <ReceivingStandard key={currentPrescription.id} />;
 };

@@ -98,7 +98,7 @@ const rx3: Prescription = {
   doctorMCR: '1155A',
   doctorSignature: true,
   clinicAddress: 'Ngee Ann Clinic, 5 Bishan Lane, Singapore 159111',
-  date: '2021-02-02',
+  date: '02-Feb-21',
   medications: [
     {
       medicationId: 'med-001b', // Paracetamol 500mg
@@ -121,19 +121,19 @@ const rx4: Prescription = {
   patientIC: 'S8023455I',
   patientAddress: '2 Bedok South Ave 3 S(212733)',
   patientDOB: '19-Feb-80',
-  patientAllergies: [],
+  patientAllergies: ['NKDA'], // Updated to match "NKDA" in image
   doctorName: 'Dr Ang Ah Ang',
   doctorMCR: '1192N',
   doctorSignature: true,
   clinicAddress: 'Grace Clinic, 22 Ryce Ave S(324917)',
-  date: '2020-11-28',
+  date: '28-Nov-20',
   medications: [
     {
       medicationId: 'med-007', // Salbutamol
       quantity: 2,
       dosageInstruction: '2 puffs',
       frequency: 'tds',
-      duration: '2 inhalers',
+      duration: '2', // Updated to match image "2"
       specialInstructions: 'prn',
     },
     {

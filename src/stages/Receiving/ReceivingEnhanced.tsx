@@ -535,14 +535,14 @@ export const ReceivingEnhanced: React.FC = () => {
               className="space-y-4"
             >
               {/* Scenario Situation */}
-              <div className="poke-textbox p-3 sm:p-6 bg-yellow-100 border-4 border-yellow-600">
-                <div className="flex items-start gap-2 sm:gap-3 mb-3">
-                  <AlertTriangle className="text-yellow-700 flex-shrink-0" size={24} />
+              <div className="poke-textbox p-4 sm:p-6 bg-yellow-100 border-4 border-yellow-600">
+                <div className="flex items-start gap-4 mb-3">
+                  <AlertTriangle className="text-yellow-700 flex-shrink-0" size={32} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-poke-black text-sm sm:text-lg font-bold mb-2" >
+                    <p className="text-poke-black text-lg sm:text-xl font-bold mb-2" >
                       SITUATION
                     </p>
-                    <p className="text-poke-black text-xs sm:text-base leading-relaxed" >
+                    <p className="text-poke-black text-base sm:text-lg leading-relaxed" >
                       {currentPrescription.scenario.situation}
                     </p>
                   </div>
@@ -550,38 +550,36 @@ export const ReceivingEnhanced: React.FC = () => {
               </div>
 
               {/* Question */}
-              <div className="poke-menu p-3 sm:p-6">
-                <p className="text-poke-black text-sm sm:text-lg font-bold mb-4 leading-relaxed" >
+              <div className="poke-menu p-4 sm:p-6">
+                <p className="text-poke-black text-lg sm:text-xl font-bold mb-6 leading-relaxed" >
                   {currentPrescription.scenario.question}
                 </p>
 
                 {/* Action Options */}
-                <div className="space-y-2 sm:space-y-3">
+                <div className="space-y-3 sm:space-y-4">
                   {currentPrescription.scenario.options.map((option) => (
                     <motion.button
                       key={option.id}
                       onClick={() => handleActionSelect(option.id)}
                       disabled={selectedAction !== ''}
-                      className={`w-full border-4 border-poke-black p-3 sm:p-4 text-left transition-all ${selectedAction === option.id
+                      className={`w-full border-4 border-poke-black p-4 sm:p-5 text-left transition-all ${selectedAction === option.id
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-poke-black hover:bg-gray-100'
                         }`}
                       style={{
-                        fontSize: '10px',
-                        lineHeight: '1.6',
                         boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
                         cursor: selectedAction !== '' ? 'not-allowed' : 'pointer'
                       }}
                       whileTap={selectedAction === '' ? { scale: 0.98 } : {}}
                     >
-                      <div className="flex items-start sm:items-center gap-2 sm:gap-3">
-                        <div className="flex-shrink-0 pt-1 sm:pt-0">
-                          {option.action === 'call-doctor' && <Phone size={18} className="sm:w-6 sm:h-6" />}
-                          {option.action === 'ask-patient' && <User size={18} className="sm:w-6 sm:h-6" />}
-                          {option.action === 'refuse-rx' && <XCircle size={18} className="sm:w-6 sm:h-6" />}
-                          {option.action === 'accept-rx' && <CheckCircle size={18} className="sm:w-6 sm:h-6" />}
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0">
+                          {option.action === 'call-doctor' && <Phone size={24} className="min-w-6" />}
+                          {option.action === 'ask-patient' && <User size={24} className="min-w-6" />}
+                          {option.action === 'refuse-rx' && <XCircle size={24} className="min-w-6" />}
+                          {option.action === 'accept-rx' && <CheckCircle size={24} className="min-w-6" />}
                         </div>
-                        <span className="flex-1 break-words">{option.text}</span>
+                        <span className="flex-1 text-base sm:text-lg font-medium break-words">{option.text}</span>
                       </div>
                     </motion.button>
                   ))}
