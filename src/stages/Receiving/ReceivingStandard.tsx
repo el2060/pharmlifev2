@@ -818,6 +818,16 @@ export const ReceivingStandard: React.FC = () => {
                                             )}
                                         </div>
                                     </motion.button>
+
+                                    {/* Submit Button */}
+                                    <motion.button
+                                        onClick={handleSubmitValidation}
+                                        className="w-full py-4 mt-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-lg shadow-lg border-b-4 border-blue-900 active:border-b-0 active:translate-y-1 transition-all"
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        VERIFY PRESCRIPTION →
+                                    </motion.button>
                                 </div>
                             </div>
 
