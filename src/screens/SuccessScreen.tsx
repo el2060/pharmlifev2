@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Home, RotateCcw } from 'lucide-react';
+import { Trophy, Home } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 
 interface SuccessScreenProps {
