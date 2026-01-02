@@ -26,7 +26,12 @@ export const Typing: React.FC = () => {
 
   // Scroll to top when moving to next medication
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Small timeout to ensure DOM update has processed
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 10);
   }, [currentMedIndex]);
 
   if (!currentPrescription) {
