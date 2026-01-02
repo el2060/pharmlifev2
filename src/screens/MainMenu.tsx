@@ -159,6 +159,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             <p className="text-gray-600 text-[10px] sm:text-xs leading-relaxed mt-2">
               Gamified Learning for Dip Pharm Sci, LSCT, NP
             </p>
+            <p className="text-gray-500/60 text-[10px] sm:text-xs mt-1">
+              updated as at {__COMMIT_DATE__}
+            </p>
 
           </div>
         </div>
