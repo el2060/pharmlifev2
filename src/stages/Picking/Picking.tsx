@@ -189,10 +189,10 @@ export const Picking: React.FC = () => {
                     <ShoppingCart className="text-cyan-400" size={28} />
                   </motion.div>
                   <div>
-                    <h3 className="text-white mb-1 pixel-label font-bold text-contrast-shadow">
+                    <h3 className="text-blue-900 mb-1 pixel-label font-bold">
                       PICKING BASKET
                     </h3>
-                    <p className="text-sm sm:text-base text-cyan-200 font-medium">
+                    <p className="text-sm sm:text-base text-blue-700 font-medium">
                       Selected: {selectedMedications.length} / {requiredMedIds.length}
                     </p>
                   </div>
@@ -201,9 +201,9 @@ export const Picking: React.FC = () => {
                   onClick={handleSubmit}
                   disabled={selectedMedications.length === 0}
                   className={`arcade-button ${selectedMedications.length === 0
-                    ? 'bg-gray-500 opacity-50 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-green-500 to-emerald-600'
-                    } text-white py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm font-semibold`}
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                    } py-3 px-4 sm:px-6 flex items-center justify-center gap-2 min-h-[48px] w-full sm:w-auto text-xs sm:text-sm font-semibold`}
                   whileHover={selectedMedications.length > 0 ? { scale: 1.05 } : {}}
                   whileTap={selectedMedications.length > 0 ? { scale: 0.95 } : {}}
                 >
@@ -380,9 +380,9 @@ export const Picking: React.FC = () => {
             onClick={handleSubmit}
             disabled={selectedMedications.length === 0}
             className={`w-full arcade-button ${selectedMedications.length === 0
-              ? 'bg-gray-500 opacity-50 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-emerald-600'
-              } text-white py-4 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold`}
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+              } py-4 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold`}
             whileHover={selectedMedications.length > 0 ? { scale: 1.02 } : {}}
             whileTap={selectedMedications.length > 0 ? { scale: 0.98 } : {}}
           >
