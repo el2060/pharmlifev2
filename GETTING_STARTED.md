@@ -1,4 +1,32 @@
-# Getting Started with Pharm Life
+# Getting Started with PharmLife
+
+## 🎮 How to Play
+PharmLife places you in the shoes of a Pharmacy Technician. Your goal is to process prescriptions accurately and safely.
+
+### The Gameplay Loop
+1.  **Receiving:** Check the prescription details. Verify Patient Name, IC, and Doctor's Signature.
+    *   *Tip:* Watch out for allergy alerts!
+2.  **Typing:** Transcribe the prescription instructions onto labels.
+    *   *Tip:* Use the "Auto-Fill" for standard instructions during training.
+3.  **Picking:** Select the correct medications from the shelves.
+    *   *Tip:* Match the details exactly (Name, Strength, Form).
+4.  **Dispensing:** Hand over to the patient and provide counselling.
+
+## 🚀 Current Mission: Year 1 Training
+You will face **4 Scenarios** in this training module:
+1.  **Standard Rx:** A simple Ibuprofen prescription.
+2.  **Multi-Item Rx:** Handling multiple medications.
+3.  **Allergy Alert:** The patient is allergic to the prescribed drug! **Action: Call Doctor.**
+4.  **Missing Info:** The doctor forgot the duration! **Action: Call Doctor.**
+
+## 🛠 Setup & Run
+1.  Install dependencies: `npm install`
+2.  Start the game: `npm run dev`
+3.  Open browser to: `http://localhost:5173`
+
+## 📝 Latest Updates
+*   **New End Screen:** View your performance report after completing the level.
+*   **Improved UI:** Clearer buttons and easier navigation in the Picking stage.
 
 ## 🎉 Your Game is Ready!
 
