@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { execSync } from 'child_process'
 
-const commitIso = execSync('git log -1 --format=%cI').toString().trimEnd()
-const commitDate = new Date(commitIso).toLocaleString('en-GB', {
+// Use build time instead of commit time for reliability across deployment environments
+const buildDate = new Date().toLocaleString('en-GB', {
   day: '2-digit',
   month: 'short',
   year: 'numeric',
@@ -16,7 +15,7 @@ const commitDate = new Date(commitIso).toLocaleString('en-GB', {
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    __COMMIT_DATE__: JSON.stringify(commitDate),
+    __COMMIT_DATE__: JSON.stringify(buildDate),
   },
   plugins: [react()],
   server: {
