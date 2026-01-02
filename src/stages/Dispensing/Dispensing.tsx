@@ -9,9 +9,11 @@ import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
 import { getQuestionsByMedicationId } from '../../data/questions';
 import { CounselingQuestion } from '../../types/game.types';
+import { ACTIVE_LEVEL_LIMIT } from '../../data/prescriptions';
 
 export const Dispensing: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel } = useGameStore();
+  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel, currentYear, currentLevel } = useGameStore();
+  const isLastLevel = currentLevel >= ACTIVE_LEVEL_LIMIT[currentYear];
   const [counselingStarted, setCounselingStarted] = useState(false);
   const [counselingComplete, setCounselingComplete] = useState(false);
 
@@ -234,7 +236,7 @@ export const Dispensing: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                NEXT LEVEL →
+                {isLastLevel ? 'FINISH LEVEL →' : 'NEXT PATIENT →'}
               </motion.button>
               <Button variant="secondary" onClick={handleResetToMenu} fullWidth>
                 Back to Menu
