@@ -32,16 +32,18 @@ const getYearLevels = (year: YearLevel) =>
     .filter((level) => level.year === year)
     .sort((a, b) => a.chapterNumber - b.chapterNumber);
 
-const getWrappedNextLevel = (year: YearLevel, currentLevel: number) => {
+const getNextLevel = (year: YearLevel, currentLevel: number): number | null => {
   const yearLevels = getYearLevels(year);
-  const maxLevels = yearLevels.length;
 
-  if (!maxLevels) {
-    return currentLevel;
+  if (!yearLevels.length) return null;
+
+  const currentIndex = yearLevels.findIndex((l) => l.chapterNumber === currentLevel);
+
+  if (currentIndex === -1 || currentIndex === yearLevels.length - 1) {
+    return null; // No next level
   }
 
-  const nextIndex = currentLevel % maxLevels;
-  return yearLevels[nextIndex]?.chapterNumber ?? currentLevel;
+  return yearLevels[currentIndex + 1].chapterNumber;
 };
 
 const stageOrder: GameStage[] = ['receiving', 'typing', 'picking', 'dispensing'];
@@ -57,6 +59,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   currentPrescription: null,
   selectedMedications: [],
   allergyConflictDetected: false,
+  isLevelComplete: false,
   stageProgress: {
     receiving: false,
     typing: false,
@@ -65,7 +68,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // Actions
-  setYear: (year) => set({ currentYear: year, currentLevel: 1 }),
+  setYear: (year) => set({ currentYear: year, currentLevel: 1, isLevelComplete: false }),
 
   setStage: (stage) => set({ currentStage: stage }),
 
@@ -97,9 +100,38 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (currentIndex < stageOrder.length - 1) {
       set({ currentStage: stageOrder[currentIndex + 1] });
     } else {
-      // All stages complete, move to next level
-      set((state) => ({
-        currentLevel: getWrappedNextLevel(state.currentYear, state.currentLevel),
+      // All stages complete, try move to next level
+      const state = get();
+      const nextLevel = getNextLevel(state.currentYear, state.currentLevel);
+
+      if (nextLevel) {
+        set({
+          currentLevel: nextLevel,
+          currentStage: 'receiving',
+          score: 0,
+          selectedMedications: [],
+          allergyConflictDetected: false,
+          stageProgress: {
+            receiving: false,
+            typing: false,
+            picking: false,
+            dispensing: false,
+          },
+        });
+      } else {
+        // Level Complete!
+        set({ isLevelComplete: true });
+      }
+    }
+  },
+
+  completeLevel: () => {
+    const state = get();
+    const nextLevel = getNextLevel(state.currentYear, state.currentLevel);
+
+    if (nextLevel) {
+      set({
+        currentLevel: nextLevel,
         currentStage: 'receiving',
         score: 0,
         selectedMedications: [],
@@ -110,24 +142,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
           picking: false,
           dispensing: false,
         },
-      }));
+      });
+    } else {
+      // Level Complete!
+      set({ isLevelComplete: true });
     }
   },
-
-  completeLevel: () =>
-    set((state) => ({
-      currentLevel: getWrappedNextLevel(state.currentYear, state.currentLevel),
-      currentStage: 'receiving',
-      score: 0,
-      selectedMedications: [],
-      allergyConflictDetected: false,
-      stageProgress: {
-        receiving: false,
-        typing: false,
-        picking: false,
-        dispensing: false,
-      },
-    })),
 
   resetLevel: () =>
     set({
@@ -136,6 +156,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       score: 0,
       selectedMedications: [],
       allergyConflictDetected: false,
+      isLevelComplete: false,
       stageProgress: {
         receiving: false,
         typing: false,

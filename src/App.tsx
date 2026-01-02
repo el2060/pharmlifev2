@@ -1,152 +1,40 @@
-import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { MainMenu } from './screens/MainMenu';
-import { YearSelection } from './screens/YearSelection';
-import { About } from './screens/About';
-import { HUD } from './components/HUD';
-import { Receiving } from './stages/Receiving/Receiving';
-import { Typing } from './stages/Typing/Typing';
-import { Picking } from './stages/Picking/Picking';
-import { Dispensing } from './stages/Dispensing/Dispensing';
-import { useGameStore } from './store/gameStore';
-import { levels } from './data/prescriptions';
-import { YearLevel } from './types/game.types';
+import { SuccessScreen } from './screens/SuccessScreen';
 
-type Screen = 'menu' | 'year-selection' | 'about' | 'game';
+// ... (existing imports)
 
-// Helper function to get level data based on year and chapter number with safe fallback
-const getLevelData = (year: YearLevel, chapterNumber: number) => {
-  const yearLevels = levels
-    .filter((l) => l.year === year)
-    .sort((a, b) => a.chapterNumber - b.chapterNumber);
+// Inside App component
+const { currentYear, currentLevel, currentStage, setYear, setPrescription, resetLevel, isLevelComplete } = useGameStore();
 
-  if (!yearLevels.length) return undefined;
+// ...
 
-  return yearLevels.find((l) => l.chapterNumber === chapterNumber) ?? yearLevels[0];
-};
+{
+  currentScreen === 'game' && (
+    <motion.div
+      key="game"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen space-y-6"
+    >
+      {isLevelComplete ? (
+        <SuccessScreen onBackToHome={handleBackToHome} />
+      ) : (
+        <>
+          <HUD onBackToHome={handleBackToHome} />
+          <div className="pb-10">{renderStage()}</div>
+        </>
+      )}
+    </motion.div>
+  )
+}
+        </AnimatePresence >
 
-function App() {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
-  const { currentYear, currentLevel, currentStage, setYear, setPrescription, resetLevel } = useGameStore();
-
-  const handleStartGame = () => {
-    setCurrentScreen('year-selection');
-  };
-
-  const handleShowAbout = () => {
-    setCurrentScreen('about');
-  };
-
-  const handleBackToMenu = () => {
-    setCurrentScreen('menu');
-  };
-
-  const handleBackToHome = () => {
-    resetLevel(); // Reset game state
-    setCurrentScreen('menu');
-  };
-
-  const handleSelectYear = (year: YearLevel) => {
-    setYear(year);
-
-    // Load first level for selected year (Chapter 1)
-    const levelData = getLevelData(year, 1);
-    if (levelData) {
-      setPrescription(levelData.prescription);
-      setCurrentScreen('game');
-    }
-  };
-
-  // Load prescription when currentLevel changes
-  React.useEffect(() => {
-    if (currentScreen === 'game') {
-      const levelData = getLevelData(currentYear, currentLevel);
-      if (levelData) {
-        setPrescription(levelData.prescription);
-      }
-    }
-  }, [currentLevel, currentScreen, currentYear, setPrescription]);
-
-  // Scroll to top when stage changes
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentStage, currentScreen]);
-
-  const renderStage = () => {
-    switch (currentStage) {
-      case 'receiving':
-        return <Receiving />;
-      case 'typing':
-        return <Typing />;
-      case 'picking':
-        return <Picking />;
-      case 'dispensing':
-        return <Dispensing />;
-      default:
-        return <Receiving />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen background-clinical flex">
-      <div className="flex-1 mx-auto w-full max-w-[1600px] px-3 sm:px-6 lg:px-10 xl:px-14">
-        <AnimatePresence mode="wait">
-          {currentScreen === 'menu' && (
-            <motion.div
-              key="menu"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <MainMenu onStartGame={handleStartGame} onShowAbout={handleShowAbout} />
-            </motion.div>
-          )}
-
-          {currentScreen === 'year-selection' && (
-            <motion.div
-              key="year-selection"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <YearSelection onSelectYear={handleSelectYear} onBack={handleBackToMenu} />
-            </motion.div>
-          )}
-
-          {currentScreen === 'about' && (
-            <motion.div
-              key="about"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <About onBack={handleBackToMenu} />
-            </motion.div>
-          )}
-
-          {currentScreen === 'game' && (
-            <motion.div
-              key="game"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="min-h-screen space-y-6"
-            >
-              <HUD onBackToHome={handleBackToHome} />
-              <div className="pb-10">{renderStage()}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <footer className="py-4 text-center text-sm text-gray-500/60 font-medium">
-          <p>Last Updated: {__COMMIT_DATE__}</p>
-        </footer>
-      </div>
-    </div>
+  <footer className="py-4 text-center text-sm text-gray-500/60 font-medium">
+    <p>Last Updated: {__COMMIT_DATE__}</p>
+  </footer>
+      </div >
+    </div >
   );
 }
 

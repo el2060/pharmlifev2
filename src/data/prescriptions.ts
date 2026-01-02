@@ -427,12 +427,12 @@ const allLevels: LevelData[] = [
 
 // Active catalog: Year 1
 const activeLevels = allLevels.filter(
-  (level) => level.year === 1,
+  (level) => level.year === 1 && level.chapterNumber <= 4
 );
 
 // Year limits for gameplay selection and wrapping
 export const ACTIVE_LEVEL_LIMIT: Record<YearLevel, number> = {
-  1: activeLevels.length,
+  1: 4, // Limited to 4 scenarios as requested
   2: 0,
   3: 0,
 };

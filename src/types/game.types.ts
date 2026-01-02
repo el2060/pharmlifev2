@@ -155,6 +155,7 @@ export interface GameState {
     picking: boolean;
     dispensing: boolean;
   };
+  isLevelComplete: boolean;
 }
 
 export interface LevelData {
