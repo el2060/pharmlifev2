@@ -2,7 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
 
-const commitDate = execSync('git log -1 --format=%cd --date=format:"%d %b %Y %I:%M %p"').toString().trimEnd()
+const commitIso = execSync('git log -1 --format=%cI').toString().trimEnd()
+const commitDate = new Date(commitIso).toLocaleString('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'Asia/Singapore'
+})
 
 // https://vitejs.dev/config/
 export default defineConfig({
