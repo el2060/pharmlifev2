@@ -68,7 +68,7 @@ const rx2: Prescription = {
     },
     {
       medicationId: 'med-006', // Dextromethorphan
-      quantity: 1,
+      quantity: 10,
       dosageInstruction: '10ml',
       frequency: 'tds',
       duration: '1/52',
@@ -331,7 +331,7 @@ export const rx13: Prescription = {
   medications: [
     {
       medicationId: 'med-006',
-      quantity: 1,
+      quantity: 10,
       dosageInstruction: '10ml',
       frequency: 'tds',
       duration: '5 days',

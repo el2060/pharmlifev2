@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Printer, CheckCircle, XCircle } from 'lucide-react';
 import { Modal } from '../../components/Modal';
@@ -23,6 +23,11 @@ export const Typing: React.FC = () => {
   // Patient dialogue state
   const [showPatientDialogue, setShowPatientDialogue] = useState(false);
   const [patientQuestion, setPatientQuestion] = useState('');
+
+  // Scroll to top when moving to next medication
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentMedIndex]);
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -51,7 +56,7 @@ export const Typing: React.FC = () => {
     return currentMed.specialInstructions;
   }, [currentMed.specialInstructions]);
 
-  const dosageFormOptions = ['tablet', 'capsule', 'liquid', 'syrup', 'inhaler', 'topical'];
+  const dosageFormOptions = ['tablet', 'capsule', 'syrup', 'inhaler', 'topical'];
 
   // Generate quantity options based on medication type
   const getQuantityOptions = () => {
@@ -356,7 +361,7 @@ export const Typing: React.FC = () => {
                     {medication.strength}
                   </p>
                   <p className="mt-3 text-sm text-poke-black break-words" >
-                    Take {labelData.quantity} {labelData.dosageForm}(s) {labelData.frequency}
+                    Take {labelData.quantity}{['liquid', 'syrup'].includes(labelData.dosageForm) ? 'ml' : ` ${labelData.dosageForm}(s)`} {labelData.frequency}
                   </p>
                   {specialInstructionLabel && (
                     <p className="text-xs text-poke-black mt-2" >{specialInstructionLabel}</p>
@@ -383,8 +388,8 @@ export const Typing: React.FC = () => {
                 onClick={handlePrintLabel}
                 disabled={!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting}
                 className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
-                    ? 'text-poke-gray cursor-not-allowed'
-                    : 'text-poke-white'
+                  ? 'text-poke-gray cursor-not-allowed'
+                  : 'text-poke-white'
                   }`}
                 style={{
                   background: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
