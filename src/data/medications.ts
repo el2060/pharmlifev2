@@ -4,7 +4,7 @@ export const medications: Medication[] = [
   // Analgesics and anti-inflammatory
   {
     id: 'med-001',
-    genericName: 'Paracetamol',
+    genericName: 'Paracetamol 250mg tab',
     // Brand name removed
     strength: '250mg',
     dosageForm: 'tablet',
@@ -36,7 +36,7 @@ export const medications: Medication[] = [
   },
   {
     id: 'med-001b',
-    genericName: 'Paracetamol',
+    genericName: 'Paracetamol 500mg tab',
     strength: '500mg',
     dosageForm: 'tablet',
     category: 'analgesic',
@@ -67,7 +67,7 @@ export const medications: Medication[] = [
   },
   {
     id: 'med-002',
-    genericName: 'Ibuprofen',
+    genericName: 'Ibuprofen 200mg tab',
     brandName: 'Nurofen',
     strength: '200mg',
     dosageForm: 'tablet',
@@ -101,7 +101,7 @@ export const medications: Medication[] = [
   // Anti-infectives
   {
     id: 'med-003',
-    genericName: 'Amoxicillin',
+    genericName: 'Amoxycillin 250mg tab',
     brandName: 'Amoxil',
     strength: '250mg',
     dosageForm: 'tablet',
@@ -133,7 +133,7 @@ export const medications: Medication[] = [
   },
   {
     id: 'med-003b',
-    genericName: 'Amoxicillin',
+    genericName: 'Amoxycillin 500mg tab',
     strength: '500mg',
     dosageForm: 'tablet',
     category: 'antimicrobial',
@@ -166,7 +166,7 @@ export const medications: Medication[] = [
   // Gastrointestinal drugs
   {
     id: 'med-004',
-    genericName: 'Antacid',
+    genericName: 'Antacid tab',
     brandName: 'Gaviscon',
     strength: '',
     dosageForm: 'tablet',
@@ -200,7 +200,7 @@ export const medications: Medication[] = [
   // Respiratory drugs
   {
     id: 'med-005',
-    genericName: 'Chlorpheniramine',
+    genericName: 'Chlorpheniramine 4mg tab',
     strength: '4mg',
     dosageForm: 'tablet',
     category: 'respiratory',
@@ -231,7 +231,7 @@ export const medications: Medication[] = [
   },
   {
     id: 'med-006',
-    genericName: 'Dextromethorphan',
+    genericName: 'Dextromethorphan 15mg/5ml syrup',
     strength: '15mg/5ml',
     dosageForm: 'syrup',
     category: 'respiratory',
@@ -262,7 +262,7 @@ export const medications: Medication[] = [
   },
   {
     id: 'med-007',
-    genericName: 'Salbutamol',
+    genericName: 'Salbutamol 100mcg/dose inhaler',
     brandName: 'Ventolin',
     strength: '100mcg',
     dosageForm: 'inhaler',

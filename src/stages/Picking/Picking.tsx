@@ -70,7 +70,9 @@ export const Picking: React.FC = () => {
   // Get all medications for these categories
   const availableMedicationsByCategory: Record<string, Medication[]> = {};
   categories.forEach((cat) => {
-    availableMedicationsByCategory[cat] = getMedicationsByCategory(cat);
+    availableMedicationsByCategory[cat] = getMedicationsByCategory(cat).sort((a, b) =>
+      a.genericName.localeCompare(b.genericName)
+    );
   });
 
   const handleSelectMedication = (medId: string) => {
