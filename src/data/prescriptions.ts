@@ -9,6 +9,13 @@ import {
   signatureVerificationScenario,
 } from './scenarios';
 
+// Helper to get a date relative to today (YYYY-MM-DD)
+const getRelativeDate = (daysAgo: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date.toISOString().split('T')[0];
+};
+
 // Rx #1 - Valid Rx (Ibuprofen)
 const rx1: Prescription = {
   id: 'rx-001',
@@ -17,7 +24,7 @@ const rx1: Prescription = {
   patientAllergies: ['Paracetamol'], // Patient is allergic to Paracetamol
   doctorName: 'Dr William Tan',
   doctorSignature: true,
-  date: '2025-02-02',
+  date: getRelativeDate(2), // Recent
   medications: [
     {
       medicationId: 'med-002', // Ibuprofen
@@ -39,7 +46,7 @@ const rx2: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Chan Yew Chan',
   doctorSignature: true,
-  date: '2025-04-11',
+  date: getRelativeDate(5),
   medications: [
     {
       medicationId: 'med-003a', // Amoxicillin
@@ -76,7 +83,7 @@ const rx3: Prescription = {
   patientAllergies: ['Paracetamol'],
   doctorName: 'Dr William Tan',
   doctorSignature: true,
-  date: '2025-02-02',
+  date: getRelativeDate(3),
   medications: [
     {
       medicationId: 'med-001b', // Paracetamol 500mg
@@ -100,7 +107,7 @@ const rx4: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Ang Ah Ang',
   doctorSignature: true,
-  date: '2025-11-28',
+  date: getRelativeDate(10),
   medications: [
     {
       medicationId: 'med-007', // Salbutamol
@@ -132,7 +139,7 @@ export const rx5: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Lee Ming',
   doctorSignature: true,
-  date: '2025-10-20',
+  date: getRelativeDate(7),
   medications: [
     {
       medicationId: 'med-001',
@@ -153,7 +160,7 @@ const rx6: Prescription = {
   patientAllergies: ['Penicillin'],
   doctorName: 'Dr Wong',
   doctorSignature: false, // Invalid - missing signature
-  date: '2025-10-20',
+  date: getRelativeDate(4),
   medications: [
     {
       medicationId: 'med-002',
@@ -175,7 +182,7 @@ const rx7: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Tan',
   doctorSignature: true,
-  date: '2024-08-15', // Invalid - expired date
+  date: getRelativeDate(200), // Invalid - expired date (> 6 months)
   medications: [
     {
       medicationId: 'med-008',
@@ -198,7 +205,7 @@ const rx8: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Lee',
   doctorSignature: true,
-  date: '2025-10-22',
+  date: getRelativeDate(6),
   medications: [
     {
       medicationId: 'med-001',
@@ -227,7 +234,7 @@ export const rx9: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Lee Ming',
   doctorSignature: true, // Present but questionably legible
-  date: '2025-10-24',
+  date: getRelativeDate(1),
   medications: [
     {
       medicationId: 'med-001',
@@ -250,7 +257,7 @@ export const rx10: Prescription = {
   patientAllergies: ['Penicillin'], // System shows allergy
   doctorName: 'Dr Tan',
   doctorSignature: true,
-  date: '2025-10-23',
+  date: getRelativeDate(3),
   medications: [
     {
       medicationId: 'med-003b', // Amoxicillin - a penicillin antibiotic
@@ -273,7 +280,7 @@ export const rx11: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Lim Seng',
   doctorSignature: true,
-  date: '2025-11-01',
+  date: getRelativeDate(14),
   medications: [
     {
       medicationId: 'med-002',
@@ -295,7 +302,7 @@ export const rx12: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Kumar',
   doctorSignature: true,
-  date: '2024-11-15', // Expired - more than 1 year old
+  date: getRelativeDate(370), // Expired - more than 1 year old
   medications: [
     {
       medicationId: 'med-005',
@@ -317,7 +324,7 @@ export const rx13: Prescription = {
   patientAllergies: ['Sulfonamides'],
   doctorName: 'Dr Fernandes',
   doctorSignature: true,
-  date: '2025-11-10',
+  date: getRelativeDate(8),
   medications: [
     {
       medicationId: 'med-006',

@@ -23,6 +23,11 @@ export const Receiving: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
+  // Scroll to top when step changes
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
+
   // Interactive validation checks
   const [checkedFields, setCheckedFields] = useState<Set<string>>(new Set());
   const [foundIssues, setFoundIssues] = useState<string[]>([]);
@@ -91,6 +96,8 @@ export const Receiving: React.FC = () => {
     } else {
       // Reset for retry
       setShowResult(false);
+      setCheckedFields(new Set());
+      setFoundIssues([]);
     }
   };
 
