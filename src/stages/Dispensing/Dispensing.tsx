@@ -254,10 +254,18 @@ export const Dispensing: React.FC = () => {
         {currentQuestions.length > 0 && (
           <div className="space-y-6">
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <p className="text-sm text-blue-800 font-semibold mb-1">
-                Question {currentQuestionIndex + 1} of {currentQuestions.length}
-              </p>
-              <h3 className="text-xl font-bold text-gray-900">
+              <div className="flex flex-col gap-1 mb-2">
+                <p className="text-sm text-blue-800 font-semibold">
+                  Question {currentQuestionIndex + 1} of {currentQuestions.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">MEDICATION:</span>
+                  <span className="text-sm font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded border border-indigo-200">
+                    {getMedicationById(currentQuestions[currentQuestionIndex].medicationId)?.genericName}
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mt-2">
                 {currentQuestions[currentQuestionIndex].question}
               </h3>
             </div>
