@@ -159,9 +159,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowAbout }) 
             <p className="text-gray-600 text-[10px] sm:text-xs leading-relaxed mt-2">
               Gamified Learning for Dip Pharm Sci, LSCT, NP
             </p>
-            <p className="text-gray-500 text-[9px] sm:text-xs leading-relaxed mt-3">
-              Last Updated: 01 Jan 2026
-            </p>
+
           </div>
         </div>
       </motion.div>
