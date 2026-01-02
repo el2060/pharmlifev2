@@ -16,6 +16,9 @@ const getRelativeDate = (daysAgo: number): string => {
   return date.toISOString().split('T')[0];
 };
 
+// Force refresh for HMR
+
+
 // Rx #1 - Valid Rx (Ibuprofen)
 const rx1: Prescription = {
   id: 'rx-001',

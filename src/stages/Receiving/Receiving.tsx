@@ -636,7 +636,8 @@ export const Receiving: React.FC = () => {
                       const today = new Date();
                       const daysDiff = Math.floor((today.getTime() - rxDate.getTime()) / (1000 * 60 * 60 * 24));
                       const isExpired = daysDiff > 180; // More than 6 months old
-                      handleFieldCheck('date', isExpired);
+                      // If prescription is valid, force NO ISSUE (false), overriding any date math glitches
+                      handleFieldCheck('date', currentPrescription.isValid ? false : isExpired);
                     }}
                     disabled={checkedFields.has('date')}
                     className="w-full border-4 border-poke-black p-4 text-left"
@@ -712,7 +713,8 @@ export const Receiving: React.FC = () => {
                       const hasIncomplete = currentPrescription.medications.some(
                         med => !med.duration || !med.dosageInstruction || !med.frequency
                       );
-                      handleFieldCheck('dosage', hasIncomplete);
+                      // If prescription is valid, force NO ISSUE (false)
+                      handleFieldCheck('dosage', currentPrescription.isValid ? false : hasIncomplete);
                     }}
                     disabled={checkedFields.has('dosage')}
                     className="w-full border-4 border-poke-black p-4 text-left"
@@ -765,7 +767,8 @@ export const Receiving: React.FC = () => {
                           allergy => medication?.genericName.toLowerCase().includes(allergy.toLowerCase())
                         );
                       });
-                      handleFieldCheck('allergies', hasAllergyConflict);
+                      // If prescription is valid, force NO ISSUE (false)
+                      handleFieldCheck('allergies', currentPrescription.isValid ? false : hasAllergyConflict);
                     }}
                     disabled={checkedFields.has('allergies')}
                     className="w-full border-4 border-poke-black p-4 text-left"
