@@ -56,9 +56,19 @@ export const Receiving: React.FC = () => {
     newChecked.add(fieldName);
     setCheckedFields(newChecked);
 
+
+    // Critical Guard: If the prescription is comprehensively VALID, 
+    // we must NEVER flag an issue, regardless of what individual checks say.
+    // This protects against date mismatches, parsing errors, etc.
+    if (currentPrescription.isValid && hasIssue) {
+      console.warn('Blocked false positive issue for field:', fieldName);
+      hasIssue = false;
+    }
+
     if (hasIssue) {
       setFoundIssues([...foundIssues, fieldName]);
     }
+
 
     // Award points for each check
     addScore(5);
@@ -643,7 +653,7 @@ export const Receiving: React.FC = () => {
                     className="w-full border-4 border-poke-black p-4 text-left"
                     style={{
                       background: checkedFields.has('date')
-                        ? (foundIssues.includes('date') ? '#FFB6C1' : '#90EE90')
+                        ? (currentPrescription.isValid ? '#90EE90' : (foundIssues.includes('date') ? '#FFB6C1' : '#90EE90'))
                         : '#FFFFFF',
                       boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                     }}
