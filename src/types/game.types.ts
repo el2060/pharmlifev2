@@ -105,7 +105,9 @@ export interface Prescription {
   patientDOB?: string;
   patientAllergies: string[];
   doctorName: string;
+  doctorMCR?: string;
   doctorSignature: boolean;
+  clinicAddress?: string;
   date: string;
   medications: PrescriptionItem[];
   isValid: boolean;

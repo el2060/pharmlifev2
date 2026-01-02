@@ -466,8 +466,13 @@ export const ReceivingEnhanced: React.FC = () => {
                       <span className="font-bold">IC:</span> {currentPrescription.patientIC}
                     </div>
                     <div className="break-words">
-                      <span className="font-bold">Doctor:</span> {currentPrescription.doctorName}
+                      <span className="font-bold">Doctor:</span> {currentPrescription.doctorName} {currentPrescription.doctorMCR && <span className="text-xs text-gray-600">({currentPrescription.doctorMCR})</span>}
                     </div>
+                    {currentPrescription.clinicAddress && (
+                      <div className="break-words">
+                        <span className="font-bold">Clinic:</span> {currentPrescription.clinicAddress}
+                      </div>
+                    )}
                     <div>
                       <span className="font-bold">Signature:</span> {currentPrescription.doctorSignature ? '✓ Signed' : '✗ NOT SIGNED'}
                     </div>

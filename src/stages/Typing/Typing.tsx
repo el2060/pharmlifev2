@@ -5,7 +5,7 @@ import { Modal } from '../../components/Modal';
 import { Hint } from '../../components/Hint';
 import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
-import { medicalAbbreviations } from '../../data/prescriptions';
+import { medicalAbbreviations, convertDuration } from '../../data/prescriptions';
 
 export const Typing: React.FC = () => {
   const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
@@ -19,6 +19,9 @@ export const Typing: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+
+  // New state to track attempts and help stuck users
+  const [attempts, setAttempts] = useState(0);
 
   // Patient dialogue state
   const [showPatientDialogue, setShowPatientDialogue] = useState(false);
@@ -98,6 +101,8 @@ export const Typing: React.FC = () => {
 
       // If label is wrong, patient asks for confirmation
       if (!isValid) {
+        setAttempts(prev => prev + 1); // Increment attempts on failure
+
         // Patient notices something is off
         const wrongField = labelData.quantity !== currentMed.quantity.toString() ? 'quantity' :
           labelData.dosageForm !== medication.dosageForm ? 'form' : 'frequency';
@@ -124,12 +129,7 @@ export const Typing: React.FC = () => {
     if (response === 'recheck') {
       // Player catches their mistake
       addScore(30); // Partial credit for catching error
-      setLabelData({
-        quantity: '',
-        dosageForm: '',
-        frequency: '',
-        specialInstructions: '',
-      });
+      // Do NOT clear labelData, let them edit it
     } else {
       // Player insists it's correct (wrong)
       setShowResult(true);
@@ -142,14 +142,25 @@ export const Typing: React.FC = () => {
       proceedToNext();
     } else {
       // Retry
-      setLabelData({
-        quantity: '',
-        dosageForm: '',
-        frequency: '',
-        specialInstructions: '',
-      });
+      // Do NOT clear labelData
       setShowResult(false);
     }
+  };
+
+  const handleAutoFill = () => {
+    // Find correct frequency value
+    const expectedAbbrs = currentMed.frequency.split('or').map((part) => part.trim());
+    const correctFreq = frequencyOptions.find(f => expectedAbbrs.includes(f.abbr))?.value || '';
+
+    setLabelData({
+      quantity: currentMed.quantity.toString(),
+      dosageForm: medication.dosageForm,
+      frequency: correctFreq,
+      specialInstructions: specialInstructionLabel || '',
+    });
+
+    // Reset attempts so button disappears? Or keep it? keeping it is fine.
+    // Maybe show a toast or highlight effect? For now just filling is enough feedback as inputs change.
   };
 
   const proceedToNext = () => {
@@ -162,6 +173,7 @@ export const Typing: React.FC = () => {
         frequency: '',
         specialInstructions: '',
       });
+      setAttempts(0); // Reset attempts for next med
       setShowResult(false);
     } else {
       // All medications labeled
@@ -238,7 +250,7 @@ export const Typing: React.FC = () => {
                   {currentMed.dosageInstruction} {currentMed.frequency}
                 </p>
                 {currentMed.duration && (
-                  <p className="text-sm text-poke-black mt-2" >Duration: {currentMed.duration}</p>
+                  <p className="text-sm text-poke-black mt-2" >Duration: {convertDuration(currentMed.duration)}</p>
                 )}
               </div>
 
@@ -350,6 +362,18 @@ export const Typing: React.FC = () => {
                   ))}
                 </select>
               </div>
+
+              {/* Help Button - Appears after 3 attempts */}
+              {attempts >= 3 && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  onClick={handleAutoFill}
+                  className="w-full py-2 bg-yellow-100 text-yellow-800 border-2 border-yellow-400 font-bold text-sm rounded mb-2 hover:bg-yellow-200"
+                >
+                  💡 STUCK? CLICK TO AUTO-FILL CORRECT ANSWERS
+                </motion.button>
+              )}
 
               {/* Label Preview - Pokemon Style */}
               {labelData.quantity && labelData.dosageForm && labelData.frequency && (

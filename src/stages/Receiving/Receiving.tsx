@@ -385,8 +385,9 @@ export const Receiving: React.FC = () => {
                         <div className="space-y-2 text-poke-black" >
                           <p>Patient: {currentPrescription.patientName}</p>
                           <p>IC: {currentPrescription.patientIC}</p>
-                          <p>Doctor: {currentPrescription.doctorName}</p>
+                          <p>Doctor: {currentPrescription.doctorName} {currentPrescription.doctorMCR && <span className="text-xs text-gray-600">({currentPrescription.doctorMCR})</span>}</p>
                           <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                          {currentPrescription.clinicAddress && <p>Clinic: {currentPrescription.clinicAddress}</p>}
                           <p>Date: {currentPrescription.date}</p>
                           {currentPrescription.patientAddress && <p>Address: {currentPrescription.patientAddress}</p>}
                           <div className="pt-1">
@@ -574,8 +575,9 @@ export const Receiving: React.FC = () => {
                   <div className="space-y-2 text-poke-black" >
                     <p>Patient: {currentPrescription.patientName}</p>
                     <p>IC: {currentPrescription.patientIC}</p>
-                    <p>Doctor: {currentPrescription.doctorName}</p>
+                    <p>Doctor: {currentPrescription.doctorName} {currentPrescription.doctorMCR && <span className="text-xs text-gray-600">({currentPrescription.doctorMCR})</span>}</p>
                     <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                    {currentPrescription.clinicAddress && <p>Clinic: {currentPrescription.clinicAddress}</p>}
                     <p>Date: {currentPrescription.date}</p>
                     <div className="pt-1">
                       <p className="font-bold">Medications:</p>

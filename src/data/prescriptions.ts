@@ -28,13 +28,15 @@ const rx1: Prescription = {
   patientDOB: '12-Jan-67',
   patientAllergies: ['Paracetamol'],
   doctorName: 'Dr William Tan',
+  doctorMCR: '1155A',
   doctorSignature: true,
+  clinicAddress: 'Ngee Ann Clinic, 5 Bishan Lane, Singapore 159111',
   date: '2021-02-02',
   medications: [
     {
       medicationId: 'med-002', // Ibuprofen
-      quantity: 1,
-      dosageInstruction: '1 tab', // "tab" in Rx
+      quantity: 1, // Interpreted as 1 pack/supply
+      dosageInstruction: '200mg', // Updated to match image "200mg"
       frequency: 'bd',
       duration: '40 tabs', // "x 40"
       specialInstructions: 'prn',
@@ -52,7 +54,9 @@ const rx2: Prescription = {
   patientDOB: '29-Mar-73',
   patientAllergies: [],
   doctorName: 'Dr Chan Yew Chan',
+  doctorMCR: '1482P',
   doctorSignature: true,
+  clinicAddress: 'Chan Clinic, Bukit Batok St 21 S(233233)',
   date: '2021-04-11',
   medications: [
     {
@@ -91,7 +95,9 @@ const rx3: Prescription = {
   patientDOB: '12-Jan-67',
   patientAllergies: ['Paracetamol'],
   doctorName: 'Dr William Tan',
+  doctorMCR: '1155A',
   doctorSignature: true,
+  clinicAddress: 'Ngee Ann Clinic, 5 Bishan Lane, Singapore 159111',
   date: '2021-02-02',
   medications: [
     {
@@ -113,11 +119,13 @@ const rx4: Prescription = {
   id: 'rx-004',
   patientName: 'Sivanathan Ramasamy',
   patientIC: 'S8023455I',
-  patientAddress: '2 Bedok South Ave 3', // Zip omitted in ref? Image matches user provided. 2 Bedok South ...
+  patientAddress: '2 Bedok South Ave 3 S(212733)',
   patientDOB: '19-Feb-80',
   patientAllergies: [],
   doctorName: 'Dr Ang Ah Ang',
+  doctorMCR: '1192N',
   doctorSignature: true,
+  clinicAddress: 'Grace Clinic, 22 Ryce Ave S(324917)',
   date: '2020-11-28',
   medications: [
     {
