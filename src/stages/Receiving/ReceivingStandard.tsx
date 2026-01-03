@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, XCircle, User, Shield, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, User, Shield, FileText, MousePointer2 } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Modal } from '../../components/Modal';
@@ -557,7 +557,7 @@ export const ReceivingStandard: React.FC = () => {
                                     VALIDATE PRESCRIPTION
                                 </p>
                                 <p className="text-poke-black text-xs sm:text-sm" >
-                                    Check each field carefully. Keep the prescription visible while you tick each box.
+                                    Review the prescription details, then <span className="font-bold text-blue-600">tap on each task box below</span> to verify.
                                 </p>
                             </div>
 
@@ -597,7 +597,7 @@ export const ReceivingStandard: React.FC = () => {
 
                                     <div className="mb-2">
                                         <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
-                                            Your Tasks
+                                            Your Tasks (Tap to Verify)
                                         </h4>
                                     </div>
 
@@ -605,7 +605,7 @@ export const ReceivingStandard: React.FC = () => {
                                     <motion.button
                                         onClick={() => handleFieldCheck('signature', !currentPrescription.doctorSignature)}
                                         disabled={checkedFields.has('signature')}
-                                        className="w-full border-4 border-poke-black p-4 sm:p-5 text-left relative overflow-hidden"
+                                        className="w-full border-4 border-poke-black p-4 sm:p-5 text-left relative overflow-hidden cursor-pointer group"
                                         style={{
                                             background: checkedFields.has('signature')
                                                 ? (currentPrescription.doctorSignature ? '#90EE90' : '#FFB6C1')
@@ -618,8 +618,13 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DOCTOR SIGNATURE
+                                                    {!checkedFields.has('signature') && (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                                            <MousePointer2 size={12} /> TAP HERE
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <p className="text-poke-black text-xs sm:text-sm" >
                                                     Dr. {currentPrescription.doctorName}
@@ -628,7 +633,7 @@ export const ReceivingStandard: React.FC = () => {
                                                     <p className="italic text-gray-600 text-sm mt-1">✍️ Signed</p>
                                                 )}
                                             </div>
-                                            {checkedFields.has('signature') && (
+                                            {checkedFields.has('signature') ? (
                                                 <motion.div
                                                     initial={{ scale: 0 }}
                                                     animate={{ scale: 1 }}
@@ -639,6 +644,14 @@ export const ReceivingStandard: React.FC = () => {
                                                     ) : (
                                                         <XCircle className="text-red-600" size={32} />
                                                     )}
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    animate={{ x: [0, 5, 0] }}
+                                                    transition={{ repeat: Infinity, duration: 1.5 }}
+                                                >
+                                                    <User size={24} className="opacity-20" />
                                                 </motion.div>
                                             )}
                                         </div>
@@ -655,7 +668,7 @@ export const ReceivingStandard: React.FC = () => {
                                             handleFieldCheck('date', currentPrescription.isValid ? false : isExpired);
                                         }}
                                         disabled={checkedFields.has('date')}
-                                        className="w-full border-4 border-poke-black p-4 text-left"
+                                        className="w-full border-4 border-poke-black p-4 text-left cursor-pointer group"
                                         style={{
                                             background: checkedFields.has('date')
                                                 ? (currentPrescription.isValid ? '#90EE90' : (foundIssues.includes('date') ? '#FFB6C1' : '#90EE90'))
@@ -663,11 +676,17 @@ export const ReceivingStandard: React.FC = () => {
                                             boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                                         }}
                                         whileTap={{ scale: checkedFields.has('date') ? 1 : 0.98 }}
+                                        whileHover={!checkedFields.has('date') ? { scale: 1.02 } : {}}
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
                                                     ☐ PRESCRIPTION DATE
+                                                    {!checkedFields.has('date') && (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                                            <MousePointer2 size={12} /> TAP HERE
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <p className="text-poke-black text-xs sm:text-sm" >
                                                     {currentPrescription.date}
@@ -693,17 +712,23 @@ export const ReceivingStandard: React.FC = () => {
                                     <motion.button
                                         onClick={() => handleFieldCheck('patient', false)} // Assuming always matches in our scenarios
                                         disabled={checkedFields.has('patient')}
-                                        className="w-full border-4 border-poke-black p-4 text-left"
+                                        className="w-full border-4 border-poke-black p-4 text-left cursor-pointer group"
                                         style={{
                                             background: checkedFields.has('patient') ? '#90EE90' : '#FFFFFF',
                                             boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                                         }}
                                         whileTap={{ scale: checkedFields.has('patient') ? 1 : 0.98 }}
+                                        whileHover={!checkedFields.has('patient') ? { scale: 1.02 } : {}}
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
                                                     ☐ PATIENT DETAILS
+                                                    {!checkedFields.has('patient') && (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                                            <MousePointer2 size={12} /> TAP HERE
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <p className="text-poke-black text-xs sm:text-sm" >
                                                     {currentPrescription.patientName}
@@ -732,7 +757,7 @@ export const ReceivingStandard: React.FC = () => {
                                             handleFieldCheck('dosage', currentPrescription.isValid ? false : hasIncomplete);
                                         }}
                                         disabled={checkedFields.has('dosage')}
-                                        className="w-full border-4 border-poke-black p-4 text-left"
+                                        className="w-full border-4 border-poke-black p-4 text-left cursor-pointer group"
                                         style={{
                                             background: checkedFields.has('dosage')
                                                 ? (foundIssues.includes('dosage') ? '#FFB6C1' : '#90EE90')
@@ -740,11 +765,17 @@ export const ReceivingStandard: React.FC = () => {
                                             boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                                         }}
                                         whileTap={{ scale: checkedFields.has('dosage') ? 1 : 0.98 }}
+                                        whileHover={!checkedFields.has('dosage') ? { scale: 1.02 } : {}}
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DOSAGE COMPLETE
+                                                    {!checkedFields.has('dosage') && (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                                            <MousePointer2 size={12} /> TAP HERE
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <div className="space-y-1">
                                                     {currentPrescription.medications.map((med, idx) => {
@@ -786,7 +817,7 @@ export const ReceivingStandard: React.FC = () => {
                                             handleFieldCheck('allergies', currentPrescription.isValid ? false : hasAllergyConflict);
                                         }}
                                         disabled={checkedFields.has('allergies')}
-                                        className="w-full border-4 border-poke-black p-4 text-left"
+                                        className="w-full border-4 border-poke-black p-4 text-left cursor-pointer group"
                                         style={{
                                             background: checkedFields.has('allergies')
                                                 ? (foundIssues.includes('allergies') ? '#FFB6C1' : '#90EE90')
@@ -794,11 +825,17 @@ export const ReceivingStandard: React.FC = () => {
                                             boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
                                         }}
                                         whileTap={{ scale: checkedFields.has('allergies') ? 1 : 0.98 }}
+                                        whileHover={!checkedFields.has('allergies') ? { scale: 1.02 } : {}}
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2" >
+                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DRUG ALLERGIES
+                                                    {!checkedFields.has('allergies') && (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                                            <MousePointer2 size={12} /> TAP HERE
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <p className="text-poke-black text-xs sm:text-sm" >
                                                     {currentPrescription.patientAllergies.length > 0 ? currentPrescription.patientAllergies.join(', ') : 'NIL'}
