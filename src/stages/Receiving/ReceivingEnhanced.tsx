@@ -388,7 +388,7 @@ export const ReceivingEnhanced: React.FC = () => {
                           <CheckCircle className="text-green-500" size={32} />
                         )}
                       </div>
-                      {currentPrescription.patientAllergies.length > 0 ? (
+                      {currentPrescription.patientAllergies.length > 0 && !currentPrescription.patientAllergies.includes('NKDA') ? (
                         <div className="bg-red-200 border-4 border-red-600 p-4 rounded mb-4">
                           <p className="font-semibold text-red-900 text-center" >
                             ⚠️ ALLERGIES: {currentPrescription.patientAllergies.join(', ')}

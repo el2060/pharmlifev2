@@ -31,7 +31,7 @@ const rx1: Prescription = {
   doctorMCR: '1155A',
   doctorSignature: true,
   clinicAddress: 'Ngee Ann Clinic, 5 Bishan Lane, Singapore 159111',
-  date: '2021-02-02',
+  date: '2025-02-02',
   medications: [
     {
       medicationId: 'med-002', // Ibuprofen
@@ -57,7 +57,7 @@ const rx2: Prescription = {
   doctorMCR: '1482P',
   doctorSignature: true,
   clinicAddress: 'Chan Clinic, Bukit Batok St 21 S(233233)',
-  date: '2021-04-11',
+  date: '2025-04-11',
   medications: [
     {
       medicationId: 'med-003b', // Amoxicillin
@@ -98,7 +98,7 @@ const rx3: Prescription = {
   doctorMCR: '1155A',
   doctorSignature: true,
   clinicAddress: 'Ngee Ann Clinic, 5 Bishan Lane, Singapore 159111',
-  date: '02-Feb-21',
+  date: '02-Feb-25',
   medications: [
     {
       medicationId: 'med-001b', // Paracetamol 500mg
@@ -126,7 +126,7 @@ const rx4: Prescription = {
   doctorMCR: '1192N',
   doctorSignature: true,
   clinicAddress: 'Grace Clinic, 22 Ryce Ave S(324917)',
-  date: '28-Nov-20',
+  date: '28-Nov-25',
   medications: [
     {
       medicationId: 'med-007', // Salbutamol
@@ -179,7 +179,7 @@ const rx6: Prescription = {
   patientAllergies: ['Penicillin'],
   doctorName: 'Dr Wong',
   doctorSignature: false, // Invalid - missing signature
-  date: getRelativeDate(4),
+  date: getRelativeDate(10),
   medications: [
     {
       medicationId: 'med-002',
@@ -253,7 +253,7 @@ export const rx9: Prescription = {
   patientAllergies: [],
   doctorName: 'Dr Lee Ming',
   doctorSignature: true, // Present but questionably legible
-  date: getRelativeDate(1),
+  date: getRelativeDate(10),
   medications: [
     {
       medicationId: 'med-001',
@@ -276,7 +276,7 @@ export const rx10: Prescription = {
   patientAllergies: ['Penicillin'], // System shows allergy
   doctorName: 'Dr Tan',
   doctorSignature: true,
-  date: getRelativeDate(3),
+  date: getRelativeDate(10),
   medications: [
     {
       medicationId: 'med-003b', // Amoxicillin - a penicillin antibiotic

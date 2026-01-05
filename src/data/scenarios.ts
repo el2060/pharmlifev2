@@ -434,6 +434,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
       rxPointsImpact: 50,
       isCorrect: true,
       explanation: 'Good verification, but there is a safer and faster way. Hint: Since the allergy is confirmed in the records, calling the doctor for an alternative is the standard procedure.',
+      shouldSkipRemainingStages: true,
     },
     'refuse-unsafe': {
       outcome: 'You refused without helping arrange an alternative. Patient had to make another doctor appointment, delaying treatment.',

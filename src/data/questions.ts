@@ -150,20 +150,7 @@ export const counselingQuestions: CounselingQuestion[] = [
     explanation: 'Amoxicillin is an antibiotic used to treat bacterial infections.',
     category: 'indication',
   },
-  {
-    id: 'q-008',
-    medicationId: 'med-003b',
-    question: 'What side effect should you warn the patient about?',
-    options: [
-      'This can cause drowsiness',
-      'This can cause red eyes',
-      'This can cause hearing loss',
-      'This causes weight gain',
-    ],
-    correctAnswer: 0,
-    explanation: 'Amoxicillin can cause drowsiness in some patients.',
-    category: 'side-effects',
-  },
+
   {
     id: 'q-009',
     medicationId: 'med-003b',
@@ -238,20 +225,7 @@ export const counselingQuestions: CounselingQuestion[] = [
     explanation: 'Chlorpheniramine can cause drowsiness, so patients should avoid driving or operating machinery.',
     category: 'warnings',
   },
-  {
-    id: 'q-014',
-    medicationId: 'med-005',
-    question: 'How long can the patient take this medication continuously?',
-    options: [
-      'Do not take continuously for more than 5 days in a row',
-      'Can take as long as needed',
-      'Must take for exactly 7 days',
-      'Take for 1 month minimum',
-    ],
-    correctAnswer: 0,
-    explanation: 'Chlorpheniramine should not be taken continuously for more than 5 days without consulting a doctor.',
-    category: 'warnings',
-  },
+
 
   // Dextromethorphan
   {

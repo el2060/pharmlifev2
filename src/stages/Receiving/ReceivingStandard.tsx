@@ -475,7 +475,7 @@ export const ReceivingStandard: React.FC = () => {
                                                     </motion.div>
                                                 )}
                                             </div>
-                                            {currentPrescription.patientAllergies.length > 0 ? (
+                                            {currentPrescription.patientAllergies.length > 0 && !currentPrescription.patientAllergies.includes('NKDA') ? (
                                                 <motion.div
                                                     className="bg-red-200 border-4 border-red-600 p-4 rounded mb-4"
                                                     animate={{
@@ -627,7 +627,7 @@ export const ReceivingStandard: React.FC = () => {
                                                     )}
                                                 </p>
                                                 <p className="text-poke-black text-xs sm:text-sm" >
-                                                    Dr. {currentPrescription.doctorName}
+                                                    {currentPrescription.doctorName}
                                                 </p>
                                                 {currentPrescription.doctorSignature && (
                                                     <p className="italic text-gray-600 text-sm mt-1">✍️ Signed</p>

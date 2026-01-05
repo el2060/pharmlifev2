@@ -389,9 +389,11 @@ export const Typing: React.FC = () => {
                   <p className="text-xs text-poke-black mb-2" >
                     {medication.strength}
                   </p>
-                  <p className="mt-3 text-sm text-poke-black break-words" >
-                    Take {labelData.quantity}{['liquid', 'syrup'].includes(labelData.dosageForm) ? 'ml' : ` ${labelData.dosageForm}(s)`} {labelData.frequency}
-                  </p>
+                  Take {labelData.quantity}{
+                    ['liquid', 'syrup'].includes(labelData.dosageForm) ? 'ml'
+                      : (labelData.dosageForm === 'inhaler' ? ` puff${Number(labelData.quantity) > 1 ? 's' : ''}`
+                        : ` ${labelData.dosageForm}${Number(labelData.quantity) > 1 ? 's' : ''}`)
+                  } {labelData.frequency}
                   {specialInstructionLabel && (
                     <p className="text-xs text-poke-black mt-2" >{specialInstructionLabel}</p>
                   )}
