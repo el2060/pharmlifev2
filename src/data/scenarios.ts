@@ -384,7 +384,7 @@ export const typingDialogues: PatientDialogue[] = [
 // Scenario 6: RX #3 - Patient allergic to Paracetamol but prescribed it
 export const rx3AllergyScenario: ScenarioDecision = {
   id: 'scenario-rx3-allergy',
-  situation: 'The prescription works for Paracetamol 500mg. Patient record shows allergy to Paracetamol. Remarks: "Patient is allergic to Paracetamol, so cannot proceed. (In such instances, usually the staff has to give the dr a call - intervention)".',
+  situation: 'The prescription is indicated for Paracetamol 500mg. Patient record shows allergy to Paracetamol. Remarks: "Patient is allergic to Paracetamol, so cannot proceed. (In such instances, usually the staff has to give the dr a call - intervention)".',
   question: 'You found that the patient is allergic to the prescribed medication. What should you do?',
   options: [
     {

@@ -607,7 +607,9 @@ export const ReceivingEnhanced: React.FC = () => {
                 </motion.div>
 
                 <h3 className={`text-lg sm:text-2xl font-bold mb-2 sm:mb-3 ${consequence.isCorrect ? 'text-pharm-green' : 'text-poke-red'}`} >
-                  {consequence.isCorrect ? 'EXCELLENT!' : 'INCORRECT'}
+                  {consequence.isCorrect
+                    ? (consequence.shouldSkipRemainingStages ? 'CASE CLOSED: INTERVENTION SUCCESSFUL' : 'EXCELLENT!')
+                    : 'INCORRECT'}
                 </h3>
 
                 {/* Outcome */}
@@ -618,6 +620,11 @@ export const ReceivingEnhanced: React.FC = () => {
                   <p className="text-xs sm:text-sm leading-relaxed" >
                     {consequence.outcome}
                   </p>
+                  {consequence.isCorrect && consequence.shouldSkipRemainingStages && (
+                    <p className="text-xs sm:text-sm font-bold mt-2 text-blue-600">
+                      ✓ Prescription cancelled. No further processing required.
+                    </p>
+                  )}
                 </div>
 
                 {/* Patient Reaction */}
@@ -661,7 +668,7 @@ export const ReceivingEnhanced: React.FC = () => {
                 <Button variant={consequence.isCorrect ? 'success' : 'danger'} onClick={handleContinue} fullWidth>
                   <span className="text-xs sm:text-base">
                     {consequence.isCorrect
-                      ? (consequence.shouldSkipRemainingStages ? 'NEXT PATIENT →' : 'CONTINUE TO TYPING →')
+                      ? (consequence.shouldSkipRemainingStages ? 'START NEXT CASE »' : 'CONTINUE TO TYPING →')
                       : '◀ TRY AGAIN'}
                   </span>
                 </Button>
