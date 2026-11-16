@@ -32,7 +32,7 @@ export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
           <p className="scene-kicker"><MapPin size={15} aria-hidden="true" /> Polyclinic pharmacy · Singapore</p>
           <h1 id="game-title">Pharm Life<span>.</span></h1>
           <p className="lobby-subtitle">The Prescription Quest</p>
-          <p className="lobby-description">Step behind the counter and follow a prescription from intake to patient counselling.</p>
+          <p className="lobby-description">Step behind the counter, review prescriptions, and help patients use their medicines safely.</p>
           <div className="lobby-actions">
             <button type="button" className="shift-button" onClick={onStartGame}>
               Start your shift <ArrowRight size={19} aria-hidden="true" />
@@ -46,7 +46,7 @@ export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
       <section className="lobby-workflow">
         <div className="lobby-workflow-heading">
           <h2>Your pharmacy route</h2>
-          <p>Move through four stations with each prescription.</p>
+          <p>Review, label, pack, and counsel at four stations.</p>
         </div>
         <StationRoute />
       </section>
@@ -70,7 +70,11 @@ export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
           </section>
           <section>
             <h3>Making a decision</h3>
-            <p>Read the prescription carefully. In cases that require intervention, choose what you would do at the counter. Ask the prescriber if anything is unclear, and read the feedback before moving on.</p>
+            <p>Use the information at each station to make a decision. Read the feedback, then follow the next action. Some cases end at the prescription counter when you identify a safety issue.</p>
+          </section>
+          <section>
+            <h3>Explore the pharmacy</h3>
+            <p>Rotate the 3D view or drag the scene to look around. Select a carton directly from the shelf at the picking station. Use the map to preview other stations, then return to the active task.</p>
           </section>
           <section>
             <h3>Scores and ranks</h3>

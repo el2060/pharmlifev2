@@ -1,5 +1,5 @@
 import { useSceneMoment } from '../../scene/shiftScene';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, CheckCircle, XCircle, ShoppingCart, Activity } from 'lucide-react';
 import { Modal } from '../../components/Modal';
@@ -24,6 +24,7 @@ export const Picking: React.FC = () => {
   const [selectedMedications, setSelectedMedications] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const basketHeading = useRef<HTMLHeadingElement>(null);
 
   const requiredMedIds = currentPrescription?.medications.map((item) => item.medicationId) ?? [];
   const mismatchedMeds = selectedMedications.filter((id) => !requiredMedIds.includes(id));
@@ -58,11 +59,12 @@ export const Picking: React.FC = () => {
   useSceneMoment({
     stage: 'picking',
     speaker: 'Pharmacy technician',
+    speakerRole: 'staff',
     caption: showResult
       ? isCorrect ? 'The items match the prescription.' : 'Compare the medication names and strengths with the prescription.'
-      : 'Select cartons on the shelf or use the list beside it. Check the tray when you’re ready.',
-    gesture: 'pack',
-    cartons: selectedMedications.length,
+      : 'Check the name and strength on each carton before you put it in the basket.',
+    actionLabel: 'Open picking workstation',
+    gesture: showResult ? isCorrect ? 'nod' : 'consider' : 'pack',
     products: sceneProducts,
   }, undefined, handleSelectMedication);
 
@@ -97,7 +99,7 @@ export const Picking: React.FC = () => {
             </p>
           </div>
           <p className="text-white text-sm font-medium">
-            ← Go back to Receiving stage to handle this properly
+            Use Restart shift to review the prescription from the beginning.
           </p>
         </motion.div>
       </div>
@@ -124,6 +126,7 @@ export const Picking: React.FC = () => {
       nextStage();
     } else {
       setShowResult(false);
+      requestAnimationFrame(() => basketHeading.current?.focus());
     }
   };
 
@@ -134,6 +137,12 @@ export const Picking: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-4 sm:space-y-6"
       >
+        <header className="label-desk-heading">
+          <div>
+            <h2>Pick the prescribed medicines</h2>
+            <p>Select cartons from the 3D shelves or the list. Match each name and strength, then check your basket.</p>
+          </div>
+        </header>
         <div className="grid lg:grid-cols-[1fr_1.5fr] gap-6">
           {/* Left Column: Prescription + Instructions */}
           <div className="space-y-4">
@@ -142,7 +151,7 @@ export const Picking: React.FC = () => {
               <div className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-3 border-b-2 border-gray-100 pb-2">
                   <Activity className="text-blue-500" size={20} />
-                  <h3 className="font-bold text-gray-800">PRESCRIPTION</h3>
+                  <h3 className="font-bold text-gray-800">Prescription</h3>
                 </div>
 
                 <div className="space-y-3 text-sm">
@@ -152,7 +161,7 @@ export const Picking: React.FC = () => {
                       <p className="font-bold text-gray-900">{currentPrescription.patientName}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">Age/IC</p>
+                      <p className="text-xs text-gray-500">IC number</p>
                       <p className="font-bold text-gray-900">{currentPrescription.patientIC}</p>
                     </div>
                   </div>
@@ -189,16 +198,6 @@ export const Picking: React.FC = () => {
               </div>
             </Card>
 
-            {/* Quick instruction for the stage */}
-            <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
-              <p className="text-poke-black text-sm sm:text-base font-bold mb-2">
-                PICK THE RIGHT MEDICATIONS
-              </p>
-              <p className="text-poke-black text-xs sm:text-sm font-semibold">
-                Browse the shelves, tap the correct items to add them to your basket, then verify once done.
-              </p>
-            </div>
-
             {/* Shopping Cart */}
             <div className="picking-tray game-screen p-4 sm:p-6 relative">
               <div className="scanline" />
@@ -211,15 +210,11 @@ export const Picking: React.FC = () => {
                     <ShoppingCart className="text-cyan-400" size={28} />
                   </motion.div>
                   <div>
-                    <h3 className="text-blue-900 mb-1 pixel-label font-bold">
-                      PICKING BASKET
+                    <h3 ref={basketHeading} tabIndex={-1} className="text-blue-900 mb-1 font-bold">
+                      Picking basket
                     </h3>
                     <p className="text-sm sm:text-base text-blue-700 font-medium" aria-live="polite">
-                      {selectedMedications.length === requiredMedIds.length ? (
-                        <span className="text-green-600 font-bold">Ready to Verify!</span>
-                      ) : (
-                        `Selected: ${selectedMedications.length} / ${requiredMedIds.length}`
-                      )}
+                      {selectedMedications.length} selected · {requiredMedIds.length} prescribed
                     </p>
                   </div>
                 </div>
@@ -280,7 +275,7 @@ export const Picking: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                Find and pick medication
+                Shelf stock
               </motion.h3>
 
               {Object.entries(availableMedicationsByCategory).map(([category, meds], catIndex) => (
@@ -358,74 +353,34 @@ export const Picking: React.FC = () => {
           </div>
 
           {/* Verify Button moved to bottom for natural scroll */}
-          <motion.button
+          <button
+            type="button"
             onClick={handleSubmit}
             disabled={selectedMedications.length === 0}
-            className={`w-full arcade-button lg:col-span-2 ${selectedMedications.length === 0
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-              } py-4 flex items-center justify-center gap-2 text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all`}
-            whileHover={selectedMedications.length > 0 ? { scale: 1.01 } : {}}
-            whileTap={selectedMedications.length > 0 ? { scale: 0.99 } : {}}
+            className="shift-button w-full justify-center lg:col-span-2"
           >
-            <Package size={20} />
-            <span className="tracking-wide">VERIFY SELECTION</span>
-          </motion.button>
+            <Package size={20} aria-hidden="true" />
+            Check basket
+          </button>
 
-          {/* Result Modal */}
-          <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
-            <div className="text-center">
+          <Modal isOpen={showResult} onClose={() => {}} title={isCorrect ? 'Basket checked' : 'Check the basket again'} showCloseButton={false}>
+            <div className="space-y-4">
               {isCorrect ? (
                 <>
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 200 }}
-                    className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"
-                  >
-                    <CheckCircle size={48} className="text-green-500" />
-                  </motion.div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-green-600 mb-2">
-                    PERFECT PICK!
-                  </h3>
-                  <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
-                    You selected all the correct medications. Well done!
-                  </p>
-                  <p className="text-sm text-gray-500 mb-6 font-medium">
-                    +30 Rx Points
-                  </p>
+                  <p>All selected medicines match the prescription. The basket is ready for the counselling counter.</p>
+                  <p><strong>+30 Rx points</strong></p>
                 </>
               ) : (
                 <>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4 animate-shake"
-                  >
-                    <XCircle size={48} className="text-red-500" />
-                  </motion.div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
-                    INCORRECT
-                  </h3>
-                  <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
-                    {mismatchedMeds.length > 0 && (
-                      <>Compare {mismatchedMeds.map((id) => getMedicationById(id)?.genericName ?? id).join(', ')} with the prescription.</>
-                    )}
-                    {missingCount > 0 && <> {missingCount} prescribed {missingCount === 1 ? 'item is' : 'items are'} still missing.</>}
-                  </p>
+                  {mismatchedMeds.length > 0 && (
+                    <p>Return {mismatchedMeds.map((id) => getMedicationById(id)?.genericName ?? id).join(', ')} to the shelf. Check the prescription for the correct name and strength.</p>
+                  )}
+                  {missingCount > 0 && <p>{missingCount} prescribed {missingCount === 1 ? 'item is' : 'items are'} still missing.</p>}
                 </>
               )}
-              <motion.button
-                onClick={handleContinue}
-                className={`arcade-button ${isCorrect
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                  : 'bg-gradient-to-r from-blue-500 to-blue-700'
-                  } text-white py-3 px-6 w-full min-h-[48px] font-semibold`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isCorrect ? 'CONTINUE →' : 'RETURN TO THE BASKET'}
-              </motion.button>
+              <button type="button" className="shift-button w-full justify-center" onClick={handleContinue}>
+                {isCorrect ? 'Go to counselling counter' : 'Edit basket'}
+              </button>
             </div>
           </Modal>
         </div>

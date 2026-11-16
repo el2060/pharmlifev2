@@ -11,7 +11,7 @@ import { getQuestionsByMedicationId } from '../../data/questions';
 import { CounselingQuestion } from '../../types/game.types';
 import { ACTIVE_LEVEL_LIMIT } from '../../data/prescriptions';
 
-export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
+export function Dispensing() {
   const { currentPrescription, addScore, addRxPoints, completeLevel, currentYear, currentLevel } = useGameStore();
   const isLastLevel = currentLevel >= ACTIVE_LEVEL_LIMIT[currentYear];
   const [counselingStarted, setCounselingStarted] = useState(false);
@@ -25,12 +25,16 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
   const [showFeedback, setShowFeedback] = useState(false);
 
   const conversationHeading = useRef<HTMLHeadingElement>(null);
+  const feedbackHeading = useRef<HTMLHeadingElement>(null);
+  const summaryHeading = useRef<HTMLHeadingElement>(null);
   const handoverButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (isConversing) conversationHeading.current?.focus();
-    if (counselingStarted) handoverButton.current?.focus();
-  }, [isConversing, currentQuestionIndex, counselingStarted]);
+    if (counselingComplete) summaryHeading.current?.focus();
+    else if (showFeedback) feedbackHeading.current?.focus();
+    else if (isConversing) conversationHeading.current?.focus();
+    else if (counselingStarted) handoverButton.current?.focus();
+  }, [isConversing, currentQuestionIndex, showFeedback, counselingStarted, counselingComplete]);
 
   useSceneMoment({
     stage: 'dispensing',
@@ -42,19 +46,16 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
           : 'Hello, I’m here to collect my medication.',
     actionLabel: counselingComplete ? 'View handover summary'
       : counselingStarted ? 'Hand over medication'
-        : showFeedback ? currentQuestionIndex < currentQuestions.length - 1 ? 'Continue conversation' : 'Finish counselling'
-        : isConversing ? 'Reply to the patient' : 'Speak with the patient',
+        : showFeedback ? 'Review counselling feedback'
+        : isConversing ? 'View patient question' : 'Start counselling',
+    canActFromScene: !counselingComplete && !isConversing,
     gesture: counselingComplete ? 'handover'
       : showFeedback ? isAnswerCorrect ? 'nod' : 'consider'
         : 'talk',
   }, handleSceneInteraction);
 
   function handleSceneInteraction() {
-    if (counselingComplete) document.getElementById('handover-summary')?.focus();
-    else if (showFeedback) handleNextQuestion();
-    else if (isConversing) conversationHeading.current?.focus();
-    else if (counselingStarted) handoverButton.current?.click();
-    else handleStartCounseling();
+    if (!counselingComplete && !isConversing) handoverButton.current?.click();
   }
 
 
@@ -132,6 +133,12 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
       >
         {!counselingComplete && !isConversing && (
           <div className="collection-desk">
+            <header className="label-desk-heading">
+              <div>
+                <h2>{counselingStarted ? 'Ready to hand over' : 'Counsel the patient'}</h2>
+                <p>{counselingStarted ? 'Hand the prepared medicines to the patient to complete this case.' : 'Choose how to answer the patient’s questions, then hand over their medicines.'}</p>
+              </div>
+            </header>
             {/* Patient Info Card */}
             <Card className="bg-gradient-to-r from-blue-50 to-indigo-50">
               <div className="flex items-start gap-4">
@@ -157,10 +164,8 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
             </Card>
 
             {/* Counseling Instructions */}
-            <div className="poke-textbox p-6 space-y-4" style={{ background: '#FFFFFF' }}>
-              <p className="text-poke-black text-lg font-bold">
-                PATIENT COUNSELING
-              </p>
+            {!counselingStarted && <details className="label-reference">
+              <summary>Counselling checklist</summary>
               <div className="text-poke-black text-sm space-y-3">
                 <p>📋 For each medication, explain:</p>
                 <ul className="ml-4 space-y-2 text-sm">
@@ -183,11 +188,12 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
                   ✓ Important warnings
                 </p>
               </div>
-            </div>
+            </details>}
 
             <button
               type="button"
               ref={handoverButton}
+              data-scene-task
               className="shift-button collection-action"
               onClick={counselingStarted ? handleCounselingComplete : handleStartCounseling}
             >
@@ -211,14 +217,13 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
             </motion.div>
 
             <div>
-              <h2 id="handover-summary" tabIndex={-1} className="text-3xl font-bold text-pharm-green mb-2">MEDICATIONS DISPENSED!</h2>
-              <p className="text-xl text-gray-700">Patient counseling complete</p>
+              <h2 ref={summaryHeading} data-scene-task tabIndex={-1} className="text-3xl font-bold text-pharm-green mb-2">Medicines handed over</h2>
             </div>
 
             <Card className="bg-gradient-to-r from-green-50 to-emerald-50">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Level Score</p>
+                  <p className="text-sm text-gray-600">Case score earned</p>
                   <p className="text-3xl font-bold text-pharm-green">+40 pts</p>
                 </div>
                 <div>
@@ -237,9 +242,6 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
               >
                 {isLastLevel ? 'Finish shift →' : 'Call the next patient →'}
               </motion.button>
-              <Button variant="secondary" onClick={onBackToHome} fullWidth>
-                Back to Menu
-              </Button>
             </div>
           </motion.div>
         )}
@@ -252,14 +254,15 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
+          <p className="conversation-progress">Question {currentQuestionIndex + 1} of {currentQuestions.length}</p>
           <div className="patient-dialogue">
             <span className="conversation-avatar"><MessageCircle size={21} aria-hidden="true" /></span>
             <div className="conversation-bubble">
               <p className="scene-kicker">{currentPrescription.patientName} <span aria-hidden="true">·</span> {getMedicationById(currentQuestions[currentQuestionIndex].medicationId)?.genericName}</p>
-              <h2 ref={conversationHeading} tabIndex={-1}>{currentQuestions[currentQuestionIndex].question}</h2>
+              <h2 ref={conversationHeading} data-scene-task={showFeedback ? undefined : true} tabIndex={-1}>{currentQuestions[currentQuestionIndex].question}</h2>
             </div>
           </div>
-          <p className="conversation-label">Your reply</p>
+          <p className="conversation-label">{showFeedback ? 'Replies' : 'Choose your reply'}</p>
             <div className="grid gap-3">
               {visibleReplies.map(({ option, index: idx }) => (
                 <button
@@ -283,10 +286,10 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
                   <div className="flex items-center justify-between">
                     <span>{option}</span>
                     {showFeedback && idx === currentQuestions[currentQuestionIndex].correctAnswer && (
-                      <CheckCircle className="text-green-600" size={20} />
+                      <CheckCircle className="text-green-600" size={20} aria-label="Correct reply" />
                     )}
                     {showFeedback && idx === selectedAnswer && idx !== currentQuestions[currentQuestionIndex].correctAnswer && (
-                      <XCircle className="text-red-600" size={20} />
+                      <XCircle className="text-red-600" size={20} aria-label="Your reply" />
                     )}
                   </div>
                 </button>
@@ -304,12 +307,12 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
                   {isAnswerCorrect ? (
                     <CheckCircle className="text-green-600 shrink-0 mt-1" />
                   ) : (
-                    <CheckCircle className="text-red-600 shrink-0 mt-1" />
+                    <XCircle className="text-red-600 shrink-0 mt-1" aria-hidden="true" />
                   )}
                   <div>
-                    <h4 className={`font-bold ${isAnswerCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                      {isAnswerCorrect ? 'Correct!' : 'What to explain instead'}
-                    </h4>
+                    <h3 ref={feedbackHeading} data-scene-task tabIndex={-1} className={`font-bold ${isAnswerCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                      {isAnswerCorrect ? 'That’s right' : 'What to explain instead'}
+                    </h3>
                     <p className={`text-base leading-relaxed mt-1 ${isAnswerCorrect ? 'text-green-700' : 'text-red-700'}`}>
                       {currentQuestions[currentQuestionIndex].explanation}
                     </p>
@@ -318,13 +321,12 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
 
                 <div className="mt-4 flex justify-end">
                   <Button onClick={handleNextQuestion}>
-                    {currentQuestionIndex < currentQuestions.length - 1 ? 'Continue conversation' : 'Finish counselling'}
+                    {currentQuestionIndex < currentQuestions.length - 1 ? 'Next question' : 'Finish counselling'}
                   </Button>
                 </div>
               </motion.div>
             )}
 
-            <p className="conversation-progress">Topic {currentQuestionIndex + 1} of {currentQuestions.length}</p>
             <div className="w-full bg-gray-200 h-2 rounded-full" aria-hidden="true">
               <div
                 className="bg-emerald-700 h-2 rounded-full transition-all duration-300"

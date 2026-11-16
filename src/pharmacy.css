@@ -76,6 +76,7 @@
 }
 .shift-button { background: var(--action); color: #202c23; border-radius: .35rem; padding: .86rem 1rem; transition: background .18s, transform .18s; }
 .shift-button:hover { background: #ffe4ae; transform: translateY(-2px); }
+.shift-button:disabled { background: #e2e8de; color: #526358; cursor: default; transform: none; }
 .lobby-link { color: white; font-size: 1rem; }
 .lobby-link:hover, .workstation-jump:hover { text-decoration: underline; text-underline-offset: .28em; }
 .lobby-scene :focus-visible, .selection-scene :focus-visible, .workstation-scene :focus-visible { outline-color: #fff3cd; }
@@ -557,7 +558,8 @@
 .rx-source-details[open] summary { margin-bottom: .4rem; }
 .shift-layout .receiving-workstation [data-scene-task] { scroll-margin-top: 125px; }
 
-.play-scene canvas.is-over-carton { cursor: pointer; }
+.play-scene canvas.is-over-interaction { cursor: pointer; }
+.play-scene:not(:has([data-renderer='webgl'])) .scene-rotate { display: none; }
 .world-stock-tooltip {
   position: absolute;
   z-index: 1;
@@ -719,7 +721,17 @@
 .label-field select { width: 100%; min-height: 52px; border: 1px solid #a3b9ac; background: #fffefa; border-radius: .42rem; padding: .58rem .68rem; font-size: 1.08rem; }
 .label-preview-name { font-weight: 800; color: var(--muted); font-size: .9rem; margin-bottom: .26rem; }
 .label-print { width: 100%; }
-.label-print:disabled { background: #e2e8de; color: #526358; cursor: default; transform: none; }
+.label-form [role="status"]:empty { display: none; }
+.label-correction, .patient-label-question { padding: .75rem 1rem; border-radius: .45rem; background: #e8efe4; }
+.shift-modal .conversation-reply {
+  min-height: 48px;
+  padding: .75rem 1rem;
+  text-align: left;
+  border: 1px solid #a3b9ac;
+  border-radius: .45rem;
+  background: #fffefa;
+}
+.shift-modal .conversation-reply:hover { background: #e8f3e7; border-color: #72a18a; }
 .label-autofill { font-weight: 750; text-decoration: underline; min-height: 44px; justify-self: start; text-underline-offset: .25em; }
 @container (max-width: 465px) {
   .label-desk-grid { grid-template-columns: minmax(0, 1fr); }
@@ -796,7 +808,7 @@
   .lobby-scene:has([data-renderer='webgl']) { min-height: 670px; }
   .lobby-content .scene-kicker { font-size: .78rem; }
   .station-route small { font-size: .82rem; }
-  .shift-game .shift-bar { gap: .6rem; }
+  .shift-game .shift-bar { flex-wrap: wrap; gap: .15rem .6rem; }
   .shift-restart-word { display: none; }
   .shift-totals { gap: .55rem; }
   .shift-totals dt { font-size: .73rem; }

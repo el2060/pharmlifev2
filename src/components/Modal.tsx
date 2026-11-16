@@ -61,7 +61,7 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
           className="shift-modal-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, pointerEvents: 'none' }}
           onClick={(event) => {
             if (showCloseButton && event.target === event.currentTarget) onClose();
           }}

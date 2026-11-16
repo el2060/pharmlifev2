@@ -10,6 +10,8 @@ interface ViewState {
   caseNumber: number;
   markers: Partial<Record<GameStage, HTMLButtonElement>>;
   ambient: boolean;
+  rotationRequest: number;
+  stationAction?: () => void;
   moment?: SceneMoment;
   choose: (id: string) => void;
 }
@@ -43,10 +45,10 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   let lastDeskInset = -1;
   let desiredZoom = 5;
   let angle = 0;
+  let lastRotationRequest = state.rotationRequest;
   let width = 1;
   let height = 1;
   let lastFrame = 0;
-  let arrivalStarted = 0;
   let gestureStarted = 0;
   let lastMoment: SceneMoment | undefined;
   let frame = 0;
@@ -77,7 +79,10 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       const marker = state.markers[key];
       if (!marker) continue;
       position.set(...stationViews[key].marker).project(camera);
-      marker.style.setProperty('--marker-x', `${THREE.MathUtils.clamp((position.x + 1) * 50, 10, 86 - 75 * (inset / width))}%`);
+      const visibleWidth = width - inset;
+      const margin = Math.min(marker.offsetWidth / 2 + 10, visibleWidth / 2);
+      const x = THREE.MathUtils.clamp((position.x + 1) * width / 2, margin, visibleWidth - margin);
+      marker.style.setProperty('--marker-x', `${x}px`);
       marker.style.setProperty('--marker-y', `${THREE.MathUtils.clamp((1 - position.y) * 50, 17, 79)}%`);
     }
   }
@@ -85,7 +90,8 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   function draw(now: number, snap = false) {
     if (!visible || lost || width < 2 || height < 2) return;
     const changed = view !== state.view || caseNumber !== state.caseNumber;
-    if (!snap && !changed && state.moment === lastMoment && state.deskInset === lastDeskInset && reducedMotion.matches && !firstFrame) {
+    const rotated = state.rotationRequest !== lastRotationRequest;
+    if (!snap && !changed && !rotated && state.moment === lastMoment && state.deskInset === lastDeskInset && reducedMotion.matches && !firstFrame) {
       projectMarkers();
       lastFrame = now;
       return;
@@ -93,16 +99,18 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     if (changed) {
       view = state.view;
       caseNumber = state.caseNumber;
-      arrivalStarted = now;
       angle = 0;
+    }
+    if (rotated) {
+      lastRotationRequest = state.rotationRequest;
+      angle = angle < -0.18 ? 0 : angle > 0.18 ? -0.43 : 0.43;
     }
 
     if (state.moment !== lastMoment) {
       gestureStarted = now;
       lastMoment = state.moment;
       world.setProducts(state.moment?.products ?? []);
-      lastProduct = undefined;
-      onHoverProduct(undefined);
+      hover(undefined);
     }
 
     updateView();
@@ -125,7 +133,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     camera.lookAt(look);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld();
-    world.animate(still ? 0 : now / 1000, state.view, still ? 1 : (now - arrivalStarted) / 1000, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber, state.activeStage);
+    world.animate(still ? 0 : now / 1000, state.view, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber, state.activeStage);
     renderer.render(scene, camera);
 
     projectMarkers();
@@ -156,8 +164,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   resizeObserver.observe(host);
   visibilityObserver.observe(host);
 
-  function productAt(event: PointerEvent) {
-    if (state.activeStage !== 'picking' || state.view !== 'picking' || !state.moment?.products?.length) return undefined;
+  function aimAt(event: PointerEvent) {
     const bounds = canvas.getBoundingClientRect();
     const x = event.clientX - bounds.x;
     const y = event.clientY - bounds.y;
@@ -165,13 +172,19 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     host.style.setProperty('--stock-tip-x', `${THREE.MathUtils.clamp(x, 90, bounds.width - 90)}px`);
     host.style.setProperty('--stock-tip-y', `${y}px`);
     raycaster.setFromCamera(pointer, camera);
-    return world.pickProduct(raycaster);
+  }
+
+  function interactionAt(event: PointerEvent) {
+    if (state.view !== state.activeStage) return {};
+    aimAt(event);
+    const product = state.view === 'picking' ? world.pickProduct(raycaster) : undefined;
+    const action = state.stationAction && world.hitsStationAction(raycaster, state.view) ? state.stationAction : undefined;
+    return { product, action };
   }
 
   function hover(product: SceneProduct | undefined) {
     if (lastProduct === product) return;
     lastProduct = product;
-    canvas.classList.toggle('is-over-carton', Boolean(product));
     onHoverProduct(product);
   }
 
@@ -186,17 +199,21 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       if (Math.abs(event.clientX - startPointer.x) > 5) canvas.classList.add('is-dragging');
       if (canvas.classList.contains('is-dragging')) {
         angle = THREE.MathUtils.clamp(angle - (event.clientX - previousPointer) * 0.006, -0.55, 0.62);
+        canvas.classList.remove('is-over-interaction');
         hover(undefined);
       }
       previousPointer = event.clientX;
     } else if (event.pointerType === 'mouse') {
-      hover(productAt(event));
+      const { product, action } = interactionAt(event);
+      canvas.classList.toggle('is-over-interaction', Boolean(product || action));
+      hover(product);
     }
   };
   const endDrag = (event: PointerEvent) => {
     if (startPointer && Math.hypot(startPointer.x - event.clientX, startPointer.y - event.clientY) < 7) {
-      const item = productAt(event);
-      if (item) state.choose(item.id);
+      const { product, action } = interactionAt(event);
+      if (product) state.choose(product.id);
+      else action?.();
     }
   };
   const stopDrag = () => {
@@ -204,7 +221,10 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     startPointer = null;
     canvas.classList.remove('is-dragging');
   };
-  const leaveStock = () => hover(undefined);
+  const leaveStock = () => {
+    canvas.classList.remove('is-over-interaction');
+    hover(undefined);
+  };
   const contextLost = (event: Event) => {
     event.preventDefault();
     lost = true;

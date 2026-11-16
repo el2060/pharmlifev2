@@ -113,7 +113,7 @@ function App() {
       case 'picking':
         return <Picking />;
       case 'dispensing':
-        return <Dispensing onBackToHome={handleBackToHome} />;
+        return <Dispensing />;
       default:
         return <Receiving />;
     }

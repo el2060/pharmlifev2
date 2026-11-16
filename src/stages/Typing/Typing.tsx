@@ -1,12 +1,18 @@
 import { useSceneMoment } from '../../scene/shiftScene';
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Printer, CheckCircle, XCircle } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import { Modal } from '../../components/Modal';
 import { Hint } from '../../components/Hint';
 import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
 import { medicalAbbreviations, convertDuration } from '../../data/prescriptions';
+
+const correctionHints = {
+  quantity: 'Check how many tablets, capsules, millilitres, or puffs make one dose.',
+  dosageForm: 'Check the dosage form named on the prescription.',
+  frequency: 'Check the frequency abbreviation in the prescription or open the abbreviation guide.',
+};
 
 export const Typing: React.FC = () => {
   const { currentPrescription, addScore, addRxPoints, nextStage } = useGameStore();
@@ -17,8 +23,7 @@ export const Typing: React.FC = () => {
     frequency: '',
     specialInstructions: '',
   });
-  const [showResult, setShowResult] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [result, setResult] = useState<'printed' | 'held' | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const printTimer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -30,32 +35,27 @@ export const Typing: React.FC = () => {
   // Patient dialogue state
   const [showPatientDialogue, setShowPatientDialogue] = useState(false);
   const [patientQuestion, setPatientQuestion] = useState('');
+  const [flaggedField, setFlaggedField] = useState<keyof typeof correctionHints | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
 
-  // Scroll to top when moving to next medication
   useEffect(() => {
-    const scrollTimer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }, 10);
-    return () => clearTimeout(scrollTimer);
+    if (currentMedIndex > 0) heading.current?.focus();
   }, [currentMedIndex]);
 
   const canPrint = Boolean(labelData.quantity && labelData.dosageForm && labelData.frequency);
+  const printerReady = canPrint && !isPrinting && !result && !showPatientDialogue;
 
   useSceneMoment({
     stage: 'typing',
     speaker: showPatientDialogue ? currentPrescription?.patientName : 'Pharmacy technician',
+    speakerRole: showPatientDialogue ? 'patient' : 'staff',
     caption: showPatientDialogue ? patientQuestion : isPrinting ? 'Printing the label…' : 'I’ll set up the printer. Enter the directions from the prescription.',
-    gesture: isPrinting ? 'print' : undefined,
-    actionLabel: canPrint && !isPrinting ? 'Print medication label' : 'Use the label printer',
-  }, handlePrinterInteraction);
-
-  function handlePrinterInteraction() {
-    if (!currentPrescription || isPrinting || showResult || showPatientDialogue) return;
-    if (canPrint) handlePrintLabel();
-    else document.getElementById('label-quantity')?.focus();
-  }
+    gesture: isPrinting ? 'print' : 'talk',
+    actionLabel: printerReady ? 'Print medication label' : 'Open label workstation',
+    canActFromScene: printerReady,
+  }, () => {
+    if (printerReady) handlePrintLabel();
+  });
 
 
   if (!currentPrescription) {
@@ -78,12 +78,9 @@ export const Typing: React.FC = () => {
     { value: 'when necessary', abbr: 'prn' },
   ];
 
-  const specialInstructionLabel = useMemo(() => {
-    if (!currentMed.specialInstructions) return '';
-    const text = currentMed.specialInstructions.trim().toLowerCase();
-    if (text === 'prn') return 'when necessary';
-    return currentMed.specialInstructions;
-  }, [currentMed.specialInstructions]);
+  const specialInstructionLabel = currentMed.specialInstructions?.trim().toLowerCase() === 'prn'
+    ? 'when necessary'
+    : currentMed.specialInstructions;
 
   const dosageFormOptions = ['tablet', 'capsule', 'syrup', 'inhaler', 'topical'];
 
@@ -104,6 +101,7 @@ export const Typing: React.FC = () => {
 
   const handlePrintLabel = () => {
     if (printTimer.current !== undefined) return;
+    setFlaggedField(null);
     setIsPrinting(true);
 
     printTimer.current = setTimeout(() => {
@@ -119,7 +117,6 @@ export const Typing: React.FC = () => {
         labelData.dosageForm === medication.dosageForm &&
         allowedFrequencies.includes(labelData.frequency);
 
-      setIsCorrect(isValid);
       setIsPrinting(false);
 
       // If label is wrong, patient asks for confirmation
@@ -128,10 +125,11 @@ export const Typing: React.FC = () => {
 
         // Patient notices something is off
         const wrongField = labelData.quantity !== currentMed.quantity.toString() ? 'quantity' :
-          labelData.dosageForm !== medication.dosageForm ? 'form' : 'frequency';
+          labelData.dosageForm !== medication.dosageForm ? 'dosageForm' : 'frequency';
+        setFlaggedField(wrongField);
 
         if (wrongField === 'quantity') {
-          setPatientQuestion(`Wait, this seems like a lot of ${medication.dosageForm}s... Are you sure about the quantity?`);
+          setPatientQuestion('Can you check how much I should take each time?');
         } else if (wrongField === 'frequency') {
           setPatientQuestion(`The label says ${labelData.frequency}, but I think the doctor said something different...`);
         } else {
@@ -140,27 +138,21 @@ export const Typing: React.FC = () => {
         setShowPatientDialogue(true);
       } else {
         // Label is correct - show success
-        setShowResult(true);
+        setResult('printed');
         addScore(60);
         addRxPoints(25);
       }
     }, 1500);
   };
 
-  const handlePatientDialogueResponse = (response: string) => {
+  const handlePatientDialogueResponse = (response: 'recheck' | 'insist') => {
     setShowPatientDialogue(false);
-    if (response !== 'recheck') setShowResult(true);
+    if (response === 'insist') setResult('held');
   };
 
-  const handleContinue = () => {
-    if (isCorrect) {
-      // Proceed straight to next step; counseling handled in Dispensing stage
-      proceedToNext();
-    } else {
-      // Retry
-      // Do NOT clear labelData
-      setShowResult(false);
-    }
+  const updateField = (field: keyof typeof correctionHints, value: string) => {
+    setLabelData({ ...labelData, [field]: value });
+    if (flaggedField === field) setFlaggedField(null);
   };
 
   const handleAutoFill = () => {
@@ -175,8 +167,7 @@ export const Typing: React.FC = () => {
       specialInstructions: specialInstructionLabel || '',
     });
 
-    // Reset attempts so button disappears? Or keep it? keeping it is fine.
-    // Maybe show a toast or highlight effect? For now just filling is enough feedback as inputs change.
+    setFlaggedField(null);
   };
 
   const proceedToNext = () => {
@@ -190,7 +181,7 @@ export const Typing: React.FC = () => {
         specialInstructions: '',
       });
       setAttempts(0); // Reset attempts for next med
-      setShowResult(false);
+      setResult(null);
     } else {
       // All medications labeled
       nextStage();
@@ -202,7 +193,7 @@ export const Typing: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 9 }} animate={{ opacity: 1, y: 0 }} className="label-workflow">
         <header className="label-desk-heading">
           <div>
-            <h2>Prepare the medication label</h2>
+            <h2 ref={heading} tabIndex={-1}>Prepare the medication label</h2>
             <p>Use the prescription to choose the amount per dose, form, and frequency.</p>
           </div>
           {currentPrescription.medications.length > 1 && (
@@ -233,7 +224,7 @@ export const Typing: React.FC = () => {
           <section className="label-form" aria-label="Label printer">
             <div className="label-field">
               <label htmlFor="label-quantity">Amount per dose</label>
-              <select id="label-quantity" data-scene-task value={labelData.quantity} onChange={(event) => setLabelData({ ...labelData, quantity: event.target.value })}>
+              <select id="label-quantity" data-scene-task value={labelData.quantity} onChange={(event) => updateField('quantity', event.target.value)} disabled={isPrinting}>
                 <option value="">Choose an amount</option>
                 {getQuantityOptions().map((amount) => (
                   <option key={amount} value={amount}>
@@ -244,14 +235,14 @@ export const Typing: React.FC = () => {
             </div>
             <div className="label-field">
               <label htmlFor="label-dosageForm">Dosage form</label>
-              <select id="label-dosageForm" value={labelData.dosageForm} onChange={(event) => setLabelData({ ...labelData, dosageForm: event.target.value })}>
+              <select id="label-dosageForm" value={labelData.dosageForm} onChange={(event) => updateField('dosageForm', event.target.value)} disabled={isPrinting}>
                 <option value="">Choose a form</option>
                 {dosageFormOptions.map((form) => <option key={form} value={form}>{form}</option>)}
               </select>
             </div>
             <div className="label-field">
               <label htmlFor="label-frequency">Frequency</label>
-              <select id="label-frequency" value={labelData.frequency} onChange={(event) => setLabelData({ ...labelData, frequency: event.target.value })}>
+              <select id="label-frequency" value={labelData.frequency} onChange={(event) => updateField('frequency', event.target.value)} disabled={isPrinting}>
                 <option value="">Choose a frequency</option>
                 {frequencyOptions.map(({ value }) => <option key={value} value={value}>{value}</option>)}
               </select>
@@ -270,7 +261,11 @@ export const Typing: React.FC = () => {
               </motion.div>
             )}
 
-            <button type="button" className="shift-button label-print" onClick={handlePrintLabel} disabled={!canPrint || isPrinting}>
+            <div role="status">
+              {flaggedField && !showPatientDialogue && !result && <p className="label-correction">{correctionHints[flaggedField]}</p>}
+              {!canPrint && <p>Choose all three fields to print the label.</p>}
+            </div>
+            <button type="button" className="shift-button label-print" onClick={handlePrintLabel} disabled={!printerReady}>
               <Printer size={20} aria-hidden="true" /> {isPrinting ? 'Printing…' : 'Print label'}
             </button>
 
@@ -283,146 +278,48 @@ export const Typing: React.FC = () => {
                 'Special instructions appear in words on the label preview.',
               ]}
             />
-            {attempts >= 3 && <button type="button" className="label-autofill" onClick={handleAutoFill}>Show the correct label settings</button>}
+            {attempts >= 3 && <button type="button" className="label-autofill" onClick={handleAutoFill} disabled={isPrinting}>Show the correct label settings</button>}
           </section>
         </div>
 
-        {/* Result Modal - Pokemon Style */}
-        <Modal isOpen={showResult} onClose={() => { }} showCloseButton={false}>
-          <div className="text-center">
-            {isCorrect ? (
+        <Modal isOpen={result !== null} onClose={() => {}} title={result === 'printed' ? 'Label printed' : 'The label needs checking'} showCloseButton={false}>
+          <div className="space-y-4">
+            {result === 'printed' ? (
               <>
-                <motion.div
-                  initial={{ scale: 0, rotate: -45 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  className="mx-auto mb-6"
-                >
-                  <CheckCircle size={64} className="text-pharm-green mx-auto" fill="currentColor" />
-                </motion.div>
-                <h3 className="text-xl font-bold text-poke-black mb-4" >
-                  PERFECT!
-                </h3>
-                <p className="text-poke-black mb-4 text-base" >
-                  Label created correctly!
-                </p>
-                <div className="border-4 border-poke-black p-3 mb-6" style={{ background: '#FFD700' }}>
-                  <p className="text-poke-black font-bold text-base" >
-                    +25 Rx Points
-                  </p>
-                </div>
+                <p>The dose, form, and frequency match the prescription for <strong>{medication.genericName}</strong>.</p>
+                <p><strong>+25 Rx points</strong></p>
+                <button type="button" className="shift-button w-full justify-center" onClick={proceedToNext}>
+                  {currentMedIndex < currentPrescription.medications.length - 1 ? 'Label the next medicine' : 'Go to picking & packing'}
+                </button>
               </>
             ) : (
               <>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="mx-auto mb-6 animate-shake"
-                >
-                  <XCircle size={64} className="text-poke-red mx-auto" fill="currentColor" />
-                </motion.div>
-                <h3 className="text-lg sm:text-xl font-bold text-poke-black mb-3 sm:mb-4" >
-                  WRONG LABEL!
-                </h3>
-
-                {/* Show Consequence */}
-                <div className="bg-red-100 border-4 border-red-600 p-4 sm:p-5 mb-3 sm:mb-4 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-red-900 mb-2" >
-                    CONSEQUENCE:
-                  </p>
-                  <p className="text-sm sm:text-base text-red-800 leading-relaxed" >
-                    Patient followed your incorrect label and took the wrong dosage. This could lead to treatment failure or adverse effects!
-                  </p>
-                </div>
-
-                <div className="bg-yellow-100 border-4 border-yellow-600 p-4 sm:p-5 mb-4 sm:mb-6 rounded text-left">
-                  <p className="text-xs sm:text-sm font-bold text-yellow-900 mb-2" >
-                    💡 LEARNING POINT:
-                  </p>
-                  <p className="text-sm sm:text-base text-yellow-800 leading-relaxed" >
-                    Always double-check prescription instructions before printing labels. When patients question the label, take it seriously and review carefully!
-                  </p>
-                </div>
+                <p>Giving the patient this label could lead to a dosing error. Check the prescription whenever a patient questions the directions.</p>
+                <button type="button" className="shift-button w-full justify-center" onClick={() => setResult(null)}>
+                  Review the label
+                </button>
               </>
             )}
-            <motion.button
-              onClick={handleContinue}
-              className="w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black text-poke-white"
-              style={{
-                background: isCorrect ? '#00A85E' : '#3075D8',
-                boxShadow: isCorrect
-                  ? 'inset -2px -2px 0 0 #006B3A, inset 2px 2px 0 0 #00E57B, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                  : 'inset -2px -2px 0 0 #1A4A8A, inset 2px 2px 0 0 #58A8F8, 4px 4px 0 0 rgba(0,0,0,0.3)'
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isCorrect ? (
-                currentMedIndex < currentPrescription.medications.length - 1
-                  ? 'NEXT MED ▶'
-                  : 'TO PICKING ▶'
-              ) : (
-                '◀ TRY AGAIN'
-              )}
-            </motion.button>
           </div>
         </Modal>
 
-        {/* Patient Dialogue Modal - When label has errors */}
-        <Modal isOpen={showPatientDialogue} onClose={() => { }} showCloseButton={false}>
-          <div className="text-center">
-            {/* Patient Avatar */}
-            <div className="mb-3 sm:mb-4 flex justify-center">
-              <div className="relative">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-200 to-blue-300 rounded-full flex items-center justify-center text-4xl sm:text-5xl border-4 border-blue-500 shadow-lg">
-                  🤔
-                </div>
-                <div className="absolute -bottom-2 -right-2 text-2xl sm:text-3xl animate-bounce">
-                  💭
-                </div>
-              </div>
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-poke-black mb-3 sm:mb-4" >
-              PATIENT QUESTION
-            </h3>
-
-            <div className="border-4 border-yellow-600 bg-yellow-100 p-4 sm:p-5 mb-4 sm:mb-6 rounded">
-              <p className="text-poke-black text-base sm:text-lg leading-relaxed font-medium" >
-                "{patientQuestion}"
-              </p>
-            </div>
-
-            <p className="text-sm sm:text-base mb-3 sm:mb-4 text-gray-600 font-bold" >
-              How do you respond?
-            </p>
-
-            <div className="space-y-3 sm:space-y-4">
-              <button
-                onClick={() => handlePatientDialogueResponse('recheck')}
-                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-green-200 hover:bg-green-300 transition-colors text-sm sm:text-base font-bold"
-                style={{
-                  lineHeight: '1.5',
-                  boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                }}
-              >
-                "Let me double-check that for you..."<br />
-                <span className="text-xs sm:text-sm text-green-800 font-normal">(Review the prescription again)</span>
+        <Modal isOpen={showPatientDialogue} onClose={() => {}} title="The patient asks about the label" showCloseButton={false}>
+          <div className="space-y-4">
+            <blockquote className="patient-label-question">
+              <p><strong>{currentPrescription.patientName}</strong></p>
+              <p>“{patientQuestion}”</p>
+            </blockquote>
+            <p>How would you reply?</p>
+            <div className="grid gap-3">
+              <button type="button" className="conversation-reply" onClick={() => handlePatientDialogueResponse('recheck')}>
+                “Let me double-check the prescription for you.”
               </button>
-
-              <button
-                onClick={() => handlePatientDialogueResponse('insist')}
-                className="w-full p-4 sm:p-5 border-4 border-poke-black text-left bg-red-200 hover:bg-red-300 transition-colors text-sm sm:text-base font-bold"
-                style={{
-                  lineHeight: '1.5',
-                  boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                }}
-              >
-                "I'm sure this is correct."<br />
-                <span className="text-xs sm:text-sm text-red-800 font-normal">(Insist label is right)</span>
+              <button type="button" className="conversation-reply" onClick={() => handlePatientDialogueResponse('insist')}>
+                “I’m sure the label is correct.”
               </button>
             </div>
           </div>
         </Modal>
-
       </motion.div>
     </div>
   );

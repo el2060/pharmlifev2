@@ -17,10 +17,11 @@ export interface SceneProduct {
 export interface SceneMoment {
   stage: GameStage;
   speaker?: string;
+  speakerRole?: 'patient' | 'staff';
   caption?: string;
   actionLabel?: string;
+  canActFromScene?: boolean;
   gesture?: SceneGesture;
-  cartons?: number;
   products?: SceneProduct[];
 }
 
@@ -42,7 +43,7 @@ export function useShiftScene() {
   return useContext(SceneContext);
 }
 
-export function useSceneMoment({ stage, speaker, caption, actionLabel, gesture, cartons, products }: SceneMoment, onAction?: () => void, onChoose?: (id: string) => void) {
+export function useSceneMoment({ stage, speaker, speakerRole, caption, actionLabel, canActFromScene, gesture, products }: SceneMoment, onAction?: () => void, onChoose?: (id: string) => void) {
   const context = useShiftScene();
   const setMoment = context?.setMoment;
   const action = context?.action;
@@ -56,8 +57,8 @@ export function useSceneMoment({ stage, speaker, caption, actionLabel, gesture, 
 
   useEffect(() => {
     if (!setMoment) return;
-    setMoment({ stage, speaker, caption, actionLabel, gesture, cartons, products });
-  }, [stage, speaker, caption, actionLabel, gesture, cartons, products, setMoment]);
+    setMoment({ stage, speaker, speakerRole, caption, actionLabel, canActFromScene, gesture, products });
+  }, [stage, speaker, speakerRole, caption, actionLabel, canActFromScene, gesture, products, setMoment]);
 
   useEffect(() => {
     if (!action || !hasAction) return;

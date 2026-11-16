@@ -16,6 +16,9 @@ interface PharmacyViewportProps {
   stage?: GameStage;
   view?: PharmacyView;
   deskInset?: number;
+  rotationRequest?: number;
+  showTaskMarker?: boolean;
+  taskMarkerLabel?: string;
   onVisit?: (view: PharmacyView) => void;
   caseNumber?: number;
   onTask?: () => void;
@@ -23,22 +26,25 @@ interface PharmacyViewportProps {
   moment?: SceneMoment;
 }
 
-export default function PharmacyViewport({ stage, view = stage ?? 'overview', deskInset = 0, caseNumber = 1, onTask, onChoose, onVisit, moment }: PharmacyViewportProps) {
+export default function PharmacyViewport({ stage, view = stage ?? 'overview', deskInset = 0, rotationRequest = 0, showTaskMarker = true, taskMarkerLabel, caseNumber = 1, onTask, onChoose, onVisit, moment }: PharmacyViewportProps) {
   const [renderer, setRenderer] = useState<'pending' | 'webgl' | 'unavailable'>('pending');
   const ready = renderer === 'webgl';
   const [hoveredProduct, setHoveredProduct] = useState<SceneProduct>();
   const host = useRef<HTMLDivElement>(null);
-  const scene = useRef({ view, deskInset, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
+  const stationAction = showTaskMarker ? onTask : undefined;
+  const scene = useRef({ view, deskInset, rotationRequest, stationAction, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
 
   useEffect(() => {
     scene.current.view = view;
     scene.current.deskInset = deskInset;
+    scene.current.rotationRequest = rotationRequest;
+    scene.current.stationAction = stationAction;
     scene.current.activeStage = stage ?? 'receiving';
     scene.current.caseNumber = caseNumber;
     scene.current.ambient = !stage;
     scene.current.moment = moment;
     scene.current.choose = (id) => onChoose?.(id);
-  }, [view, deskInset, caseNumber, stage, moment, onChoose]);
+  }, [view, deskInset, rotationRequest, stationAction, caseNumber, stage, moment, onChoose]);
 
   useEffect(() => {
     const element = host.current;
@@ -50,7 +56,9 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
     }
   }, []);
 
-  const markerKeys = !stage ? [] : view === 'overview' ? Object.keys(locations) as GameStage[] : [view];
+  const markerKeys = !stage || (view === stage && !showTaskMarker)
+    ? []
+    : view === 'overview' ? Object.keys(locations) as GameStage[] : [view];
   const previewing = stage !== undefined && view !== stage;
 
   return (
@@ -84,7 +92,7 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
           }}
         >
           <span className="world-marker-dot" aria-hidden="true" />
-          <span>{view === 'overview' ? locations[key].name : key === stage ? moment?.actionLabel ?? locations[key].action : 'Return to your station'}</span>
+          <span>{view === 'overview' ? locations[key].name : key === stage ? taskMarkerLabel ?? locations[key].action : 'Return to your station'}</span>
           <ArrowRight size={15} aria-hidden="true" />
         </button>
       ))}

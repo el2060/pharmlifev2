@@ -91,6 +91,7 @@ function ReceivingCase({ prescription }: { prescription: Prescription }) {
   useSceneMoment({
     stage: 'receiving',
     speaker: result?.patientReaction ? prescription.patientName : result ? 'Preceptor' : prescription.patientName,
+    speakerRole: !result || result.patientReaction ? 'patient' : 'staff',
     caption: result?.patientReaction || result?.explanation || 'Hello, I’m here to collect my medication. Here’s my IC.',
     actionLabel: result ? 'See case feedback' : 'Open patient file',
     gesture: result ? result.isCorrect ? 'nod' : 'consider' : 'talk',
@@ -151,7 +152,7 @@ function ReceivingCase({ prescription }: { prescription: Prescription }) {
     <div className="container-custom receiving-desk">
       <header className="receiving-desk-header" tabIndex={-1} data-scene-task={!result || undefined}>
         <h2>Review the patient file</h2>
-        <p>Compare the name and IC, then check the medicines against the allergy record and prescription directions.</p>
+        <p>Match the patient’s name and IC number. Check their allergies and the prescription directions before deciding what to do.</p>
       </header>
 
       <div className="receiving-evidence">
@@ -167,7 +168,7 @@ function ReceivingCase({ prescription }: { prescription: Prescription }) {
 
       {!result && (
         <section className="receiving-decision" aria-labelledby="receiving-decision-title">
-          <h3 id="receiving-decision-title" tabIndex={-1} ref={decisionHeading}>What would you do at the counter?</h3>
+          <h3 id="receiving-decision-title" tabIndex={-1} ref={decisionHeading}>Choose your next action</h3>
           {scenario && !scenario.documentLed && <p>{scenario.situation} {scenario.question}</p>}
           <div className="receiving-actions">
             {actions.map((action) => {
@@ -187,7 +188,7 @@ function ReceivingCase({ prescription }: { prescription: Prescription }) {
         <section className="receiving-feedback" data-success={result.isCorrect} aria-labelledby="receiving-feedback-title">
           <h3 ref={feedbackHeading} id="receiving-feedback-title" tabIndex={-1} data-scene-task>
             {result.isCorrect && <CheckCircle2 size={20} aria-hidden="true" />}
-            {scenario ? (result.isCorrect ? 'Outcome' : 'Pause and review') : result.outcome}
+            {scenario ? (result.isCorrect ? result.shouldSkipRemainingStages ? 'Prescription on hold' : 'Prescription clarified' : 'Pause and review') : result.outcome}
           </h3>
           {scenario && <p><strong>{result.isCorrect ? 'What happened' : 'What could happen'}</strong> {result.outcome}</p>}
           <p><strong>Why it matters</strong> {result.explanation}</p>

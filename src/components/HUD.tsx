@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, House, Map, PanelRightClose, RotateCcw } from 'lucide-react';
+import { ArrowDown, House, Map, PanelRightClose, RotateCcw, RotateCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { getPharmacyQueueNumber, useShiftScene } from '../scene/shiftScene';
@@ -22,9 +22,12 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [navigation, setNavigation] = useState<{ step: string; view: PharmacyView; taskOpen: boolean }>();
   const [deskInset, setDeskInset] = useState(0);
+  const [rotationRequest, setRotationRequest] = useState(0);
   const deskRef = useRef<HTMLDivElement>(null);
-  const reopenTask = useRef(false);
+  const sceneRef = useRef<HTMLElement>(null);
+  const reopenTask = useRef<'desk' | 'scene' | null>(null);
   const step = `${currentLevel}-${currentStage}`;
+  const previousStep = useRef(step);
   const currentNavigation = navigation?.step === step ? navigation : undefined;
   const view = currentNavigation?.view ?? currentStage;
   const taskOpen = currentNavigation?.taskOpen ?? true;
@@ -51,18 +54,33 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
 
   useEffect(() => {
     if (!taskOpen || !reopenTask.current) return;
-    reopenTask.current = false;
-    document.getElementById('workstation')?.focus();
+    const task = document.getElementById('workstation');
+    const control = reopenTask.current === 'scene'
+      ? task?.querySelector<HTMLElement>('[data-scene-task], .med-carton')
+      : null;
+    reopenTask.current = null;
+    (control ?? task)?.focus();
   }, [taskOpen]);
 
   useEffect(() => {
     if (deskRef.current) deskRef.current.scrollTop = 0;
+    if (previousStep.current !== step && window.matchMedia('(max-width: 850px)').matches) {
+      sceneRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      sceneRef.current?.querySelector('h1')?.focus({ preventScroll: true });
+    }
+    previousStep.current = step;
   }, [step]);
+
+  useEffect(() => {
+    if (moment?.gesture === 'handover' && window.matchMedia('(max-width: 850px)').matches) {
+      sceneRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+  }, [moment?.gesture]);
 
   function showTask(focus = false) {
     if (focus) {
       if (taskOpen) document.getElementById('workstation')?.focus();
-      else reopenTask.current = true;
+      else reopenTask.current = 'desk';
     }
     setNavigation({ step, view: currentStage, taskOpen: true });
   }
@@ -74,17 +92,11 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
 
   function handleSceneAction() {
     if (!taskOpen) {
-      showTask(true);
+      reopenTask.current = 'scene';
+      showTask();
       return;
     }
-    const action = scene?.action.current;
-    if (action) {
-      action();
-      return;
-    }
-    const task = document.getElementById('workstation');
-    const control = task?.querySelector<HTMLElement>('[data-scene-task], .med-carton');
-    (control ?? task)?.focus();
+    if (moment?.canActFromScene) scene?.action.current?.();
   }
 
   return (
@@ -107,14 +119,17 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
       </header>
 
       <div className="shift-layout" data-task-open={taskOpen}>
-        <section className="play-scene" aria-label="Pharmacy scene">
+        <section ref={sceneRef} className="play-scene" aria-label="Pharmacy scene">
           <Suspense fallback={<div className="pharmacy-world"><p className="world-status" role="status">Opening the pharmacy…</p></div>}>
             <PharmacyViewport
               stage={currentStage}
               view={view}
               deskInset={deskInset}
+              rotationRequest={rotationRequest}
               caseNumber={currentLevel}
               onTask={handleSceneAction}
+              showTaskMarker={!taskOpen || moment?.canActFromScene === true}
+              taskMarkerLabel={!taskOpen && moment?.canActFromScene ? 'Open active task' : moment?.actionLabel}
               onVisit={visitStation}
               moment={moment}
               onChoose={(id) => scene?.choose.current?.(id)}
@@ -129,7 +144,7 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
           >
             <div>
               <p className="scene-kicker">Year {currentYear} <span aria-hidden="true">/</span> Case {currentLevel} of {caseCount}</p>
-              <h1>{view === 'overview' ? 'Pharmacy map' : stations[view].place}</h1>
+              <h1 tabIndex={-1}>{view === 'overview' ? 'Pharmacy map' : stations[view].place}</h1>
               <p className="workstation-patient" aria-live="polite">
                 {previewing ? `Preview · Continue the case at the ${stations[currentStage].place.toLowerCase()}` : currentPrescription?.patientName}
               </p>
@@ -145,6 +160,9 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
                 <Map size={17} aria-hidden="true" /> Pharmacy map
               </button>
             )}
+            <button type="button" className="world-control scene-rotate" onClick={() => setRotationRequest(count => count + 1)} aria-label="Rotate 3D view">
+              <RotateCw size={17} aria-hidden="true" /> Rotate
+            </button>
             {taskOpen ? (
               <button type="button" className="world-control scene-hide-task" onClick={() => setNavigation({ step, view: currentStage, taskOpen: false })}>
                 <PanelRightClose size={17} aria-hidden="true" /> Hide task
@@ -164,7 +182,7 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
 
       <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)} title="Leave the shift?">
         <div className="space-y-4">
-          <p>Returning to the main menu resets your current case. Your Rx points stay with you for this session.</p>
+          <p>Leaving clears your progress through the cases. Your Rx points stay with you for this session.</p>
           <div className="flex gap-3">
             <Button variant="danger" onClick={onBackToHome} fullWidth>Leave shift</Button>
             <Button variant="secondary" onClick={() => setShowConfirmModal(false)} fullWidth>Stay on shift</Button>
