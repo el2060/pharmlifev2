@@ -1,3 +1,4 @@
+import { useSceneMoment } from '../../scene/shiftScene';
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Printer, CheckCircle, XCircle } from 'lucide-react';
@@ -36,6 +37,23 @@ export const Typing: React.FC = () => {
       document.body.scrollTop = 0;
     }, 10);
   }, [currentMedIndex]);
+
+  const canPrint = Boolean(labelData.quantity && labelData.dosageForm && labelData.frequency);
+
+  useSceneMoment({
+    stage: 'typing',
+    speaker: showPatientDialogue ? currentPrescription?.patientName : 'Pharmacy technician',
+    caption: showPatientDialogue ? patientQuestion : isPrinting ? 'Printing the label…' : 'I’ll set up the printer. Enter the directions from the prescription.',
+    gesture: isPrinting ? 'print' : undefined,
+    actionLabel: canPrint && !isPrinting ? 'Print medication label' : 'Use the label printer',
+  }, handlePrinterInteraction);
+
+  function handlePrinterInteraction() {
+    if (!currentPrescription || isPrinting || showResult || showPatientDialogue) return;
+    if (canPrint) handlePrintLabel();
+    else document.getElementById('label-quantity')?.focus();
+  }
+
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -298,7 +316,7 @@ export const Typing: React.FC = () => {
                   QUANTITY:
                 </label>
                 <select
-                  id="label-quantity"
+                  id="label-quantity" data-scene-task
                   value={labelData.quantity}
                   onChange={(e) => setLabelData({ ...labelData, quantity: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"

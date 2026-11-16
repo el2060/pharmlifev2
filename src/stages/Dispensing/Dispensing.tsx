@@ -1,3 +1,4 @@
+import { useSceneMoment } from '../../scene/shiftScene';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -30,6 +31,32 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
     if (isConversing) conversationHeading.current?.focus();
     if (counselingStarted) handoverButton.current?.focus();
   }, [isConversing, currentQuestionIndex, counselingStarted]);
+
+  useSceneMoment({
+    stage: 'dispensing',
+    speaker: currentPrescription?.patientName,
+    caption: counselingComplete ? 'Thank you for explaining my medication.'
+      : counselingStarted ? 'Thank you. I’m ready to collect my medication.'
+        : showFeedback ? isAnswerCorrect ? 'Thanks, that helps.' : 'Could you explain that again?'
+          : isConversing ? currentQuestions[currentQuestionIndex]?.question
+          : 'Hello, I’m here to collect my medication.',
+    actionLabel: counselingComplete ? 'View handover summary'
+      : counselingStarted ? 'Hand over medication'
+        : showFeedback ? currentQuestionIndex < currentQuestions.length - 1 ? 'Continue conversation' : 'Finish counselling'
+        : isConversing ? 'Reply to the patient' : 'Speak with the patient',
+    gesture: counselingComplete ? 'handover'
+      : showFeedback ? isAnswerCorrect ? 'nod' : 'consider'
+        : 'talk',
+  }, handleSceneInteraction);
+
+  function handleSceneInteraction() {
+    if (counselingComplete) document.getElementById('handover-summary')?.focus();
+    else if (showFeedback) handleNextQuestion();
+    else if (isConversing) conversationHeading.current?.focus();
+    else if (counselingStarted) handoverButton.current?.click();
+    else handleStartCounseling();
+  }
+
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -180,7 +207,7 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
             </motion.div>
 
             <div>
-              <h2 className="text-3xl font-bold text-pharm-green mb-2">MEDICATIONS DISPENSED!</h2>
+              <h2 id="handover-summary" tabIndex={-1} className="text-3xl font-bold text-pharm-green mb-2">MEDICATIONS DISPENSED!</h2>
               <p className="text-xl text-gray-700">Patient counseling complete</p>
             </div>
 

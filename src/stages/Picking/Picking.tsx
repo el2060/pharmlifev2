@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useSceneMoment } from '../../scene/shiftScene';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, CheckCircle, XCircle, ShoppingCart, Activity } from 'lucide-react';
 import { Modal } from '../../components/Modal';
@@ -23,6 +24,46 @@ export const Picking: React.FC = () => {
   const [selectedMedications, setSelectedMedications] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+
+  const requiredMedIds = currentPrescription?.medications.map((item) => item.medicationId) ?? [];
+  const availableMedicationsByCategory = useMemo(() => {
+    const requiredMeds = currentPrescription?.medications.flatMap(({ medicationId }) => {
+      const medication = getMedicationById(medicationId);
+      return medication ? [medication] : [];
+    }) ?? [];
+    const categories = [...new Set(requiredMeds.map(({ category }) => category))];
+    const available: Record<string, Medication[]> = {};
+    for (const category of categories) {
+      available[category] = getMedicationsByCategory(category).sort((a, b) => a.genericName.localeCompare(b.genericName));
+    }
+    return available;
+  }, [currentPrescription]);
+
+  const sceneProducts = useMemo(() => allergyConflictDetected ? [] : Object.values(availableMedicationsByCategory).flat().map((med) => ({
+    id: med.id,
+    name: med.genericName,
+    strength: med.strength,
+    selected: selectedMedications.includes(med.id),
+  })), [allergyConflictDetected, availableMedicationsByCategory, selectedMedications]);
+
+  function handleSelectMedication(medId: string) {
+    setSelectedMedications((items) => items.includes(medId)
+      ? items.filter((id) => id !== medId)
+      : [...items, medId]);
+  }
+
+
+  useSceneMoment({
+    stage: 'picking',
+    speaker: 'Pharmacy technician',
+    caption: showResult
+      ? isCorrect ? 'The items match the prescription.' : 'Compare the medication names and strengths with the prescription.'
+      : 'Select cartons on the shelf or use the list beside it. Check the tray when you’re ready.',
+    gesture: 'pack',
+    cartons: selectedMedications.length,
+    products: sceneProducts,
+  }, undefined, handleSelectMedication);
+
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -60,28 +101,6 @@ export const Picking: React.FC = () => {
       </div>
     );
   }
-
-  const requiredMedIds = currentPrescription.medications.map((m) => m.medicationId);
-  const requiredMeds = requiredMedIds.map((id) => getMedicationById(id)!).filter(Boolean);
-
-  // Get all unique categories from required medications
-  const categories = [...new Set(requiredMeds.map((m) => m.category))];
-
-  // Get all medications for these categories
-  const availableMedicationsByCategory: Record<string, Medication[]> = {};
-  categories.forEach((cat) => {
-    availableMedicationsByCategory[cat] = getMedicationsByCategory(cat).sort((a, b) =>
-      a.genericName.localeCompare(b.genericName)
-    );
-  });
-
-  const handleSelectMedication = (medId: string) => {
-    if (selectedMedications.includes(medId)) {
-      setSelectedMedications(selectedMedications.filter((id) => id !== medId));
-    } else {
-      setSelectedMedications([...selectedMedications, medId]);
-    }
-  };
 
   const handleSubmit = () => {
     // Check if selected medications match required medications

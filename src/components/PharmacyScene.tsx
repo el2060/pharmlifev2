@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, type ReactNode } from 'react';
 import { ArrowDownToLine, Check, ClipboardList, MessageCircle, Printer } from 'lucide-react';
 import type { GameStage } from '../types/game.types';
 
@@ -39,8 +39,14 @@ export function StationRoute({ activeStage }: StationRouteProps) {
   );
 }
 
+const PharmacyViewport = lazy(() => import('../scene/PharmacyViewport'));
+
 export function PharmacyArt() {
-  return <div className="pharmacy-art" aria-hidden="true" />;
+  return (
+    <div className="pharmacy-art" aria-hidden="true">
+      <Suspense fallback={null}><PharmacyViewport /></Suspense>
+    </div>
+  );
 }
 
 export function NPLogo() {

@@ -5,6 +5,7 @@ import { YearSelection } from './screens/YearSelection';
 import { About } from './screens/About';
 import { SuccessScreen } from './screens/SuccessScreen';
 import { HUD } from './components/HUD';
+import { ShiftSceneProvider } from './scene/shiftScene';
 import { Receiving } from './stages/Receiving/Receiving';
 import { Typing } from './stages/Typing/Typing';
 import { Picking } from './stages/Picking/Picking';
@@ -79,7 +80,7 @@ function App() {
   // Scroll to top when stage changes
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentStage, currentScreen]);
+  }, [currentStage, currentLevel, currentScreen]);
 
   const renderStage = () => {
     switch (currentStage) {
@@ -149,8 +150,11 @@ function App() {
                 <SuccessScreen onBackToHome={handleBackToHome} />
               ) : (
                 <>
-                  <HUD onBackToHome={handleBackToHome} caseCount={levels.filter(({ year }) => year === currentYear).length} />
-                  <main id="workstation" tabIndex={-1} className={`workstation ${currentStage}-workstation`}>{renderStage()}</main>
+                  <ShiftSceneProvider>
+                    <HUD onBackToHome={handleBackToHome} caseCount={levels.filter(({ year }) => year === currentYear).length}>
+                      <main id="workstation" tabIndex={-1} className={`workstation ${currentStage}-workstation`}>{renderStage()}</main>
+                    </HUD>
+                  </ShiftSceneProvider>
                 </>
               )}
             </motion.div>

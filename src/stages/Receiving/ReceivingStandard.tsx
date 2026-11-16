@@ -1,3 +1,4 @@
+import { useSceneMoment } from '../../scene/shiftScene';
 import { PatientIdentityCard } from './PatientIdentityCard';
 import { PreceptorNote } from '../../components/PharmacyScene';
 import React, { useState } from 'react';
@@ -26,6 +27,17 @@ export const ReceivingStandard: React.FC = () => {
     // Interactive validation checks
     const [checkedFields, setCheckedFields] = useState<Set<string>>(new Set());
     const [foundIssues, setFoundIssues] = useState<string[]>([]);
+
+    useSceneMoment({
+        stage: 'receiving',
+        speaker: step === 'identity' && !identityChecked ? currentPrescription?.patientName : 'Preceptor',
+        caption: step === 'identity'
+            ? identityChecked ? 'Check the drug allergies before reviewing the prescription.' : 'Hello, I’m here to collect my medication. Here’s my IC.'
+            : 'Check the prescription details before it goes to the label station.',
+        actionLabel: step === 'identity' ? 'Open patient file' : 'Review prescription',
+        gesture: step === 'identity' && !identityChecked ? 'talk' : 'nod',
+    });
+
 
     if (!currentPrescription) {
         return <div>Loading prescription...</div>;
@@ -169,18 +181,18 @@ export const ReceivingStandard: React.FC = () => {
                         >
                             <Card>
                                 <div className="game-screen p-4 sm:p-6">
-                                    <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" >
+                                    <h3 tabIndex={-1} data-scene-task className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                                         <User className="text-blue-500" size={24} />
                                         <span>Patient arrival</span>
                                     </h3>
 
                                     <div className="space-y-4">
-                                        <div className="grid gap-4 lg:grid-cols-2">
+                                        <div className="intake-documents grid gap-4 lg:grid-cols-2 items-start">
                                             <PatientIdentityCard prescription={currentPrescription} />
 
                                             {/* Prescription snapshot so ID and Rx can be compared on one screen */}
                                             <motion.div
-                                                className="game-screen p-4 sm:p-5 h-full"
+                                                className="game-screen p-4 sm:p-5"
                                                 initial={{ scale: 0.9, opacity: 0, rotateY: 15 }}
                                                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                                                 transition={{ type: 'spring', stiffness: 100, delay: 0.1 }}
@@ -189,11 +201,6 @@ export const ReceivingStandard: React.FC = () => {
                                                 <div className="space-y-2 text-poke-black" >
                                                     <p>Patient: {currentPrescription.patientName}</p>
                                                     <p>IC: {currentPrescription.patientIC}</p>
-                                                    <p>Doctor: {currentPrescription.doctorName} {currentPrescription.doctorMCR && <span className="text-xs text-gray-600">({currentPrescription.doctorMCR})</span>}</p>
-                                                    <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
-                                                    {currentPrescription.clinicAddress && <p>Clinic: {currentPrescription.clinicAddress}</p>}
-                                                    <p>Date: {currentPrescription.date}</p>
-                                                    {currentPrescription.patientAddress && <p>Address: {currentPrescription.patientAddress}</p>}
                                                     <div className="pt-1">
                                                         <p className="font-bold">Medications:</p>
                                                         <div className="space-y-1 mt-1">
@@ -209,9 +216,16 @@ export const ReceivingStandard: React.FC = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs text-gray-600 mt-3 font-medium">
-                                                    Cross-check name/IC against the card before proceeding.
-                                                </p>
+                                                <details className="rx-source-details">
+                                                    <summary>Prescriber and visit details</summary>
+                                                    <div className="space-y-1.5">
+                                                    <p>Doctor: {currentPrescription.doctorName} {currentPrescription.doctorMCR && <span className="text-xs text-gray-600">({currentPrescription.doctorMCR})</span>}</p>
+                                                    <p>Signature: {currentPrescription.doctorSignature ? '✓ Signed' : '✗ Missing'}</p>
+                                                    {currentPrescription.clinicAddress && <p>Clinic: {currentPrescription.clinicAddress}</p>}
+                                                    <p>Date: {currentPrescription.date}</p>
+                                                    {currentPrescription.patientAddress && <p>Address: {currentPrescription.patientAddress}</p>}
+                                                    </div>
+                                                </details>
                                             </motion.div>
                                         </div>
 
@@ -374,7 +388,7 @@ export const ReceivingStandard: React.FC = () => {
 
                             <div className="grid lg:grid-cols-[1.05fr_1fr] gap-4">
                                 {/* Prescription reference on same screen for cross-checking */}
-                                <div className="game-screen p-4 sm:p-5 h-full">
+                                <div className="game-screen p-4 sm:p-5">
                                     <p className="pixel-title text-lg sm:text-xl mb-3">PRESCRIPTION DETAILS</p>
                                     <div className="space-y-2 text-poke-black" >
                                         <p>Patient: {currentPrescription.patientName}</p>

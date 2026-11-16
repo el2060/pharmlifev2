@@ -1,3 +1,4 @@
+import { useSceneMoment } from '../../scene/shiftScene';
 import { PatientIdentityCard } from './PatientIdentityCard';
 import { PreceptorNote } from '../../components/PharmacyScene';
 import React, { useState } from 'react';
@@ -22,6 +23,18 @@ export const ReceivingEnhanced: React.FC = () => {
   // Track player's findings during investigation
   const [foundIssues, setFoundIssues] = useState<string[]>([]);
   const [checkedFields, setCheckedFields] = useState<Set<string>>(new Set());
+
+  useSceneMoment({
+    stage: 'receiving',
+    speaker: showOutcome || (step === 'identity' && !identityVerified) ? currentPrescription?.patientName : 'Preceptor',
+    caption: showOutcome ? consequence?.patientReaction
+      : step === 'identity'
+        ? identityVerified ? 'Now check the patient’s drug allergies.' : 'Hello, I’m here to collect my medication. Here’s my IC.'
+        : step === 'decision' ? 'Decide how to handle this prescription.' : 'Read the prescription and check the remarks.',
+    actionLabel: step === 'identity' ? 'Open patient file' : 'Review prescription',
+    gesture: showOutcome ? consequence?.isCorrect ? 'nod' : 'consider' : step === 'identity' && !identityVerified ? 'talk' : undefined,
+  });
+
 
   if (!currentPrescription) {
     return <div>Loading prescription...</div>;
@@ -195,7 +208,7 @@ export const ReceivingEnhanced: React.FC = () => {
             >
               <Card>
                 <div className="game-screen p-4 sm:p-6">
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" >
+                  <h3 tabIndex={-1} data-scene-task className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                     <User className="text-blue-500" size={24} />
                     <span>Patient arrival</span>
                   </h3>
