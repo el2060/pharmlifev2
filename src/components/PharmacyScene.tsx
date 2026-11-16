@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, type ReactNode } from 'react';
+import { lazy, Suspense } from 'react';
 import { ArrowDownToLine, Check, ClipboardList, MessageCircle, Printer } from 'lucide-react';
 import type { GameStage } from '../types/game.types';
 
@@ -51,21 +51,4 @@ export function PharmacyArt() {
 
 export function NPLogo() {
   return <img className="np-logo" src={import.meta.env.BASE_URL + 'np-logo.png'} alt="Ngee Ann Polytechnic" />;
-}
-
-export function PreceptorNote({ step, children }: { step: string; children: ReactNode }) {
-  const note = useRef<HTMLElement>(null);
-  const previousStep = useRef(step);
-
-  useEffect(() => {
-    if (previousStep.current !== step && step !== 'outcome') note.current?.focus();
-    previousStep.current = step;
-  }, [step]);
-
-  return (
-    <aside ref={note} tabIndex={-1} className="preceptor-note" aria-label="Preceptor guidance">
-      <span><ClipboardList size={20} aria-hidden="true" /></span>
-      <div><small>Preceptor</small><p>{children}</p></div>
-    </aside>
-  );
 }

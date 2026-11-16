@@ -23,9 +23,16 @@ export function PatientIdentityCard({ prescription }: { prescription: Prescripti
       <dl>
         <div><dt>Name</dt><dd>{name}</dd></div>
         <div><dt>IC number</dt><dd>{ic}</dd></div>
-        {patientDOB && <div><dt>Date of birth</dt><dd>{patientDOB}</dd></div>}
-        {patientAddress && <div><dt>Address</dt><dd>{patientAddress}</dd></div>}
       </dl>
+      {(patientDOB || patientAddress) && (
+        <details className="rx-source-details">
+          <summary>Other ID details</summary>
+          <dl>
+            {patientDOB && <div><dt>Date of birth</dt><dd>{patientDOB}</dd></div>}
+            {patientAddress && <div><dt>Address</dt><dd>{patientAddress}</dd></div>}
+          </dl>
+        </details>
+      )}
     </motion.section>
   );
 }

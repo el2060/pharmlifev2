@@ -36,6 +36,7 @@ export interface ScenarioDecision {
   question: string;
   options: DecisionOption[];
   correctAction: string;
+  documentLed?: boolean;
   consequences: {
     [key: string]: ConsequenceResult;
   };
@@ -55,6 +56,7 @@ export interface ConsequenceResult {
   isCorrect: boolean;
   explanation: string;
   shouldSkipRemainingStages?: boolean;
+  confirmedDurations?: Record<string, string>;
 }
 
 export interface PatientDialogue {
@@ -108,6 +110,7 @@ export interface Prescription {
   doctorMCR?: string;
   doctorSignature: boolean;
   clinicAddress?: string;
+  remarks?: string;
   date: string;
   medications: PrescriptionItem[];
   isValid: boolean;

@@ -127,6 +127,7 @@ const rx4: Prescription = {
   doctorSignature: true,
   clinicAddress: 'Grace Clinic, 22 Ryce Ave S(324917)',
   date: '28-Nov-25',
+  remarks: '1/12',
   medications: [
     {
       medicationId: 'med-007', // Salbutamol

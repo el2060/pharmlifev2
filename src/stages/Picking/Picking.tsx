@@ -26,6 +26,8 @@ export const Picking: React.FC = () => {
   const [isCorrect, setIsCorrect] = useState(false);
 
   const requiredMedIds = currentPrescription?.medications.map((item) => item.medicationId) ?? [];
+  const mismatchedMeds = selectedMedications.filter((id) => !requiredMedIds.includes(id));
+  const missingCount = requiredMedIds.filter((id) => !selectedMedications.includes(id)).length;
   const availableMedicationsByCategory = useMemo(() => {
     const requiredMeds = currentPrescription?.medications.flatMap(({ medicationId }) => {
       const medication = getMedicationById(medicationId);
@@ -121,7 +123,6 @@ export const Picking: React.FC = () => {
     if (isCorrect) {
       nextStage();
     } else {
-      setSelectedMedications([]);
       setShowResult(false);
     }
   };
@@ -407,7 +408,10 @@ export const Picking: React.FC = () => {
                     INCORRECT
                   </h3>
                   <p className="text-gray-600 mb-4 text-sm sm:text-base font-medium">
-                    Please review the prescription carefully and select the exact medications required.
+                    {mismatchedMeds.length > 0 && (
+                      <>Compare {mismatchedMeds.map((id) => getMedicationById(id)?.genericName ?? id).join(', ')} with the prescription.</>
+                    )}
+                    {missingCount > 0 && <> {missingCount} prescribed {missingCount === 1 ? 'item is' : 'items are'} still missing.</>}
                   </p>
                 </>
               )}
@@ -420,7 +424,7 @@ export const Picking: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {isCorrect ? 'CONTINUE →' : 'TRY AGAIN'}
+                {isCorrect ? 'CONTINUE →' : 'RETURN TO THE BASKET'}
               </motion.button>
             </div>
           </Modal>

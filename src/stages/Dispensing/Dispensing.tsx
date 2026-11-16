@@ -62,6 +62,10 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
     return <div>Loading...</div>;
   }
 
+  const replies = currentQuestions[currentQuestionIndex]?.options.map((option, index) => ({ option, index })) ?? [];
+  const replyOffset = replies.length ? (currentLevel + currentQuestionIndex) % replies.length : 0;
+  const visibleReplies = [...replies.slice(replyOffset), ...replies.slice(0, replyOffset)];
+
   const handleStartCounseling = () => {
     // Collect all questions for the prescribed medications
     const allQuestions: CounselingQuestion[] = [];
@@ -257,7 +261,7 @@ export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
           </div>
           <p className="conversation-label">Your reply</p>
             <div className="grid gap-3">
-              {currentQuestions[currentQuestionIndex].options.map((option, idx) => (
+              {visibleReplies.map(({ option, index: idx }) => (
                 <button
                   key={idx}
                   onClick={() => handleAnswerSelect(idx)}

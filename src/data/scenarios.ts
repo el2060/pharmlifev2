@@ -384,6 +384,7 @@ export const typingDialogues: PatientDialogue[] = [
 // Scenario 6: RX #3 - Patient allergic to Paracetamol but prescribed it
 export const rx3AllergyScenario: ScenarioDecision = {
   id: 'scenario-rx3-allergy',
+  documentLed: true,
   situation: 'The prescription is indicated for Paracetamol 500mg. Patient record shows allergy to Paracetamol. Remarks: "Patient is allergic to Paracetamol, so cannot proceed. (In such instances, usually the staff has to give the dr a call - intervention)".',
   question: 'You found that the patient is allergic to the prescribed medication. What should you do?',
   options: [
@@ -450,6 +451,7 @@ export const rx3AllergyScenario: ScenarioDecision = {
 // Scenario 7: RX #4 - Missing Duration Information
 export const rx4IncompleteDurationScenario: ScenarioDecision = {
   id: 'scenario-rx4-duration',
+  documentLed: true,
   situation: 'Prescription for Antacid tablet, 1 tab tds prn. The duration/quantity field shows "(missing)". Remarks: "1/12".',
   question: 'The prescription is missing the duration information. What is your action?',
   options: [
@@ -485,10 +487,11 @@ export const rx4IncompleteDurationScenario: ScenarioDecision = {
       explanation: 'Wait! Look at the "Duration" field for the Antacid. It says "(missing)". Check the Remarks field or call the doctor to confirm the intended duration.',
     },
     'call-verify-duration': {
-      outcome: 'You called the clinic. Doctor specified "1/12" (1 month). You updated the prescription and dispensed correctly.',
+      outcome: 'You called the clinic. Doctor specified "1/12" (1 month). You updated the prescription before labelling.',
       patientReaction: 'Patient waits briefly but receives proper medication',
       scoreImpact: 120,
       rxPointsImpact: 60,
+      confirmedDurations: { 'med-004': '1/12' },
       isCorrect: true,
       explanation: 'Model Answer: "1/12" (1 month). Incomplete prescriptions require prescriber clarification.',
     },

@@ -144,14 +144,7 @@ export const Typing: React.FC = () => {
 
   const handlePatientDialogueResponse = (response: string) => {
     setShowPatientDialogue(false);
-    if (response === 'recheck') {
-      // Player catches their mistake
-      addScore(30); // Partial credit for catching error
-      // Do NOT clear labelData, let them edit it
-    } else {
-      // Player insists it's correct (wrong)
-      setShowResult(true);
-    }
+    if (response !== 'recheck') setShowResult(true);
   };
 
   const handleContinue = () => {
