@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { MainMenu } from './screens/MainMenu';
-import { YearSelection } from './screens/YearSelection';
 import { About } from './screens/About';
 import { SuccessScreen } from './screens/SuccessScreen';
 import { HUD } from './components/HUD';
@@ -16,7 +15,9 @@ import { useGameStore, type ShiftStartingStats } from './store/gameStore';
 import { levels } from './data/prescriptions';
 import { YearLevel } from './types/game.types';
 
-type Screen = 'menu' | 'year-selection' | 'about' | 'game';
+type Screen = 'menu' | 'about' | 'game';
+const startingYear: YearLevel = 1;
+const startingYearCaseCount = levels.filter(({ year }) => year === startingYear).length;
 
 // Helper function to get level data based on year and chapter number with safe fallback
 const getLevelData = (year: YearLevel, chapterNumber: number) => {
@@ -51,7 +52,13 @@ function App() {
   } = useGameStore();
 
   const handleStartGame = () => {
-    setCurrentScreen('year-selection');
+    const firstCase = getLevelData(startingYear, 1);
+    if (!firstCase) return;
+
+    rememberStartingStats();
+    setYear(startingYear);
+    restartShift(firstCase.prescription, startingStats.current);
+    setCurrentScreen('game');
   };
 
   const handleShowAbout = () => {
@@ -65,18 +72,6 @@ function App() {
   const handleBackToHome = () => {
     resetLevel(); // Reset game state
     setCurrentScreen('menu');
-  };
-
-  const handleSelectYear = (year: YearLevel) => {
-    setYear(year);
-
-    // Load first level for selected year (Chapter 1)
-    const levelData = getLevelData(year, 1);
-    if (levelData) {
-      rememberStartingStats();
-      setPrescription(levelData.prescription);
-      setCurrentScreen('game');
-    }
   };
 
   function handleRestart() {
@@ -131,19 +126,7 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <MainMenu onStartGame={handleStartGame} onShowAbout={handleShowAbout} />
-            </motion.div>
-          )}
-
-          {currentScreen === 'year-selection' && (
-            <motion.div
-              key="year-selection"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <YearSelection onSelectYear={handleSelectYear} onBack={handleBackToMenu} />
+              <MainMenu caseCount={startingYearCaseCount} onStartGame={handleStartGame} onShowAbout={handleShowAbout} />
             </motion.div>
           )}
 

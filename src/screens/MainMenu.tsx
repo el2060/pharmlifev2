@@ -7,11 +7,12 @@ import { Button } from '../components/Button';
 import { NPLogo, PharmacyArt, StationRoute } from '../components/PharmacyScene';
 
 interface MainMenuProps {
+  caseCount: number;
   onStartGame: () => void;
   onShowAbout: () => void;
 }
 
-export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
+export function MainMenu({ caseCount, onStartGame, onShowAbout }: MainMenuProps) {
   const { rxPoints, playerLevel } = useGameStore();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
@@ -34,13 +35,14 @@ export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
           <p className="lobby-subtitle">The Prescription Quest</p>
           <p className="lobby-description">Step behind the counter, review prescriptions, and help patients use their medicines safely.</p>
           <div className="lobby-actions">
-            <button type="button" className="shift-button" onClick={onStartGame}>
+            <button type="button" className="shift-button" aria-describedby="shift-details" onClick={onStartGame}>
               Start your shift <ArrowRight size={19} aria-hidden="true" />
             </button>
             <button type="button" className="lobby-link" onClick={() => setShowHowToPlay(true)}>
               <BookOpen size={17} aria-hidden="true" /> Shift guide
             </button>
           </div>
+          <p className="lobby-shift-details" id="shift-details">Year 1 Foundations · {caseCount} patient cases</p>
         </motion.div>
       </section>
       <section className="lobby-workflow">

@@ -38,6 +38,10 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
   const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
 
   useEffect(() => {
+    sceneRef.current?.querySelector('h1')?.focus({ preventScroll: true });
+  }, []);
+
+  useEffect(() => {
     const desk = deskRef.current;
     if (!desk) return;
     const desktop = window.matchMedia('(min-width: 851px)');

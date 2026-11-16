@@ -66,6 +66,7 @@
 .lobby-subtitle { font-size: clamp(1.35rem, 2.05vw, 1.95rem); font-weight: 650; letter-spacing: -.04em; }
 .lobby-description { max-width: 35ch; color: #e6eee7; margin-top: .75rem; line-height: 1.55; font-size: clamp(1.12rem, 1.4vw, 1.3rem); }
 .lobby-actions { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; align-items: center; margin-top: 1.5rem; }
+.lobby-shift-details { margin-top: .65rem; color: #e6eee7; font-size: .94rem; }
 .shift-button, .lobby-link, .shift-home, .workstation-jump {
   display: inline-flex;
   align-items: center;
@@ -126,9 +127,6 @@
 }
 .placement-available h2 { font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.25rem); letter-spacing: -.035em; }
 .placement-available p { color: var(--muted); }
-.placement-unavailable > div { display: flex; align-items: center; gap: .65rem; padding: .95rem .5rem; border-bottom: 1px solid var(--line); color: var(--muted); }
-.placement-unavailable small { margin-left: auto; }
-.placement-unavailable { font-size: .86rem; }
 
 .shift-hud { background: var(--paper); }
 .shift-bar {
