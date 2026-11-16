@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, type ReactNode } from 'react';
 import { ArrowDown, House } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
-import { useShiftScene } from '../scene/shiftScene';
+import { getPharmacyQueueNumber, useShiftScene } from '../scene/shiftScene';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { StationRoute, stations } from './PharmacyScene';
@@ -21,7 +21,7 @@ export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
   const scene = useShiftScene();
   const moment = scene?.moment?.stage === currentStage ? scene.moment : undefined;
   const station = stations[currentStage];
-  const queueNumber = 'P' + String(100 + currentLevel);
+  const queueNumber = getPharmacyQueueNumber(currentLevel);
   const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
 
   function handleSceneAction() {

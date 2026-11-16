@@ -621,4 +621,8 @@
 .med-carton { min-width: 0; overflow-wrap: anywhere; }
 @container (max-width: 820px) {
   .shift-layout .picking-workstation .grid.lg\:grid-cols-\[1fr_1\.5fr\] { grid-template-columns: minmax(0, 1fr); }
+
+  .shift-layout .picking-workstation .grid.lg\:grid-cols-\[1fr_1\.5fr\] > button {
+    grid-column: 1 / -1;
+  }
 }

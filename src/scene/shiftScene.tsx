@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { GameStage } from '../types/game.types';
 
+export function getPharmacyQueueNumber(caseNumber: number) {
+  return `P${100 + caseNumber}`;
+}
+
 export type SceneGesture = 'talk' | 'nod' | 'consider' | 'print' | 'pack' | 'handover';
 
 export interface SceneProduct {

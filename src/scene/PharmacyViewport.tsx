@@ -6,7 +6,7 @@ import type { SceneMoment, SceneProduct } from './shiftScene';
 import type { GameStage } from '../types/game.types';
 
 const locations = {
-  receiving: { name: 'Intake counter', action: 'Open patient file' },
+  receiving: { name: 'Prescription counter', action: 'Open patient file' },
   typing: { name: 'Label station', action: 'Use the label printer' },
   picking: { name: 'Medication shelves', action: 'Inspect the shelves' },
   dispensing: { name: 'Counselling counter', action: 'Speak with the patient' },
@@ -26,10 +26,11 @@ export default function PharmacyViewport({ stage, caseNumber = 1, onTask, onChoo
   const [navigation, setNavigation] = useState<{ forStage: GameStage; view: PharmacyView } | null>(null);
   const view = navigation && navigation.forStage === stage ? navigation.view : stage ?? 'overview';
   const host = useRef<HTMLDivElement>(null);
-  const scene = useRef({ view, caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
+  const scene = useRef({ view, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
 
   useEffect(() => {
     scene.current.view = view;
+    scene.current.activeStage = stage ?? 'receiving';
     scene.current.caseNumber = caseNumber;
     scene.current.ambient = !stage;
     scene.current.moment = moment;

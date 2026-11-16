@@ -5,6 +5,7 @@ import type { GameStage } from '../types/game.types';
 
 interface ViewState {
   view: PharmacyView;
+  activeStage: GameStage;
   caseNumber: number;
   markers: Partial<Record<GameStage, HTMLButtonElement>>;
   ambient: boolean;
@@ -117,7 +118,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     camera.lookAt(look);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld();
-    world.animate(still ? 0 : now / 1000, state.view, still ? 1 : (now - arrivalStarted) / 1000, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber);
+    world.animate(still ? 0 : now / 1000, state.view, still ? 1 : (now - arrivalStarted) / 1000, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber, state.activeStage);
     renderer.render(scene, camera);
 
     projectMarkers();

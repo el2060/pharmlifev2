@@ -3,7 +3,7 @@ import { ArrowDownToLine, Check, ClipboardList, MessageCircle, Printer } from 'l
 import type { GameStage } from '../types/game.types';
 
 export const stations = {
-  receiving: { name: 'Receiving', place: 'Intake counter', icon: ClipboardList },
+  receiving: { name: 'Receiving', place: 'Prescription counter', icon: ClipboardList },
   typing: { name: 'Typing', place: 'Label station', icon: Printer },
   picking: { name: 'Picking & packing', place: 'Medication shelves', icon: ArrowDownToLine },
   dispensing: { name: 'Dispensing', place: 'Counselling counter', icon: MessageCircle },

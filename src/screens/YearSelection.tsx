@@ -27,7 +27,7 @@ export function YearSelection({ onSelectYear, onBack }: YearSelectionProps) {
           <div>
             <p className="scene-kicker">Year 1 · {caseCount} patient cases</p>
             <h2>Foundations</h2>
-            <p>Practise prescription basics and dosage forms in a Singapore outpatient setting, from polyclinic intake to medication collection.</p>
+            <p>Practise checking prescriptions, recognising dosage forms, and preparing medicines for patients.</p>
           </div>
           <button type="button" className="shift-button" onClick={() => onSelectYear(1)}>
             Begin Year 1 <ArrowRight size={19} aria-hidden="true" />
