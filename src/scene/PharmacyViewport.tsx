@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import { mountPharmacy } from './mountPharmacy';
 import type { PharmacyView } from './pharmacyWorld';
 import type { SceneMoment, SceneProduct } from './shiftScene';
@@ -30,6 +30,8 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
   const [renderer, setRenderer] = useState<'pending' | 'webgl' | 'unavailable'>('pending');
   const ready = renderer === 'webgl';
   const [hoveredProduct, setHoveredProduct] = useState<SceneProduct>();
+  const [inspectedId, setInspectedId] = useState<string>();
+  const inspectedProduct = view === 'picking' ? moment?.products?.find(({ id }) => id === inspectedId) : undefined;
   const host = useRef<HTMLDivElement>(null);
   const stationAction = showTaskMarker ? onTask : undefined;
   const scene = useRef({ view, deskInset, rotationRequest, stationAction, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
@@ -43,8 +45,13 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
     scene.current.caseNumber = caseNumber;
     scene.current.ambient = !stage;
     scene.current.moment = moment;
-    scene.current.choose = (id) => onChoose?.(id);
+    scene.current.choose = (id) => {
+      if (window.matchMedia('(max-width: 600px)').matches) setInspectedId(id);
+      else onChoose?.(id);
+    };
   }, [view, deskInset, rotationRequest, stationAction, caseNumber, stage, moment, onChoose]);
+
+  useEffect(() => setInspectedId(undefined), [caseNumber, view]);
 
   useEffect(() => {
     const element = host.current;
@@ -72,10 +79,26 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
         {hoveredProduct && view === 'picking' && ready && (
           <div className="world-stock-tooltip" aria-hidden="true">
             <strong>{hoveredProduct.name}</strong>
-            <span>{hoveredProduct.selected ? 'Return to shelf' : 'Add to the tray'}</span>
+            {hoveredProduct.strength && !hoveredProduct.name.includes(hoveredProduct.strength) && <span>{hoveredProduct.strength}</span>}
+            <span>{hoveredProduct.selected ? 'Click to return to shelf' : 'Click to add to basket'}</span>
           </div>
         )}
       </div>
+      {ready && inspectedProduct && (
+        <section className="world-carton-inspection" aria-label="Carton details">
+          <button type="button" className="world-carton-close" onClick={() => setInspectedId(undefined)} aria-label="Close carton details">
+            <X size={18} aria-hidden="true" />
+          </button>
+          <p><strong>{inspectedProduct.name}</strong></p>
+          {inspectedProduct.strength && !inspectedProduct.name.includes(inspectedProduct.strength) && <p>{inspectedProduct.strength}</p>}
+          <button type="button" className="shift-button" onClick={() => {
+            onChoose?.(inspectedProduct.id);
+            setInspectedId(undefined);
+          }}>
+            {inspectedProduct.selected ? 'Return to shelf' : 'Add to basket'}
+          </button>
+        </section>
+      )}
       {stage && ready && markerKeys.map((key) => (
         <button
           type="button"
@@ -96,7 +119,7 @@ export default function PharmacyViewport({ stage, view = stage ?? 'overview', de
           <ArrowRight size={15} aria-hidden="true" />
         </button>
       ))}
-      {stage && !previewing && moment?.caption && (
+      {stage && view !== 'picking' && !previewing && moment?.caption && (
         <div className="world-dialogue" aria-hidden="true" key={moment.caption}>
           <p><strong>{moment.speaker}</strong></p>
           <p>{moment.caption}</p>

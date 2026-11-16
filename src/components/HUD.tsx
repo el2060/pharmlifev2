@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, House, Map, PanelRightClose, RotateCcw, RotateCw } from 'lucide-react';
+import { ArrowDown, ArrowRight, House, Map, RotateCcw, RotateCw, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { getPharmacyQueueNumber, useShiftScene } from '../scene/shiftScene';
@@ -25,17 +25,23 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
   const [rotationRequest, setRotationRequest] = useState(0);
   const deskRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLElement>(null);
+  const openTaskButton = useRef<HTMLButtonElement>(null);
+  const restoreSceneFocus = useRef(false);
   const reopenTask = useRef<'desk' | 'scene' | null>(null);
   const step = `${currentLevel}-${currentStage}`;
   const previousStep = useRef(step);
   const currentNavigation = navigation?.step === step ? navigation : undefined;
   const view = currentNavigation?.view ?? currentStage;
-  const taskOpen = currentNavigation?.taskOpen ?? true;
+  const taskOpen = currentNavigation?.taskOpen ?? (currentStage === 'typing' || currentStage === 'picking');
+  const pickingLayout = currentStage === 'picking' && view === 'picking';
   const previewing = view !== currentStage;
   const scene = useShiftScene();
   const moment = scene?.moment?.stage === currentStage ? scene.moment : undefined;
   const queueNumber = getPharmacyQueueNumber(currentLevel);
   const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
+  const taskLabel = moment?.actionLabel ?? (currentStage === 'receiving' ? 'Open patient file' : 'Open workstation');
+  const shelfProducts = pickingLayout ? moment?.products : undefined;
+  const basketCount = shelfProducts?.filter(({ selected }) => selected).length ?? 0;
 
   useEffect(() => {
     sceneRef.current?.querySelector('h1')?.focus({ preventScroll: true });
@@ -45,7 +51,7 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
     const desk = deskRef.current;
     if (!desk) return;
     const desktop = window.matchMedia('(min-width: 851px)');
-    const measure = () => setDeskInset(taskOpen && desktop.matches ? desk.clientWidth + 20 : 0);
+    const measure = () => setDeskInset(taskOpen && !pickingLayout && desktop.matches ? desk.clientWidth + 20 : 0);
     const observer = new ResizeObserver(measure);
     observer.observe(desk);
     desktop.addEventListener('change', measure);
@@ -54,13 +60,19 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
       observer.disconnect();
       desktop.removeEventListener('change', measure);
     };
-  }, [taskOpen]);
+  }, [pickingLayout, taskOpen]);
 
   useEffect(() => {
+    if (!taskOpen && restoreSceneFocus.current) {
+      restoreSceneFocus.current = false;
+      sceneRef.current?.scrollIntoView({ block: 'nearest' });
+      const marker = sceneRef.current?.querySelector<HTMLElement>('.world-marker');
+      (marker ?? openTaskButton.current)?.focus({ preventScroll: true });
+    }
     if (!taskOpen || !reopenTask.current) return;
     const task = document.getElementById('workstation');
     const control = reopenTask.current === 'scene'
-      ? task?.querySelector<HTMLElement>('[data-scene-task], .med-carton')
+      ? task?.querySelector<HTMLElement>('[data-scene-task]')
       : null;
     reopenTask.current = null;
     (control ?? task)?.focus();
@@ -96,11 +108,17 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
 
   function handleSceneAction() {
     if (!taskOpen) {
-      reopenTask.current = 'scene';
+      if (moment?.canActFromScene) scene?.action.current?.();
+      else reopenTask.current = 'scene';
       showTask();
       return;
     }
     if (moment?.canActFromScene) scene?.action.current?.();
+  }
+
+  function closeTask() {
+    restoreSceneFocus.current = true;
+    setNavigation({ step, view: currentStage, taskOpen: false });
   }
 
   return (
@@ -122,8 +140,8 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
         <StationRoute activeStage={currentStage} viewedStage={view === 'overview' ? undefined : view} onVisit={visitStation} />
       </header>
 
-      <div className="shift-layout" data-task-open={taskOpen}>
-        <section ref={sceneRef} className="play-scene" aria-label="Pharmacy scene">
+      <div className="shift-layout" data-task-open={taskOpen} data-picking={pickingLayout}>
+        <section ref={sceneRef} id="pharmacy-scene" tabIndex={-1} className="play-scene" aria-label="Pharmacy scene">
           <Suspense fallback={<div className="pharmacy-world"><p className="world-status" role="status">Opening the pharmacy…</p></div>}>
             <PharmacyViewport
               stage={currentStage}
@@ -133,7 +151,7 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
               caseNumber={currentLevel}
               onTask={handleSceneAction}
               showTaskMarker={!taskOpen || moment?.canActFromScene === true}
-              taskMarkerLabel={!taskOpen && moment?.canActFromScene ? 'Open active task' : moment?.actionLabel}
+              taskMarkerLabel={taskLabel}
               onVisit={visitStation}
               moment={moment}
               onChoose={(id) => scene?.choose.current?.(id)}
@@ -167,19 +185,24 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
             <button type="button" className="world-control scene-rotate" onClick={() => setRotationRequest(count => count + 1)} aria-label="Rotate 3D view">
               <RotateCw size={17} aria-hidden="true" /> Rotate
             </button>
-            {taskOpen ? (
-              <button type="button" className="world-control scene-hide-task" onClick={() => setNavigation({ step, view: currentStage, taskOpen: false })}>
-                <PanelRightClose size={17} aria-hidden="true" /> Hide task
-              </button>
-            ) : (
-              <button type="button" className="world-control scene-show-task" onClick={() => showTask(true)}>
-                <RotateCcw size={16} aria-hidden="true" /> {previewing ? 'Return to active task' : 'Show task'}
+            {!taskOpen && (
+              <button ref={openTaskButton} type="button" className={`world-control ${previewing ? '' : 'scene-task-fallback'}`} onClick={previewing ? () => showTask(true) : handleSceneAction}>
+                {previewing ? 'Return to active task' : taskLabel} <ArrowRight size={15} aria-hidden="true" />
               </button>
             )}
           </div>
-          {taskOpen && <a className="mobile-task-link" href="#workstation">Go to task <ArrowDown size={14} aria-hidden="true" /></a>}
+          {taskOpen && (
+            <a className="mobile-task-link" href={shelfProducts?.length ? '#picking-basket' : '#workstation'}>
+              {shelfProducts?.length ? `Basket (${basketCount})` : 'Go to task'} <ArrowDown size={14} aria-hidden="true" />
+            </a>
+          )}
         </section>
         <div ref={deskRef} className="shift-task" hidden={!taskOpen}>
+          {!pickingLayout && taskOpen && (
+            <div className="task-dock-controls">
+              <button type="button" onClick={closeTask}><X size={16} aria-hidden="true" /> Close task</button>
+            </div>
+          )}
           {children}
         </div>
       </div>

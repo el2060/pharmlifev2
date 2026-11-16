@@ -67,11 +67,15 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     if (overview) {
       goalOffset.set(8.8, 12, 17.2);
       desiredZoom = Math.max(6.95, 9.4 * height / width);
+    } else if (state.view === 'picking') {
+      goalOffset.set(1.1, 2.7, 9.8);
+      desiredZoom = Math.max(stationViews.picking.zoom, 3.18 * height / viewWidth);
     } else {
-      goalOffset.set(state.view === 'picking' ? 4.4 : 4.6, state.view === 'dispensing' ? 4.3 : 5.1, 9.8);
+      goalOffset.set(4.6, state.view === 'dispensing' ? 4.3 : 5.1, 9.8);
       desiredZoom = Math.max(preset!.zoom, 3.2 * height / viewWidth);
     }
-    goalOffset.applyAxisAngle(THREE.Object3D.DEFAULT_UP, angle);
+    const viewAngle = state.view === 'picking' ? angle * 0.46 : angle;
+    goalOffset.applyAxisAngle(THREE.Object3D.DEFAULT_UP, viewAngle);
   }
 
   function projectMarkers() {
@@ -185,6 +189,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   function hover(product: SceneProduct | undefined) {
     if (lastProduct === product) return;
     lastProduct = product;
+    world.setHoveredProduct(product?.id);
     onHoverProduct(product);
   }
 

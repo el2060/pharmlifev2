@@ -94,10 +94,10 @@ function App() {
     }
   }, [currentLevel, currentScreen, currentYear, setPrescription]);
 
-  // Scroll to top when stage changes
+  // The shift HUD handles scrolling between stations.
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentStage, currentLevel, currentScreen, shiftRevision]);
+  }, [currentScreen, shiftRevision]);
 
   const renderStage = () => {
     switch (currentStage) {

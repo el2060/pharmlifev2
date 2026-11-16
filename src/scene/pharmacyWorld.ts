@@ -12,7 +12,7 @@ const colors = {
 export const stationViews = {
   receiving: { target: [-4.65, 1.35, 1.23], marker: [-4.4, 1.42, 1.55], zoom: 3.7 },
   typing: { target: [-1.3, 1.5, -2.3], marker: [-0.55, 1.53, -1.95], zoom: 3.6 },
-  picking: { target: [3.6, 1.6, -2.6], marker: [3.35, 2.1, -2.25], zoom: 3.6 },
+  picking: { target: [3.65, 2.03, -3.30], marker: [3.35, 2.1, -2.25], zoom: 2.65 },
   dispensing: { target: [4.63, 1.4, 1.53], marker: [6.23, 2.18, 1.24], zoom: 3.5 },
 } satisfies Record<GameStage, { target: Point; marker: Point; zoom: number }>;
 
@@ -379,6 +379,7 @@ export function buildPharmacy(scene: THREE.Scene) {
 
   const inventory = group(stock, [0, 0, 0]);
   let visibleProducts: SceneProduct[] = [];
+  let hoveredProductId: string | undefined;
   let stockIds = '';
   let cartons: { model: THREE.Group; band: THREE.Mesh }[] = [];
 
@@ -425,13 +426,17 @@ export function buildPharmacy(scene: THREE.Scene) {
     return undefined;
   }
 
+  function setHoveredProduct(id?: string) {
+    hoveredProductId = id;
+  }
+
 
   type Person = ReturnType<typeof person>;
   type Waypoint = [x: number, z: number];
   const intakeSpot: Waypoint = [-4.95, 2.43];
   const waitSpot: Waypoint = [-1.2, 3.18];
   const pickupSpot: Waypoint = [4.62, 2.38];
-  const staffRoute: Waypoint[] = [[-0.25, -1.38], [0.89, -1.45], [1.05, -2.51], [2.12, -2.51]];
+  const staffRoute: Waypoint[] = [[-0.25, -1.38], [0.89, -1.45], [1.05, -2.51]];
   const returnToPrinter = staffRoute.slice().reverse();
   const printerSpot = [staffRoute[0]];
   const patientRoutes: Record<GameStage, Waypoint[]> = {
@@ -524,6 +529,14 @@ export function buildPharmacy(scene: THREE.Scene) {
 
     inventory.visible = stage === 'picking' && visibleProducts.length > 0;
     stockDecor.visible = !inventory.visible;
+    if (inventory.visible) {
+      cartons.forEach(({ model }, index) => {
+        const product = visibleProducts[index];
+        const depth = product.selected ? 0.15 : 0.02;
+        const target = depth + (product.id === hoveredProductId ? 0.09 : 0);
+        model.position.z = still ? target : THREE.MathUtils.lerp(model.position.z, target, 0.32);
+      });
+    }
     const client = patients[(Math.max(1, caseNumber) - 1) % patients.length];
     patients.forEach(patient => { patient.actor.visible = false; });
     const currentMoment = moment?.stage === activeStage ? moment : undefined;
@@ -658,5 +671,5 @@ export function buildPharmacy(scene: THREE.Scene) {
     });
   }
 
-  return { animate, dispose, setProducts, pickProduct, hitsStationAction };
+  return { animate, dispose, setProducts, setHoveredProduct, pickProduct, hitsStationAction };
 }
