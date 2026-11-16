@@ -30,7 +30,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: clamp(540px, 75svh, 860px);
+  min-height: clamp(520px, 70svh, 790px);
 }
 .lobby-scene .pharmacy-art { animation: lobby-arrive 1.35s cubic-bezier(.22, .6, .36, 1) both; }
 @keyframes lobby-arrive {
@@ -57,14 +57,14 @@
 .lobby-content h1 {
   font-family: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
   font-weight: 800;
-  font-size: clamp(4.9rem, 10vw, 10.5rem);
-  line-height: .79;
-  letter-spacing: -.078em;
-  margin: .15em 0 .16em -.04em;
+  font-size: clamp(2.8rem, 5vw, 5.75rem);
+  line-height: 1;
+  letter-spacing: -.055em;
+  margin: .24em 0 .18em;
 }
 .lobby-content h1 span { color: var(--action); }
-.lobby-subtitle { font-size: clamp(1.2rem, 2.45vw, 2rem); font-weight: 650; letter-spacing: -.04em; }
-.lobby-description { max-width: 32ch; color: #e6eee7; margin-top: .75rem; line-height: 1.55; font-size: .97rem; }
+.lobby-subtitle { font-size: clamp(1.35rem, 2.05vw, 1.95rem); font-weight: 650; letter-spacing: -.04em; }
+.lobby-description { max-width: 35ch; color: #e6eee7; margin-top: .75rem; line-height: 1.55; font-size: clamp(1.12rem, 1.4vw, 1.3rem); }
 .lobby-actions { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; align-items: center; margin-top: 1.5rem; }
 .shift-button, .lobby-link, .shift-home, .workstation-jump {
   display: inline-flex;
@@ -76,7 +76,7 @@
 }
 .shift-button { background: var(--action); color: #202c23; border-radius: .35rem; padding: .86rem 1rem; transition: background .18s, transform .18s; }
 .shift-button:hover { background: #ffe4ae; transform: translateY(-2px); }
-.lobby-link { color: white; font-size: .86rem; }
+.lobby-link { color: white; font-size: 1rem; }
 .lobby-link:hover, .workstation-jump:hover { text-decoration: underline; text-underline-offset: .28em; }
 .lobby-scene :focus-visible, .selection-scene :focus-visible, .workstation-scene :focus-visible { outline-color: #fff3cd; }
 .lobby-workflow {
@@ -87,8 +87,8 @@
   padding-block: 1.45rem;
   background: var(--paper);
 }
-.lobby-workflow h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: -.035em; }
-.lobby-workflow p { color: var(--muted); font-size: .84rem; margin-top: .2rem; }
+.lobby-workflow h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.035em; }
+.lobby-workflow p { color: var(--muted); font-size: 1.03rem; margin-top: .2rem; }
 .station-route { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; }
 .station-route li {
   display: flex;
@@ -98,12 +98,12 @@
   min-width: 0;
   border-inline-start: 1px solid var(--line);
 }
-.station-route strong { display: block; font-size: .87rem; line-height: 1.2; }
-.station-route small { display: block; margin-top: .24rem; font-size: .72rem; line-height: 1.15; color: var(--muted); }
+.station-route strong { display: block; font-size: 1.06rem; line-height: 1.2; }
+.station-route small { display: block; margin-top: .24rem; font-size: .91rem; line-height: 1.25; color: var(--muted); }
 .station-route-icon { display: grid; place-items: center; width: 2rem; height: 2rem; flex: none; color: #326252; background: #e5eee4; border-radius: .35rem; }
 .station-route li[aria-current='step'] { background: #e2eee4; box-shadow: inset 0 -3px #2d6b58; }
 .station-route li[aria-current='step'] .station-route-icon, .station-done .station-route-icon { background: #2f624f; color: white; }
-.lobby-footer { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; padding-block: .75rem; color: var(--muted); font-size: .74rem; border-top: 1px solid var(--line); }
+.lobby-footer { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; padding-block: .75rem; color: var(--muted); font-size: .91rem; border-top: 1px solid var(--line); }
 .lobby-footer div, .lobby-footer button { display: flex; align-items: center; gap: .4rem; }
 .lobby-footer div { flex-wrap: wrap; gap: 1rem; }
 .lobby-footer button { min-height: 32px; color: var(--ink); }
@@ -144,14 +144,14 @@
 .shift-rank { border-left: 1px solid #ffffff40; padding-left: 1rem; font-size: .73rem; color: #d5e4d9; }
 .shift-totals { margin-left: auto; display: flex; gap: .9rem 1.5rem; }
 .shift-totals div { display: flex; align-items: baseline; gap: .4rem; }
-.shift-totals dt { font-size: .71rem; color: #d5e4d9; white-space: nowrap; }
-.shift-totals dd { font-size: .9rem; color: var(--action); font-weight: 800; font-variant-numeric: tabular-nums; }
+.shift-totals dt { font-size: .84rem; color: #d5e4d9; white-space: nowrap; }
+.shift-totals dd { font-size: 1rem; color: var(--action); font-weight: 800; font-variant-numeric: tabular-nums; }
 .workstation-scene { display: flex; justify-content: space-between; align-items: flex-end; min-height: clamp(180px, 25vh, 300px); padding: 1.4rem clamp(.95rem, 4vw, 4rem); gap: .8rem; }
 .workstation-scene .pharmacy-art { background-position: 58% 52%; }
 .workstation-scene::after { background: linear-gradient(90deg, #102b24f5, #102b24b5 31%, #102b2424 100%); }
 .scene-dispensing .pharmacy-art { background-position: right 57%; }
 .workstation-title h1 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(1.95rem, 5vw, 4.3rem); font-weight: 800; letter-spacing: -.045em; line-height: .98; margin: .4rem 0; }
-.workstation-patient { font-weight: 650; color: #e6efe6; font-size: .9rem; }
+.workstation-patient { font-weight: 650; color: #e6efe6; font-size: 1.06rem; }
 .workstation-scene .workstation-jump { padding: .55rem .75rem; border: 1px solid #ffffff70; border-radius: .35rem; background: #102b24df; color: white; font-size: .78rem; white-space: nowrap; }
 .shift-hud .station-route { max-width: 1420px; margin: auto; }
 .shift-hud .station-route li { padding: .7rem clamp(.45rem, 2vw, 1.6rem); }
@@ -662,9 +662,9 @@
 }
 .shift-task[hidden] { display: none; }
 .shift-modal :is(p, li) { font-size: max(1rem, 1em); }
-.shift-task .text-xs { font-size: .88rem; line-height: 1.4; }
-.shift-task .text-sm { font-size: 1rem; line-height: 1.45; }
-.shift-task .text-base { font-size: 1.08rem; line-height: 1.45; }
+.shift-task .text-xs { font-size: .95rem; line-height: 1.4; }
+.shift-task .text-sm { font-size: 1.06rem; line-height: 1.45; }
+.shift-task .text-base { font-size: 1.12rem; line-height: 1.45; }
 .shift-task :is(.receiving-rx dt, .patient-id dt, .receiving-rx-medications p, .receiving-actions small) { font-size: .94rem; }
 .shift-task :is(.receiving-rx dd, .patient-id dd, .receiving-actions strong) { font-size: 1.05rem; }
 .shift-task :is(.conversation-label, .conversation-progress) { font-size: .95rem; }
@@ -683,7 +683,7 @@
 }
 .shift-game .station-route button:hover { background: #deebe0; }
 .shift-game .station-route button:focus-visible { outline-offset: -4px; }
-.shift-game .station-route strong { font-size: .98rem; }
+.shift-game .station-route strong { font-size: 1.07rem; }
 .shift-game .station-route li[data-preview='true'] { box-shadow: inset 0 -3px #ae7840; background: #f5ead4; }
 .shift-game .station-route li[data-preview='true'] small { color: #815627; font-weight: 800; }
 
@@ -755,10 +755,53 @@
 @media (max-width: 600px) {
   .shift-game .station-route li { padding: 0; }
   .shift-game .station-route button { justify-content: start; min-height: 43px; padding: .3rem .55rem; }
-  .shift-game .station-route strong { font-size: .9rem; }
+  .shift-game .station-route strong { font-size: .96rem; }
   .world-dialogue { font-size: .94rem; }
   .world-control { font-size: .81rem; }
   .world-marker { font-size: .9rem; }
   .shift-layout .play-scene { min-height: 340px; height: clamp(340px, 51svh, 470px); }
   .shift-layout[data-task-open='false'] .play-scene { height: clamp(380px, 68svh, 620px); }
+}
+
+.lobby-content .scene-kicker { font-size: .86rem; letter-spacing: .12em; }
+.lobby-actions .shift-button { font-size: 1.1rem; }
+.shift-restart, .shift-summary-back {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: .45rem;
+  min-height: 44px;
+  font-size: .96rem;
+  font-weight: 750;
+}
+.shift-restart { flex: none; color: #e4f0e8; white-space: nowrap; }
+.shift-restart:hover, .shift-restart:focus-visible { color: var(--action); }
+.shift-restart:focus-visible { outline-color: var(--action); }
+.shift-summary-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .85rem 1.3rem; }
+.shift-summary-back { color: #245747; }
+.shift-summary-back:hover { text-decoration: underline; }
+.feedback-restart {
+  display: block;
+  margin: .7rem auto -.3rem;
+  min-height: 44px;
+  padding: .3rem .6rem;
+  color: #425e52;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+}
+
+@media (max-width: 600px) {
+  .lobby-header { font-size: .88rem; }
+  .lobby-scene:has([data-renderer='webgl']) { min-height: 670px; }
+  .lobby-content .scene-kicker { font-size: .78rem; }
+  .station-route small { font-size: .82rem; }
+  .shift-game .shift-bar { gap: .6rem; }
+  .shift-restart-word { display: none; }
+  .shift-totals { gap: .55rem; }
+  .shift-totals dt { font-size: .73rem; }
+  .shift-totals dd { font-size: .95rem; }
+}
+@media (max-width: 360px) {
+  .shift-game .shift-bar { flex-wrap: wrap; gap: .12rem .55rem; }
 }

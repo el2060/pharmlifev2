@@ -1,13 +1,14 @@
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { PharmacyArt } from '../components/PharmacyScene';
 
 interface SuccessScreenProps {
   onBackToHome: () => void;
+  onPlayAgain: () => void;
 }
 
-export function SuccessScreen({ onBackToHome }: SuccessScreenProps) {
+export function SuccessScreen({ onBackToHome, onPlayAgain }: SuccessScreenProps) {
   const { currentYear, score, rxPoints, playerLevel } = useGameStore();
 
   return (
@@ -29,9 +30,14 @@ export function SuccessScreen({ onBackToHome }: SuccessScreenProps) {
             <div><dt>Final case score</dt><dd>{score}</dd></div>
             <div><dt>Rx points</dt><dd>{rxPoints}</dd></div>
           </dl>
-          <button type="button" className="shift-button" onClick={onBackToHome}>
-            <ArrowLeft size={18} aria-hidden="true" /> Back to the lobby
-          </button>
+          <div className="shift-summary-actions">
+            <button type="button" className="shift-button" onClick={onPlayAgain}>
+              <RotateCcw size={18} aria-hidden="true" /> Play again
+            </button>
+            <button type="button" className="shift-summary-back" onClick={onBackToHome}>
+              <ArrowLeft size={18} aria-hidden="true" /> Back to the lobby
+            </button>
+          </div>
         </div>
       </motion.section>
     </main>

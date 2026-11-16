@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -11,12 +11,17 @@ interface ModalProps {
   showCloseButton?: boolean;
 }
 
+export const ShiftRestartContext = createContext<{ requestRestart: () => void; restartOpen: boolean } | null>(null);
+
 export function Modal({ isOpen, onClose, title, children, showCloseButton = true }: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const restart = useContext(ShiftRestartContext);
+  const caseFeedback = showCloseButton ? null : restart;
+  const visible = isOpen && !caseFeedback?.restartOpen;
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!visible) return;
     const previouslyFocused = document.activeElement;
     dialogRef.current?.focus();
 
@@ -25,7 +30,7 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
         previouslyFocused.focus();
       }
     };
-  }, [isOpen]);
+  }, [visible]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape' && showCloseButton) {
@@ -51,7 +56,7 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
 
   return createPortal(
     <AnimatePresence>
-      {isOpen && (
+      {visible && (
         <motion.div
           className="shift-modal-overlay"
           initial={{ opacity: 0 }}
@@ -80,6 +85,11 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
             )}
             {title && <h2 className="shift-modal-title" id={titleId}>{title}</h2>}
             {children}
+            {caseFeedback && (
+              <button type="button" className="feedback-restart" onClick={caseFeedback.requestRestart}>
+                Restart shift
+              </button>
+            )}
           </motion.div>
         </motion.div>
       )}

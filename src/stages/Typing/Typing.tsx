@@ -1,5 +1,5 @@
 import { useSceneMoment } from '../../scene/shiftScene';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Printer, CheckCircle, XCircle } from 'lucide-react';
 import { Modal } from '../../components/Modal';
@@ -20,6 +20,9 @@ export const Typing: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+  const printTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => () => clearTimeout(printTimer.current), []);
 
   // New state to track attempts and help stuck users
   const [attempts, setAttempts] = useState(0);
@@ -30,12 +33,12 @@ export const Typing: React.FC = () => {
 
   // Scroll to top when moving to next medication
   useEffect(() => {
-    // Small timeout to ensure DOM update has processed
-    setTimeout(() => {
+    const scrollTimer = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }, 10);
+    return () => clearTimeout(scrollTimer);
   }, [currentMedIndex]);
 
   const canPrint = Boolean(labelData.quantity && labelData.dosageForm && labelData.frequency);
@@ -100,9 +103,11 @@ export const Typing: React.FC = () => {
   };
 
   const handlePrintLabel = () => {
+    if (printTimer.current !== undefined) return;
     setIsPrinting(true);
 
-    setTimeout(() => {
+    printTimer.current = setTimeout(() => {
+      printTimer.current = undefined;
       // Validate label
       const expectedAbbrs = currentMed.frequency.split('or').map((part) => part.trim());
       const allowedFrequencies = frequencyOptions

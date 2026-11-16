@@ -30,7 +30,7 @@ export function MainMenu({ onStartGame, onShowAbout }: MainMenuProps) {
           transition={{ duration: 0.55 }}
         >
           <p className="scene-kicker"><MapPin size={15} aria-hidden="true" /> Polyclinic pharmacy · Singapore</p>
-          <h1 id="game-title">Pharm<br />Life<span>.</span></h1>
+          <h1 id="game-title">Pharm Life<span>.</span></h1>
           <p className="lobby-subtitle">The Prescription Quest</p>
           <p className="lobby-description">Step behind the counter and follow a prescription from intake to patient counselling.</p>
           <div className="lobby-actions">

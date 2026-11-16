@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { MainMenu } from './screens/MainMenu';
 import { YearSelection } from './screens/YearSelection';
 import { About } from './screens/About';
 import { SuccessScreen } from './screens/SuccessScreen';
 import { HUD } from './components/HUD';
+import { Modal, ShiftRestartContext } from './components/Modal';
+import { Button } from './components/Button';
 import { ShiftSceneProvider } from './scene/shiftScene';
 import { Receiving } from './stages/Receiving/Receiving';
 import { Typing } from './stages/Typing/Typing';
 import { Picking } from './stages/Picking/Picking';
 import { Dispensing } from './stages/Dispensing/Dispensing';
-import { useGameStore } from './store/gameStore';
+import { useGameStore, type ShiftStartingStats } from './store/gameStore';
 import { levels } from './data/prescriptions';
 import { YearLevel } from './types/game.types';
 
@@ -29,6 +31,14 @@ const getLevelData = (year: YearLevel, chapterNumber: number) => {
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
+  const [showRestart, setShowRestart] = useState(false);
+  const [shiftRevision, setShiftRevision] = useState(0);
+  const startingStats = useRef<ShiftStartingStats>({ rxPoints: 0, playerLevel: 'Pharmacy Trainee' });
+
+  function rememberStartingStats() {
+    const { rxPoints, playerLevel } = useGameStore.getState();
+    startingStats.current = { rxPoints, playerLevel };
+  }
   const {
     currentYear,
     currentLevel,
@@ -36,6 +46,7 @@ function App() {
     setYear,
     setPrescription,
     resetLevel,
+    restartShift,
     isLevelComplete
   } = useGameStore();
 
@@ -62,10 +73,21 @@ function App() {
     // Load first level for selected year (Chapter 1)
     const levelData = getLevelData(year, 1);
     if (levelData) {
+      rememberStartingStats();
       setPrescription(levelData.prescription);
       setCurrentScreen('game');
     }
   };
+
+  function handleRestart() {
+    const firstCase = getLevelData(currentYear, 1);
+    if (!firstCase) return;
+
+    if (isLevelComplete) rememberStartingStats();
+    setShowRestart(false);
+    restartShift(firstCase.prescription, startingStats.current);
+    setShiftRevision((revision) => revision + 1);
+  }
 
   // Load prescription when currentLevel changes
   React.useEffect(() => {
@@ -80,7 +102,7 @@ function App() {
   // Scroll to top when stage changes
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentStage, currentLevel, currentScreen]);
+  }, [currentStage, currentLevel, currentScreen, shiftRevision]);
 
   const renderStage = () => {
     switch (currentStage) {
@@ -147,19 +169,28 @@ function App() {
               className="shift-game"
             >
               {isLevelComplete ? (
-                <SuccessScreen onBackToHome={handleBackToHome} />
+                <SuccessScreen onBackToHome={handleBackToHome} onPlayAgain={handleRestart} />
               ) : (
-                <>
-                  <ShiftSceneProvider>
-                    <HUD onBackToHome={handleBackToHome} caseCount={levels.filter(({ year }) => year === currentYear).length}>
+                <ShiftRestartContext.Provider value={{ requestRestart: () => setShowRestart(true), restartOpen: showRestart }}>
+                  <ShiftSceneProvider key={shiftRevision}>
+                    <HUD onBackToHome={handleBackToHome} onRestart={() => setShowRestart(true)} caseCount={levels.filter(({ year }) => year === currentYear).length}>
                       <main id="workstation" tabIndex={-1} className={`workstation ${currentStage}-workstation`}>{renderStage()}</main>
                     </HUD>
                   </ShiftSceneProvider>
-                </>
+                </ShiftRestartContext.Provider>
               )}
             </motion.div>
           )}
         </AnimatePresence>
+        <Modal isOpen={showRestart} onClose={() => setShowRestart(false)} title="Restart this shift?">
+          <div className="space-y-4">
+            <p>You’ll return to the first patient. Your case progress and any Rx points earned during this shift will be reset.</p>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="danger" onClick={handleRestart}>Restart shift</Button>
+              <Button variant="secondary" onClick={() => setShowRestart(false)}>Keep playing</Button>
+            </div>
+          </div>
+        </Modal>
 
 
       </div>

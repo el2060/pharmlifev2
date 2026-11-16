@@ -12,11 +12,12 @@ const PharmacyViewport = lazy(() => import('../scene/PharmacyViewport'));
 
 interface HUDProps {
   onBackToHome: () => void;
+  onRestart: () => void;
   caseCount: number;
   children: ReactNode;
 }
 
-export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
+export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) {
   const { currentStage, currentLevel, currentYear, currentPrescription, score, rxPoints, playerLevel } = useGameStore();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [navigation, setNavigation] = useState<{ step: string; view: PharmacyView; taskOpen: boolean }>();
@@ -98,6 +99,9 @@ export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
             <div><dt>Case score</dt><dd>{score}</dd></div>
             <div><dt>Rx points</dt><dd>{rxPoints}</dd></div>
           </dl>
+          <button type="button" className="shift-restart" aria-label="Restart shift" onClick={onRestart}>
+            <RotateCcw size={17} aria-hidden="true" /> <span>Restart<span className="shift-restart-word"> shift</span></span>
+          </button>
         </div>
         <StationRoute activeStage={currentStage} viewedStage={view === 'overview' ? undefined : view} onVisit={visitStation} />
       </header>

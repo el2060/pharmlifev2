@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { GameState, GameStage, YearLevel, Prescription } from '../types/game.types';
 import { levels } from '../data/prescriptions';
 
+export type ShiftStartingStats = Pick<GameState, 'rxPoints' | 'playerLevel'>;
+
 interface GameStore extends GameState {
   // Actions
   setYear: (year: YearLevel) => void;
@@ -13,6 +15,7 @@ interface GameStore extends GameState {
   nextStage: () => void;
   completeLevel: () => void;
   resetLevel: () => void;
+  restartShift: (prescription: Prescription, startingStats: ShiftStartingStats) => void;
   setAllergyConflictDetected: (detected: boolean) => void;
   addSelectedMedication: (medicationId: string) => void;
   clearSelectedMedications: () => void;
@@ -47,6 +50,18 @@ const getNextLevel = (year: YearLevel, currentLevel: number): number | null => {
 };
 
 const stageOrder: GameStage[] = ['receiving', 'typing', 'picking', 'dispensing'];
+
+function resetShiftProgress(): Pick<GameState, 'currentStage' | 'currentLevel' | 'score' | 'selectedMedications' | 'allergyConflictDetected' | 'isLevelComplete' | 'stageProgress'> {
+  return {
+    currentStage: 'receiving',
+    currentLevel: 1,
+    score: 0,
+    selectedMedications: [],
+    allergyConflictDetected: false,
+    isLevelComplete: false,
+    stageProgress: { receiving: false, typing: false, picking: false, dispensing: false },
+  };
+}
 
 export const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
@@ -149,21 +164,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  resetLevel: () =>
-    set({
-      currentStage: 'receiving',
-      currentLevel: 1,
-      score: 0,
-      selectedMedications: [],
-      allergyConflictDetected: false,
-      isLevelComplete: false,
-      stageProgress: {
-        receiving: false,
-        typing: false,
-        picking: false,
-        dispensing: false,
-      },
-    }),
+  resetLevel: () => set(resetShiftProgress()),
+
+  restartShift: (prescription, startingStats) =>
+    set({ ...resetShiftProgress(), ...startingStats, currentPrescription: prescription }),
 
   setAllergyConflictDetected: (detected) => set({ allergyConflictDetected: detected }),
 
