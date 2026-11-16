@@ -1,8 +1,9 @@
-import { lazy, Suspense, useState, type ReactNode } from 'react';
-import { ArrowDown, House } from 'lucide-react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { ArrowDown, House, Map, PanelRightClose, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { getPharmacyQueueNumber, useShiftScene } from '../scene/shiftScene';
+import type { PharmacyView } from '../scene/pharmacyWorld';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { StationRoute, stations } from './PharmacyScene';
@@ -18,13 +19,63 @@ interface HUDProps {
 export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
   const { currentStage, currentLevel, currentYear, currentPrescription, score, rxPoints, playerLevel } = useGameStore();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [navigation, setNavigation] = useState<{ step: string; view: PharmacyView; taskOpen: boolean }>();
+  const [deskInset, setDeskInset] = useState(0);
+  const deskRef = useRef<HTMLDivElement>(null);
+  const reopenTask = useRef(false);
+  const step = `${currentLevel}-${currentStage}`;
+  const currentNavigation = navigation?.step === step ? navigation : undefined;
+  const view = currentNavigation?.view ?? currentStage;
+  const taskOpen = currentNavigation?.taskOpen ?? true;
+  const previewing = view !== currentStage;
   const scene = useShiftScene();
   const moment = scene?.moment?.stage === currentStage ? scene.moment : undefined;
-  const station = stations[currentStage];
   const queueNumber = getPharmacyQueueNumber(currentLevel);
   const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
 
+  useEffect(() => {
+    const desk = deskRef.current;
+    if (!desk) return;
+    const desktop = window.matchMedia('(min-width: 851px)');
+    const measure = () => setDeskInset(taskOpen && desktop.matches ? desk.clientWidth + 20 : 0);
+    const observer = new ResizeObserver(measure);
+    observer.observe(desk);
+    desktop.addEventListener('change', measure);
+    measure();
+    return () => {
+      observer.disconnect();
+      desktop.removeEventListener('change', measure);
+    };
+  }, [taskOpen]);
+
+  useEffect(() => {
+    if (!taskOpen || !reopenTask.current) return;
+    reopenTask.current = false;
+    document.getElementById('workstation')?.focus();
+  }, [taskOpen]);
+
+  useEffect(() => {
+    if (deskRef.current) deskRef.current.scrollTop = 0;
+  }, [step]);
+
+  function showTask(focus = false) {
+    if (focus) {
+      if (taskOpen) document.getElementById('workstation')?.focus();
+      else reopenTask.current = true;
+    }
+    setNavigation({ step, view: currentStage, taskOpen: true });
+  }
+
+  function visitStation(target: PharmacyView) {
+    if (target === currentStage) showTask(true);
+    else setNavigation({ step, view: target, taskOpen: false });
+  }
+
   function handleSceneAction() {
+    if (!taskOpen) {
+      showTask(true);
+      return;
+    }
     const action = scene?.action.current;
     if (action) {
       action();
@@ -48,16 +99,25 @@ export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
             <div><dt>Rx points</dt><dd>{rxPoints}</dd></div>
           </dl>
         </div>
-        <StationRoute activeStage={currentStage} />
+        <StationRoute activeStage={currentStage} viewedStage={view === 'overview' ? undefined : view} onVisit={visitStation} />
       </header>
 
-      <div className="shift-layout">
-        <section className={`play-scene scene-${currentStage}`} aria-label="Pharmacy scene">
-          <Suspense fallback={<div className="pharmacy-world" data-renderer="image"><div className="pharmacy-world-fallback" /></div>}>
-            <PharmacyViewport stage={currentStage} caseNumber={currentLevel} onTask={handleSceneAction} moment={moment} onChoose={(id) => scene?.choose.current?.(id)} />
+      <div className="shift-layout" data-task-open={taskOpen}>
+        <section className="play-scene" aria-label="Pharmacy scene">
+          <Suspense fallback={<div className="pharmacy-world"><p className="world-status" role="status">Opening the pharmacy…</p></div>}>
+            <PharmacyViewport
+              stage={currentStage}
+              view={view}
+              deskInset={deskInset}
+              caseNumber={currentLevel}
+              onTask={handleSceneAction}
+              onVisit={visitStation}
+              moment={moment}
+              onChoose={(id) => scene?.choose.current?.(id)}
+            />
           </Suspense>
           <motion.div
-            key={`${currentStage}-${currentLevel}`}
+            key={`${view}-${currentLevel}`}
             className="play-scene-title"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,17 +125,37 @@ export function HUD({ onBackToHome, caseCount, children }: HUDProps) {
           >
             <div>
               <p className="scene-kicker">Year {currentYear} <span aria-hidden="true">/</span> Case {currentLevel} of {caseCount}</p>
-              <h1>{station.place}</h1>
-              {currentPrescription && <p className="workstation-patient">{currentPrescription.patientName}</p>}
+              <h1>{view === 'overview' ? 'Pharmacy map' : stations[view].place}</h1>
+              <p className="workstation-patient" aria-live="polite">
+                {previewing ? `Preview · Continue the case at the ${stations[currentStage].place.toLowerCase()}` : currentPrescription?.patientName}
+              </p>
             </div>
             <div className="queue-display" aria-label={counter ? 'Pharmacy queue display' : 'Current queue ticket'}>
               <span>Queue no.</span>{counter && <span>Counter</span>}
               <strong>{queueNumber}</strong>{counter && <strong>{counter}</strong>}
             </div>
           </motion.div>
-          <a className="mobile-task-link" href="#workstation">Go to task <ArrowDown size={14} aria-hidden="true" /></a>
+          <div className="world-controls">
+            {view !== 'overview' && (
+              <button type="button" className="world-control" onClick={() => visitStation('overview')}>
+                <Map size={17} aria-hidden="true" /> Pharmacy map
+              </button>
+            )}
+            {taskOpen ? (
+              <button type="button" className="world-control scene-hide-task" onClick={() => setNavigation({ step, view: currentStage, taskOpen: false })}>
+                <PanelRightClose size={17} aria-hidden="true" /> Hide task
+              </button>
+            ) : (
+              <button type="button" className="world-control scene-show-task" onClick={() => showTask(true)}>
+                <RotateCcw size={16} aria-hidden="true" /> {previewing ? 'Return to active task' : 'Show task'}
+              </button>
+            )}
+          </div>
+          {taskOpen && <a className="mobile-task-link" href="#workstation">Go to task <ArrowDown size={14} aria-hidden="true" /></a>}
         </section>
-        {children}
+        <div ref={deskRef} className="shift-task" hidden={!taskOpen}>
+          {children}
+        </div>
       </div>
 
       <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)} title="Leave the shift?">

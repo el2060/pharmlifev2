@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -48,7 +49,7 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
     }
   }
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -82,6 +83,7 @@ export function Modal({ isOpen, onClose, title, children, showCloseButton = true
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.querySelector('.pharmacy-app') ?? document.body
   );
 }

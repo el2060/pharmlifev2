@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowRight, Map as MapIcon, RotateCcw } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { mountPharmacy } from './mountPharmacy';
 import type { PharmacyView } from './pharmacyWorld';
 import type { SceneMoment, SceneProduct } from './shiftScene';
@@ -14,36 +14,39 @@ const locations = {
 
 interface PharmacyViewportProps {
   stage?: GameStage;
+  view?: PharmacyView;
+  deskInset?: number;
+  onVisit?: (view: PharmacyView) => void;
   caseNumber?: number;
   onTask?: () => void;
   onChoose?: (id: string) => void;
   moment?: SceneMoment;
 }
 
-export default function PharmacyViewport({ stage, caseNumber = 1, onTask, onChoose, moment }: PharmacyViewportProps) {
-  const [ready, setReady] = useState(false);
+export default function PharmacyViewport({ stage, view = stage ?? 'overview', deskInset = 0, caseNumber = 1, onTask, onChoose, onVisit, moment }: PharmacyViewportProps) {
+  const [renderer, setRenderer] = useState<'pending' | 'webgl' | 'unavailable'>('pending');
+  const ready = renderer === 'webgl';
   const [hoveredProduct, setHoveredProduct] = useState<SceneProduct>();
-  const [navigation, setNavigation] = useState<{ forStage: GameStage; view: PharmacyView } | null>(null);
-  const view = navigation && navigation.forStage === stage ? navigation.view : stage ?? 'overview';
   const host = useRef<HTMLDivElement>(null);
-  const scene = useRef({ view, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
+  const scene = useRef({ view, deskInset, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
 
   useEffect(() => {
     scene.current.view = view;
+    scene.current.deskInset = deskInset;
     scene.current.activeStage = stage ?? 'receiving';
     scene.current.caseNumber = caseNumber;
     scene.current.ambient = !stage;
     scene.current.moment = moment;
     scene.current.choose = (id) => onChoose?.(id);
-  }, [view, caseNumber, stage, moment, onChoose]);
+  }, [view, deskInset, caseNumber, stage, moment, onChoose]);
 
   useEffect(() => {
     const element = host.current;
     if (!element) return;
     try {
-      return mountPharmacy(element, scene.current, setReady, setHoveredProduct);
+      return mountPharmacy(element, scene.current, (available) => setRenderer(available ? 'webgl' : 'unavailable'), setHoveredProduct);
     } catch {
-      setReady(false);
+      setRenderer('unavailable');
     }
   }, []);
 
@@ -51,8 +54,12 @@ export default function PharmacyViewport({ stage, caseNumber = 1, onTask, onChoo
   const previewing = stage !== undefined && view !== stage;
 
   return (
-    <div className="pharmacy-world" data-renderer={ready ? 'webgl' : 'image'} data-view={view} aria-hidden={stage ? undefined : true}>
-      <div className="pharmacy-world-fallback" />
+    <div className="pharmacy-world" data-renderer={renderer} data-view={view} aria-hidden={stage ? undefined : true}>
+      {stage && !ready && (
+        <p className="world-status" role="status">
+          {renderer === 'pending' ? 'Opening the pharmacy…' : 'The 3D view is unavailable. You can still use the task controls.'}
+        </p>
+      )}
       <div ref={host} className="pharmacy-world-canvas">
         {hoveredProduct && view === 'picking' && ready && (
           <div className="world-stock-tooltip" aria-hidden="true">
@@ -71,9 +78,9 @@ export default function PharmacyViewport({ stage, caseNumber = 1, onTask, onChoo
             else delete scene.current.markers[key];
           }}
           onClick={() => {
-            if (view === 'overview') setNavigation({ forStage: stage, view: key });
+            if (view === 'overview') onVisit?.(key);
             else if (key === stage) onTask?.();
-            else setNavigation(null);
+            else onVisit?.(stage);
           }}
         >
           <span className="world-marker-dot" aria-hidden="true" />
@@ -85,21 +92,6 @@ export default function PharmacyViewport({ stage, caseNumber = 1, onTask, onChoo
         <div className="world-dialogue" aria-hidden="true" key={moment.caption}>
           <p><strong>{moment.speaker}</strong></p>
           <p>{moment.caption}</p>
-        </div>
-      )}
-      {stage && (
-        <div className="world-controls">
-          {!ready && <button type="button" className="world-control" onClick={onTask}>Go to task <ArrowDown size={15} aria-hidden="true" /></button>}
-          {ready && (
-            <button
-              type="button"
-              className="world-control"
-              onClick={() => setNavigation(previewing ? null : { forStage: stage, view: 'overview' })}
-            >
-              {previewing ? <RotateCcw size={16} aria-hidden="true" /> : <MapIcon size={17} aria-hidden="true" />}
-              {previewing ? 'Back to your station' : 'Pharmacy map'}
-            </button>
-          )}
         </div>
       )}
     </div>

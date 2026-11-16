@@ -193,275 +193,93 @@ export const Typing: React.FC = () => {
   };
 
   return (
-    <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1500px]">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-4 md:space-y-6"
-      >
-        {/* Pokemon-style Progress Indicator */}
-        {currentPrescription.medications.length > 1 && (
-          <div
-            className="border-4 border-poke-black p-4"
-            style={{
-              background: '#FFFFFF',
-              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)',
-            }}
-          >
-            <p className="text-poke-black text-sm mb-3 font-bold">
-              MEDICATION {currentMedIndex + 1} / {currentPrescription.medications.length}
-            </p>
-            <div className="w-full border-2 border-poke-black h-6" style={{ background: '#FFFFFF' }}>
-              <div
-                className="h-full transition-all"
-                style={{
-                  width: `${((currentMedIndex + 1) / currentPrescription.medications.length) * 100}%`,
-                  background: '#3075D8',
-                  boxShadow: 'inset -2px -2px 0 0 #1A4A8A'
-                }}
-              />
-            </div>
+    <div className="container-custom label-desk">
+      <motion.div initial={{ opacity: 0, y: 9 }} animate={{ opacity: 1, y: 0 }} className="label-workflow">
+        <header className="label-desk-heading">
+          <div>
+            <h2>Prepare the medication label</h2>
+            <p>Use the prescription to choose the amount per dose, form, and frequency.</p>
           </div>
-        )}
+          {currentPrescription.medications.length > 1 && (
+            <p className="label-item-count">Item {currentMedIndex + 1} of {currentPrescription.medications.length}</p>
+          )}
+        </header>
 
-        {/* Quick instruction for the stage */}
-        <div className="poke-textbox p-4" style={{ background: '#FFFFFF' }}>
-          <p className="text-poke-black text-sm sm:text-base font-bold mb-2" >
-            TYPE THE LABEL
-          </p>
-          <p className="text-poke-black text-xs sm:text-sm" >
-            Interpret the prescription and print the medication label. Translate abbreviations before printing.
-          </p>
-        </div>
+        <div className="label-desk-grid">
+          <section className="label-document" aria-label="Prescription directions">
+            <h3>Prescription</h3>
+            <p className="label-medicine-name">{medication.genericName}</p>
+            {medication.strength && !medication.genericName.includes(medication.strength) && <p>{medication.strength}</p>}
+            <dl className="label-directions">
+              <div><dt>Directions</dt><dd>{currentMed.dosageInstruction} {currentMed.frequency}{currentMed.specialInstructions ? ` ${currentMed.specialInstructions}` : ''}</dd></div>
+              {currentMed.duration && <div><dt>Duration / supply</dt><dd>{convertDuration(currentMed.duration)}</dd></div>}
+              {specialInstructionLabel && <div><dt>Special instructions</dt><dd>{specialInstructionLabel}</dd></div>}
+            </dl>
+            <details className="label-reference">
+              <summary>Abbreviation guide</summary>
+              <dl>
+                {Object.entries(medicalAbbreviations).slice(0, 8).map(([abbreviation, meaning]) => (
+                  <div key={abbreviation}><dt>{abbreviation}</dt><dd>{meaning}</dd></div>
+                ))}
+              </dl>
+            </details>
+          </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          {/* Left: Prescription - Pokemon Style */}
-          <div
-            className="border-4 border-poke-black p-4 sm:p-6"
-            style={{
-              background: '#FFFFFF',
-              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-            }}
-          >
-            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" >
-              <span className="text-2xl">📋</span>
-              PRESCRIPTION
-            </h3>
-
-            <div className="poke-textbox p-4 space-y-4 mb-4">
-              <div>
-                <p className="text-sm text-poke-black mb-2 font-bold" >MEDICATION:</p>
-                <p className="font-bold text-base text-poke-black" >{medication.genericName}</p>
-                <p className="text-sm text-poke-black" >{medication.strength}</p>
-              </div>
-
-              <div className="border-t-2 border-poke-black pt-4">
-                <p className="text-sm text-poke-black mb-2 font-bold" >INSTRUCTIONS:</p>
-                <p className="text-base font-bold text-poke-black break-words" >
-                  {currentMed.dosageInstruction} {currentMed.frequency}
-                </p>
-                {currentMed.duration && (
-                  <p className="text-sm text-poke-black mt-2" >Duration: {convertDuration(currentMed.duration)}</p>
-                )}
-              </div>
-
-              {specialInstructionLabel && (
-                <div className="border-t-2 border-poke-black pt-4">
-                  <p className="text-sm text-poke-black mb-2 font-bold" >SPECIAL:</p>
-                  <p className="text-sm text-poke-black" >{specialInstructionLabel}</p>
-                </div>
-              )}
+          <section className="label-form" aria-label="Label printer">
+            <div className="label-field">
+              <label htmlFor="label-quantity">Amount per dose</label>
+              <select id="label-quantity" data-scene-task value={labelData.quantity} onChange={(event) => setLabelData({ ...labelData, quantity: event.target.value })}>
+                <option value="">Choose an amount</option>
+                {getQuantityOptions().map((amount) => (
+                  <option key={amount} value={amount}>
+                    {amount}{['liquid', 'syrup'].includes(medication.dosageForm) ? ' mL' : medication.dosageForm === 'inhaler' ? ` puff${amount > 1 ? 's' : ''}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="label-field">
+              <label htmlFor="label-dosageForm">Dosage form</label>
+              <select id="label-dosageForm" value={labelData.dosageForm} onChange={(event) => setLabelData({ ...labelData, dosageForm: event.target.value })}>
+                <option value="">Choose a form</option>
+                {dosageFormOptions.map((form) => <option key={form} value={form}>{form}</option>)}
+              </select>
+            </div>
+            <div className="label-field">
+              <label htmlFor="label-frequency">Frequency</label>
+              <select id="label-frequency" value={labelData.frequency} onChange={(event) => setLabelData({ ...labelData, frequency: event.target.value })}>
+                <option value="">Choose a frequency</option>
+                {frequencyOptions.map(({ value }) => <option key={value} value={value}>{value}</option>)}
+              </select>
             </div>
 
-            {/* Abbreviation Helper - Pokemon Style */}
-            <div className="border-4 border-poke-black p-3" style={{ background: '#58A8F8' }}>
-              <p className="text-sm font-bold text-poke-black mb-3" >QUICK REF:</p>
-              <div className="grid grid-cols-2 gap-2 text-xs" >
-                {Object.entries(medicalAbbreviations)
-                  .slice(0, 8)
-                  .map(([abbr, meaning]) => (
-                    <div key={abbr} className="flex gap-1 items-start text-poke-black">
-                      <span className="font-bold flex-shrink-0">{abbr}:</span>
-                      <span className="leading-relaxed">{meaning}</span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </div>
+            {canPrint && (
+              <motion.div className="printed-label p-4 label-preview" aria-label="Medication label preview" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <p className="label-preview-name">Label preview · {currentPrescription.patientName}</p>
+                <p><strong>{medication.genericName}</strong></p>
+                <p>Take {labelData.quantity}{
+                  ['liquid', 'syrup'].includes(labelData.dosageForm) ? ' mL'
+                    : labelData.dosageForm === 'inhaler' ? ` puff${Number(labelData.quantity) > 1 ? 's' : ''}`
+                      : ` ${labelData.dosageForm}${Number(labelData.quantity) > 1 ? 's' : ''}`
+                } {labelData.frequency}</p>
+                {specialInstructionLabel && <p>{specialInstructionLabel}</p>}
+              </motion.div>
+            )}
 
-          {/* Right: Label Builder - Pokemon Style */}
-          <div
-            className="border-4 border-poke-black p-4 sm:p-6"
-            style={{
-              background: '#FFFFFF',
-              boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF, 4px 4px 0 0 rgba(0,0,0,0.3)'
-            }}
-          >
-            <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" >
-              <Printer className="text-poke-blue" size={20} />
-              Label printer
-            </h3>
+            <button type="button" className="shift-button label-print" onClick={handlePrintLabel} disabled={!canPrint || isPrinting}>
+              <Printer size={20} aria-hidden="true" /> {isPrinting ? 'Printing…' : 'Print label'}
+            </button>
 
-            <div className="space-y-4">
-              {/* Quantity */}
-              <div>
-                <label htmlFor="label-quantity" className="block text-sm font-bold text-poke-black mb-2">
-                  QUANTITY:
-                </label>
-                <select
-                  id="label-quantity" data-scene-task
-                  value={labelData.quantity}
-                  onChange={(e) => setLabelData({ ...labelData, quantity: e.target.value })}
-                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
-                  style={{
-                    background: '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
-                  }}
-                >
-                  <option value="">SELECT...</option>
-                  {getQuantityOptions().map((num) => (
-                    <option key={num} value={num}>
-                      {num}
-                      {(medication.dosageForm === 'liquid' || medication.dosageForm === 'syrup') ? ' ml' : ''}
-                      {medication.dosageForm === 'inhaler' ? ' puff' + (num > 1 ? 's' : '') : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Dosage Form */}
-              <div>
-                <label htmlFor="label-dosageForm" className="block text-sm font-bold text-poke-black mb-2">
-                  FORM:
-                </label>
-                <select
-                  id="label-dosageForm"
-                  value={labelData.dosageForm}
-                  onChange={(e) => setLabelData({ ...labelData, dosageForm: e.target.value })}
-                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
-                  style={{
-                    background: '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
-                  }}
-                >
-                  <option value="">SELECT...</option>
-                  {dosageFormOptions.map((form) => (
-                    <option key={form} value={form}>
-                      {form.toUpperCase()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Frequency */}
-              <div>
-                <label htmlFor="label-frequency" className="block text-sm font-bold text-poke-black mb-2">
-                  FREQUENCY:
-                </label>
-                <select
-                  id="label-frequency"
-                  value={labelData.frequency}
-                  onChange={(e) => setLabelData({ ...labelData, frequency: e.target.value })}
-                  className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
-                  style={{
-                    background: '#FFFFFF',
-                    boxShadow: 'inset -2px -2px 0 0 #888888, inset 2px 2px 0 0 #FFFFFF'
-                  }}
-                >
-                  <option value="">SELECT...</option>
-                  {frequencyOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.abbr.toUpperCase()} - {opt.value}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Help Button - Appears after 3 attempts */}
-              {attempts >= 3 && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  onClick={handleAutoFill}
-                  className="w-full py-2 bg-yellow-100 text-yellow-800 border-2 border-yellow-400 font-bold text-sm rounded mb-2 hover:bg-yellow-200"
-                >
-                  💡 STUCK? CLICK TO AUTO-FILL CORRECT ANSWERS
-                </motion.button>
-              )}
-
-              {/* Label Preview - Pokemon Style */}
-              {labelData.quantity && labelData.dosageForm && labelData.frequency && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="printed-label p-4"
-                  aria-label="Medication label preview"
-                >
-                  <p className="text-xs text-poke-black mb-3 font-bold" >Label preview · {currentPrescription.patientName}</p>
-                  <p className="font-bold text-sm text-poke-black mb-2" >
-                    {medication.genericName}
-                  </p>
-                  <p className="text-xs text-poke-black mb-2" >
-                    {medication.strength}
-                  </p>
-                  <p className="text-sm font-medium">Take {labelData.quantity}{
-                    ['liquid', 'syrup'].includes(labelData.dosageForm) ? 'ml'
-                      : (labelData.dosageForm === 'inhaler' ? ` puff${Number(labelData.quantity) > 1 ? 's' : ''}`
-                        : ` ${labelData.dosageForm}${Number(labelData.quantity) > 1 ? 's' : ''}`)
-                  } {labelData.frequency}</p>
-                  {specialInstructionLabel && (
-                    <p className="text-xs text-poke-black mt-2" >{specialInstructionLabel}</p>
-                  )}
-                </motion.div>
-              )}
-
-              {/* Hints - Pokemon Style */}
-              <div className="block">
-                <Hint
-                  title="Need help with the label?"
-                  hints={[
-                    "Look at the prescription instructions on the left - the abbreviations show the frequency",
-                    "Check the 'Quick Reference' guide to translate abbreviations like 'bd', 'tds', 'om', 'on'",
-                    "The quantity per dose is the number before 'tab', 'ml', or 'puffs' in the dosage instruction",
-                    "The dosage form should match the medication type - tablets for pills, liquid for syrups, inhaler for puffs",
-                    "Special instructions are already written out as words (e.g., 'when necessary') in the label preview"
-                  ]}
-                />
-              </div>
-
-              {/* Print Button - Pokemon Style */}
-              <motion.button
-                onClick={handlePrintLabel}
-                disabled={!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting}
-                className={`w-full px-6 text-base font-bold flex items-center justify-center gap-3 min-h-[56px] border-4 border-poke-black ${!labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
-                  ? 'text-poke-gray cursor-not-allowed'
-                  : 'text-poke-white'
-                  }`}
-                style={{
-                  background: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
-                    ? '#888888'
-                    : '#3075D8',
-                  boxShadow: !labelData.quantity || !labelData.dosageForm || !labelData.frequency || isPrinting
-                    ? 'inset -2px -2px 0 0 #606060, inset 2px 2px 0 0 #AAAAAA'
-                    : 'inset -2px -2px 0 0 #1A4A8A, inset 2px 2px 0 0 #58A8F8, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isPrinting ? (
-                  <>
-                    <div className="spinner w-5 h-5 border-2" />
-                    PRINTING...
-                  </>
-                ) : (
-                  <>
-                    <Printer size={20} />
-                    PRINT LABEL
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </div>
+            <Hint
+              title="Need help with the label?"
+              hints={[
+                'Compare the dose with the strength of one tablet or capsule to work out how many are needed.',
+                'Open the abbreviation guide if you need to check the frequency.',
+                'For a liquid or inhaler, check the number of millilitres or puffs in the directions.',
+                'Special instructions appear in words on the label preview.',
+              ]}
+            />
+            {attempts >= 3 && <button type="button" className="label-autofill" onClick={handleAutoFill}>Show the correct label settings</button>}
+          </section>
         </div>
 
         {/* Result Modal - Pokemon Style */}

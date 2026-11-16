@@ -5,6 +5,7 @@ import type { GameStage } from '../types/game.types';
 
 interface ViewState {
   view: PharmacyView;
+  deskInset: number;
   activeStage: GameStage;
   caseNumber: number;
   markers: Partial<Record<GameStage, HTMLButtonElement>>;
@@ -38,6 +39,8 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   let view: PharmacyView | undefined;
   let caseNumber = -1;
   let zoom = 5;
+  let inset = 0;
+  let lastDeskInset = -1;
   let desiredZoom = 5;
   let angle = 0;
   let width = 1;
@@ -55,6 +58,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   let lastProduct: SceneProduct | undefined;
 
   function updateView() {
+    const viewWidth = Math.max(width - state.deskInset, width * 0.4);
     const overview = state.view === 'overview';
     const preset = overview ? null : stationViews[state.view as GameStage];
     goal.set(...(preset?.target ?? [0.05, 1.15, -0.15]));
@@ -63,7 +67,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       desiredZoom = Math.max(6.95, 9.4 * height / width);
     } else {
       goalOffset.set(state.view === 'picking' ? 4.4 : 4.6, state.view === 'dispensing' ? 4.3 : 5.1, 9.8);
-      desiredZoom = Math.max(preset!.zoom, 3.2 * height / width);
+      desiredZoom = Math.max(preset!.zoom, 3.2 * height / viewWidth);
     }
     goalOffset.applyAxisAngle(THREE.Object3D.DEFAULT_UP, angle);
   }
@@ -73,7 +77,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       const marker = state.markers[key];
       if (!marker) continue;
       position.set(...stationViews[key].marker).project(camera);
-      marker.style.setProperty('--marker-x', `${THREE.MathUtils.clamp((position.x + 1) * 50, 14, 86)}%`);
+      marker.style.setProperty('--marker-x', `${THREE.MathUtils.clamp((position.x + 1) * 50, 10, 86 - 75 * (inset / width))}%`);
       marker.style.setProperty('--marker-y', `${THREE.MathUtils.clamp((1 - position.y) * 50, 17, 79)}%`);
     }
   }
@@ -81,7 +85,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   function draw(now: number, snap = false) {
     if (!visible || lost || width < 2 || height < 2) return;
     const changed = view !== state.view || caseNumber !== state.caseNumber;
-    if (!snap && !changed && state.moment === lastMoment && reducedMotion.matches && !firstFrame) {
+    if (!snap && !changed && state.moment === lastMoment && state.deskInset === lastDeskInset && reducedMotion.matches && !firstFrame) {
       projectMarkers();
       lastFrame = now;
       return;
@@ -109,9 +113,12 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     look.lerp(goal, blend);
     offset.lerp(goalOffset, blend);
     zoom = THREE.MathUtils.lerp(zoom, desiredZoom, blend);
+    lastDeskInset = state.deskInset;
+    inset = THREE.MathUtils.lerp(inset, Math.min(state.deskInset, width * 0.6), blend);
     const aspect = width / height;
-    camera.left = -zoom * aspect;
-    camera.right = zoom * aspect;
+    const shift = zoom * inset / height;
+    camera.left = -zoom * aspect + shift;
+    camera.right = zoom * aspect + shift;
     camera.top = zoom;
     camera.bottom = -zoom;
     camera.position.copy(look).add(offset);
@@ -150,7 +157,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   visibilityObserver.observe(host);
 
   function productAt(event: PointerEvent) {
-    if (state.view !== 'picking' || !state.moment?.products?.length) return undefined;
+    if (state.activeStage !== 'picking' || state.view !== 'picking' || !state.moment?.products?.length) return undefined;
     const bounds = canvas.getBoundingClientRect();
     const x = event.clientX - bounds.x;
     const y = event.clientY - bounds.y;
