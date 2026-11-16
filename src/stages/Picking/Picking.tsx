@@ -180,7 +180,7 @@ export const Picking: React.FC = () => {
             </div>
 
             {/* Shopping Cart */}
-            <div className="game-screen p-4 sm:p-6 relative">
+            <div className="picking-tray game-screen p-4 sm:p-6 relative">
               <div className="scanline" />
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-center gap-2 sm:gap-3 flex-1">
@@ -194,7 +194,7 @@ export const Picking: React.FC = () => {
                     <h3 className="text-blue-900 mb-1 pixel-label font-bold">
                       PICKING BASKET
                     </h3>
-                    <p className="text-sm sm:text-base text-blue-700 font-medium">
+                    <p className="text-sm sm:text-base text-blue-700 font-medium" aria-live="polite">
                       {selectedMedications.length === requiredMedIds.length ? (
                         <span className="text-green-600 font-bold">Ready to Verify!</span>
                       ) : (
@@ -218,12 +218,12 @@ export const Picking: React.FC = () => {
                           key={medId}
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 shadow-lg text-white"
+                          className="tray-item"
                         >
                           {med.genericName} {med.strength}
                           <button
                             onClick={() => handleSelectMedication(medId)}
-                            className="text-white hover:text-red-200 text-lg font-bold leading-none"
+                            className="tray-remove" aria-label={`Return ${med.genericName} ${med.strength} to the shelf`}
                           >
                             ×
                           </button>
@@ -246,7 +246,7 @@ export const Picking: React.FC = () => {
               hints={[
                 "Match the medication name and strength exactly - check the prescription items list above",
                 "Shelves are organized by drug category with color coding - analgesics (red), gastrointestinal (green), respiratory (yellow), antimicrobials (purple)",
-                "Each medication card shows the generic name, brand name (if available), strength, and dosage form",
+                "Each medication carton shows the generic name, brand name (if available), strength, and dosage form",
                 "Make sure you select the correct strength - some medications come in multiple strengths (e.g., 250mg vs 500mg)",
                 "Your picking basket shows how many items you've selected vs how many you need - check the counter before submitting"
               ]}
@@ -256,14 +256,11 @@ export const Picking: React.FC = () => {
             {/* Pharmacy Shelves */}
             <div className="space-y-4 sm:space-y-6">
               <motion.h3
-                className="text-xl sm:text-2xl font-bold text-center text-white"
-                style={{
-                  textShadow: '3px 3px 0 rgba(0,0,0,0.3)'
-                }}
+                className="text-xl sm:text-2xl font-bold text-left text-emerald-950"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                PHARMACY SHELVES
+                Find and pick medication
               </motion.h3>
 
               {Object.entries(availableMedicationsByCategory).map(([category, meds], catIndex) => (
@@ -275,28 +272,10 @@ export const Picking: React.FC = () => {
                   className="relative"
                 >
                   <div
-                    className={`rounded-t-lg p-3 sm:p-4 bg-gradient-to-r ${categoryColors[category] || 'from-gray-400 to-gray-500'
+                    className={`shelf-heading rounded-t-lg p-3 sm:p-4 bg-gradient-to-r ${categoryColors[category] || 'from-gray-400 to-gray-500'
                       } shadow-lg relative overflow-hidden`}
                   >
-                    {/* Pixel decoration */}
-                    <div className="absolute top-2 left-2 w-2 h-2 bg-white/40" />
-                    <div className="absolute top-2 right-2 w-2 h-2 bg-white/40" />
-
-                    <h4 className="text-white font-bold uppercase tracking-wide flex items-center gap-2 pixel-label text-contrast-shadow">
-                      <motion.span
-                        className="text-2xl sm:text-3xl"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: catIndex * 0.3 }}
-                      >
-                        {category === 'analgesic' && '💊'}
-                        {category === 'gastrointestinal' && '🍃'}
-                        {category === 'cardiovascular' && '❤️'}
-                        {category === 'respiratory' && '🫁'}
-                        {category === 'antimicrobial' && '🦠'}
-                        {category === 'endocrine' && '⚡'}
-                      </motion.span>
-                      {category}
-                    </h4>
+                    <h4>{category}</h4>
                   </div>
 
                   <div className="shelf-panel rounded-b-lg p-3 sm:p-4 shadow-lg border-4 border-gray-300">
@@ -304,18 +283,17 @@ export const Picking: React.FC = () => {
                       {meds.map((med, medIndex) => {
                         const isSelected = selectedMedications.includes(med.id);
                         return (
-                          <motion.div
+                          <motion.button
                             key={med.id}
+                            type="button"
+                            aria-pressed={isSelected}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: catIndex * 0.1 + medIndex * 0.05 }}
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleSelectMedication(med.id)}
-                            className={`cursor-pointer p-3 sm:p-4 rounded-lg border-4 transition-all relative ${isSelected
-                              ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100 shadow-xl'
-                              : 'border-gray-300 hover:border-blue-400 bg-white shadow-md'
-                              }`}
+                            className="med-carton"
                           >
                             {/* Medication box visual */}
                             <div className="flex items-start justify-between">
@@ -349,16 +327,7 @@ export const Picking: React.FC = () => {
                               )}
                             </div>
 
-                            {/* Pixel corners */}
-                            {isSelected && (
-                              <>
-                                <div className="absolute top-1 left-1 w-2 h-2 bg-green-500" />
-                                <div className="absolute top-1 right-1 w-2 h-2 bg-green-500" />
-                                <div className="absolute bottom-1 left-1 w-2 h-2 bg-green-500" />
-                                <div className="absolute bottom-1 right-1 w-2 h-2 bg-green-500" />
-                              </>
-                            )}
-                          </motion.div>
+                          </motion.button>
                         );
                       })}
                     </div>

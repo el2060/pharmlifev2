@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -6,72 +6,82 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   showCloseButton?: boolean;
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  showCloseButton = true,
-}) => {
+export function Modal({ isOpen, onClose, title, children, showCloseButton = true }: ModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement;
+    dialogRef.current?.focus();
+
+    return () => {
+      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
+        previouslyFocused.focus();
+      }
+    };
+  }, [isOpen]);
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape' && showCloseButton) {
+      event.stopPropagation();
+      onClose();
+    }
+    if (event.key !== 'Tab') return;
+
+    const focusable = [...event.currentTarget.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]'
+    )];
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (!first || (event.shiftKey && (active === first || active === event.currentTarget))) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
+        <motion.div
+          className="shift-modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={(event) => {
+            if (showCloseButton && event.target === event.currentTarget) onClose();
+          }}
+        >
           <motion.div
-            className="fixed inset-0 z-40"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
-
-          {/* Pokemon-style Modal Dialog Box */}
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            transition={{ type: 'tween', duration: 0.15 }}
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId : undefined}
+            aria-label={title ? undefined : 'Case feedback'}
+            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            className="shift-modal"
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
           >
-            <div className="poke-textbox max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-              {showCloseButton && (
-                <button
-                  onClick={onClose}
-                  className="absolute top-3 right-3 p-2 bg-poke-red text-poke-white border-2 border-poke-black hover:bg-poke-dark-red transition-colors"
-                  aria-label="Close modal"
-                  style={{
-                    boxShadow: 'inset -1px -1px 0 0 #880000, inset 1px 1px 0 0 #FF4444'
-                  }}
-                >
-                  <X size={16} />
-                </button>
-              )}
-
-              {title && (
-                <h2
-                  className="text-lg sm:text-xl font-bold mb-4 pr-12 text-poke-black"
-                  
-                >
-                  {title}
-                </h2>
-              )}
-
-              <div
-                className="text-poke-black"
-                
-              >
-                {children}
-              </div>
-            </div>
+            {showCloseButton && (
+              <button type="button" className="shift-modal-close" onClick={onClose} aria-label="Close dialog">
+                <X size={19} aria-hidden="true" />
+              </button>
+            )}
+            {title && <h2 className="shift-modal-title" id={titleId}>{title}</h2>}
+            {children}
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );
-};
+}

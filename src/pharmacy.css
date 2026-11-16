@@ -1,0 +1,394 @@
+/* Pharm Life's polyclinic lobby and workstations. */
+.pharmacy-app {
+  --ink: #173630;
+  --deep: #102f2a;
+  --action: #f4d28f;
+  --muted: #516861;
+  --paper: #fbf9f2;
+  --line: #cdd7cc;
+  min-height: 100svh;
+  color: var(--ink);
+  background: #eef1e9;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.pharmacy-app :focus-visible { outline: 3px solid #347a69; outline-offset: 4px; }
+.lobby-scene, .selection-scene, .workstation-scene { position: relative; isolation: isolate; overflow: hidden; background: var(--deep); color: white; }
+.pharmacy-art {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: #1a3831 url('/pharmacy-interior.webp') 57% 52% / cover no-repeat;
+}
+.lobby-scene::after, .selection-scene::after, .workstation-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #0c2622f7, #0c2622e3 23%, #0c262271 50%, #0c262213 78%);
+}
+.lobby-scene {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(540px, 75svh, 860px);
+}
+.lobby-scene .pharmacy-art { animation: lobby-arrive 1.35s cubic-bezier(.22, .6, .36, 1) both; }
+@keyframes lobby-arrive {
+  from { transform: scale(1.055); }
+  to { transform: scale(1); }
+}
+.lobby-header, .lobby-content, .selection-title, .lobby-workflow, .lobby-footer {
+  padding-inline: max(clamp(1.3rem, 5vw, 6rem), calc((100vw - 1520px) / 2));
+}
+.lobby-header {
+  padding-block: 1.4rem .65rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .76rem;
+  font-weight: 650;
+  letter-spacing: .025em;
+  color: #edf2eb;
+}
+.np-logo { display: block; width: clamp(112px, 13vw, 158px); height: auto; flex: none; }
+.lobby-content { padding-block: 2rem clamp(2.6rem, 6vh, 5.5rem); }
+.scene-kicker { display: flex; align-items: center; gap: .45rem; font-size: .69rem; font-weight: 800; text-transform: uppercase; letter-spacing: .15em; }
+.lobby-scene .scene-kicker, .workstation-title .scene-kicker { color: #f4dba9; }
+.lobby-content h1 {
+  font-family: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(4.9rem, 10vw, 10.5rem);
+  line-height: .79;
+  letter-spacing: -.078em;
+  margin: .15em 0 .16em -.04em;
+}
+.lobby-content h1 span { color: var(--action); }
+.lobby-subtitle { font-size: clamp(1.2rem, 2.45vw, 2rem); font-weight: 650; letter-spacing: -.04em; }
+.lobby-description { max-width: 32ch; color: #e6eee7; margin-top: .75rem; line-height: 1.55; font-size: .97rem; }
+.lobby-actions { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; align-items: center; margin-top: 1.5rem; }
+.shift-button, .lobby-link, .shift-home, .workstation-jump {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 44px;
+  font-weight: 750;
+}
+.shift-button { background: var(--action); color: #202c23; border-radius: .35rem; padding: .86rem 1rem; transition: background .18s, transform .18s; }
+.shift-button:hover { background: #ffe4ae; transform: translateY(-2px); }
+.lobby-link { color: white; font-size: .86rem; }
+.lobby-link:hover, .workstation-jump:hover { text-decoration: underline; text-underline-offset: .28em; }
+.lobby-scene :focus-visible, .selection-scene :focus-visible, .workstation-scene :focus-visible { outline-color: #fff3cd; }
+.lobby-workflow {
+  display: grid;
+  grid-template-columns: minmax(210px, .95fr) minmax(0, 3fr);
+  align-items: center;
+  gap: .75rem 1.7rem;
+  padding-block: 1.45rem;
+  background: var(--paper);
+}
+.lobby-workflow h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: -.035em; }
+.lobby-workflow p { color: var(--muted); font-size: .84rem; margin-top: .2rem; }
+.station-route { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; }
+.station-route li {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .65rem .6rem;
+  min-width: 0;
+  border-inline-start: 1px solid var(--line);
+}
+.station-route strong { display: block; font-size: .87rem; line-height: 1.2; }
+.station-route small { display: block; margin-top: .24rem; font-size: .72rem; line-height: 1.15; color: var(--muted); }
+.station-route-icon { display: grid; place-items: center; width: 2rem; height: 2rem; flex: none; color: #326252; background: #e5eee4; border-radius: .35rem; }
+.station-route li[aria-current='step'] { background: #e2eee4; box-shadow: inset 0 -3px #2d6b58; }
+.station-route li[aria-current='step'] .station-route-icon, .station-done .station-route-icon { background: #2f624f; color: white; }
+.lobby-footer { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; padding-block: .75rem; color: var(--muted); font-size: .74rem; border-top: 1px solid var(--line); }
+.lobby-footer div, .lobby-footer button { display: flex; align-items: center; gap: .4rem; }
+.lobby-footer div { flex-wrap: wrap; gap: 1rem; }
+.lobby-footer button { min-height: 32px; color: var(--ink); }
+.lobby-footer button:hover { text-decoration: underline; }
+.selection-scene { min-height: 320px; display: grid; align-content: end; }
+.selection-scene .pharmacy-art { background-position: 60% 48%; }
+.selection-title { padding-block: 3rem; }
+.selection-title h1 { margin-top: .4rem; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(2.2rem, 5vw, 4.2rem); line-height: 1; font-weight: 800; letter-spacing: -.045em; }
+.placement-roster { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+.placement-available {
+  background: var(--paper);
+  border-top: 3px solid #36705c;
+  padding: clamp(1.2rem, 4vw, 2.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.placement-available h2 { font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.25rem); letter-spacing: -.035em; }
+.placement-available p { color: var(--muted); }
+.placement-unavailable > div { display: flex; align-items: center; gap: .65rem; padding: .95rem .5rem; border-bottom: 1px solid var(--line); color: var(--muted); }
+.placement-unavailable small { margin-left: auto; }
+
+.shift-hud { background: var(--paper); }
+.shift-bar {
+  background: var(--deep);
+  color: #edf5ee;
+  display: flex;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  padding: .45rem clamp(.85rem, 4vw, 4rem);
+}
+.shift-home { font-size: .95rem; white-space: nowrap; }
+.shift-home:hover { color: var(--action); }
+.shift-home:focus-visible { outline-color: var(--action); }
+.shift-rank { border-left: 1px solid #ffffff40; padding-left: 1rem; font-size: .73rem; color: #d5e4d9; }
+.shift-totals { margin-left: auto; display: flex; gap: .9rem 1.5rem; }
+.shift-totals div { display: flex; align-items: baseline; gap: .4rem; }
+.shift-totals dt { font-size: .71rem; color: #d5e4d9; white-space: nowrap; }
+.shift-totals dd { font-size: .9rem; color: var(--action); font-weight: 800; font-variant-numeric: tabular-nums; }
+.workstation-scene { display: flex; justify-content: space-between; align-items: flex-end; min-height: clamp(180px, 25vh, 300px); padding: 1.4rem clamp(.95rem, 4vw, 4rem); gap: .8rem; }
+.workstation-scene .pharmacy-art { background-position: 58% 52%; }
+.workstation-scene::after { background: linear-gradient(90deg, #102b24f5, #102b24b5 31%, #102b2424 100%); }
+.scene-dispensing .pharmacy-art { background-position: right 57%; }
+.workstation-title h1 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(1.95rem, 5vw, 4.3rem); font-weight: 800; letter-spacing: -.045em; line-height: .98; margin: .4rem 0; }
+.workstation-patient { font-weight: 650; color: #e6efe6; font-size: .9rem; }
+.workstation-scene .workstation-jump { padding: .55rem .75rem; border: 1px solid #ffffff70; border-radius: .35rem; background: #102b24df; color: white; font-size: .78rem; white-space: nowrap; }
+.shift-hud .station-route { max-width: 1420px; margin: auto; }
+.shift-hud .station-route li { padding: .7rem clamp(.45rem, 2vw, 1.6rem); }
+.pharmacy-queue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .5rem;
+}
+.queue-display {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: .08rem .9rem;
+  padding: .5rem .65rem;
+  background: #122720;
+  border: 1px solid #9cae95;
+  border-radius: .26rem;
+  color: #ffe2a9;
+  font-variant-numeric: tabular-nums;
+}
+.queue-display span { font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; color: #eef3e8; }
+.queue-display strong { font-size: 1.05rem; letter-spacing: .055em; }
+.workstation { max-width: 1450px; margin: 0 auto; padding-bottom: 3rem; scroll-margin-top: .5rem; }
+.workstation .poke-textbox, .pharmacy-app .poke-menu, .workstation .game-screen { border: 1px solid var(--line); border-radius: .55rem; box-shadow: 0 4px 16px #182f2512; }
+.workstation .pixel-title, .workstation .font-pixel, .workstation .pixel-label { font-family: inherit; }
+.workstation .scanline { display: none; }
+.workstation .btn-primary { background: #245747; border-color: #245747; color: white; box-shadow: none; }
+.workstation .btn-primary:hover { background: #1b4337; }
+.workstation .arcade-button { background: #245747; border: 1px solid #245747; color: white; box-shadow: none; }
+.workstation .arcade-button::before { display: none; }
+.workstation .arcade-button:disabled { opacity: .55; }
+.preceptor-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .8rem;
+  align-items: center;
+  border-left: 3px solid #3b745e;
+  padding: .85rem 1rem;
+  background: var(--paper);
+  margin-bottom: 1rem;
+}
+.preceptor-note > span, .conversation-avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  width: 2.6rem;
+  height: 2.6rem;
+  background: #e0ebe0;
+  color: #285340;
+}
+.preceptor-note small { display: block; text-transform: uppercase; color: var(--muted); font-weight: 800; font-size: .65rem; letter-spacing: .08em; }
+.preceptor-note p { font-size: .91rem; font-weight: 650; }
+.receiving-workstation .intake-steps { justify-content: flex-start; }
+.receiving-workstation .intake-steps > div { border: 1px solid #c8d6cb; border-radius: .3rem; box-shadow: none; transform: none; color: #314f44; }
+.receiving-workstation .intake-steps > [aria-current='step'] { background: #285644; color: white; border-color: #285644; }
+.placement-unavailable, .intake-steps { font-size: .86rem; }
+@media (max-width: 950px) {
+  .lobby-workflow { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .lobby-scene { min-height: 620px; }
+  .lobby-scene .pharmacy-art { background-position: 70% 45%; }
+  .lobby-scene::after { background: linear-gradient(0deg, #0b2723 0%, #0b2723e8 36%, #0b27235e 80%), linear-gradient(90deg, #0b272380, transparent); }
+  .lobby-header p { max-width: 17ch; }
+  .lobby-content { padding-bottom: 2.2rem; }
+  .station-route { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .station-route li { border-bottom: 1px solid var(--line); }
+  .station-route small { font-size: .7rem; }
+  .shift-rank { display: none; }
+  .shift-totals div { display: block; }
+  .shift-totals dt { font-size: .65rem; }
+  .shift-totals dd { line-height: 1; }
+  .workstation-scene { min-height: 184px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pharmacy-app *, .pharmacy-app *::before, .pharmacy-app *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+.picking-workstation .shelf-heading {
+  background: #375746;
+  color: white;
+  box-shadow: none;
+  padding-block: .65rem;
+}
+.shelf-heading h4 { font-size: .82rem; font-weight: 800; text-transform: capitalize; }
+.picking-workstation .shelf-panel {
+  padding: 1.05rem 1.2rem 1.45rem;
+  background: #ded5c0;
+  border: 1px solid #b7ab92;
+  border-bottom: 8px solid #95816a;
+  box-shadow: inset 0 5px 14px #59472d3b, 0 5px 10px #49372125;
+}
+.picking-workstation .shelf-panel::after { display: none; }
+.med-carton {
+  position: relative;
+  align-content: start;
+  padding: .85rem .8rem 1.05rem;
+  margin: 0 .32rem .18rem 0;
+  text-align: left;
+  border: 1px solid #a2afa2;
+  border-top: 6px solid #4e7f68;
+  border-radius: .13rem;
+  background: linear-gradient(105deg, #fff 45%, #f4f3e8 100%);
+  box-shadow: 4px 3px 0 #b4baac, 6px 4px 0 #879183, 7px 8px 12px #44392336;
+}
+.med-carton::after {
+  content: '';
+  display: block;
+  margin-top: .65rem;
+  width: 3rem;
+  height: .5rem;
+  background: repeating-linear-gradient(90deg, #5c6c61 0 1px, transparent 1px 3px, #5c6c61 3px 5px, transparent 5px 6px);
+  opacity: .65;
+}
+.med-carton:hover { border-color: #47765e; }
+.med-carton[aria-pressed='true'] { background: #e2f0e3; border-color: #3d785f; }
+.shelf-heading.from-red-400 + .shelf-panel .med-carton { border-top-color: #a9584c; }
+.shelf-heading.from-yellow-400 + .shelf-panel .med-carton { border-top-color: #b58f35; }
+.shelf-heading.from-purple-400 + .shelf-panel .med-carton { border-top-color: #775980; }
+.shelf-heading.from-blue-400 + .shelf-panel .med-carton { border-top-color: #557b93; }
+.shelf-heading.from-orange-400 + .shelf-panel .med-carton { border-top-color: #b5794b; }
+.shelf-heading.from-indigo-400 + .shelf-panel .med-carton { border-top-color: #686c9c; }
+.workstation .picking-tray { background: #e6eee4; border: 5px solid #9eb4a4; box-shadow: inset 0 3px 11px #273e3030; }
+.tray-item { display: flex; gap: .4rem; align-items: center; padding: .2rem .35rem .2rem .65rem; font-size: .78rem; font-weight: 750; background: #fbfaf4; border: 1px solid #aec2b4; border-radius: .28rem; }
+.tray-remove { min-width: 32px; min-height: 32px; border-radius: .2rem; font-size: 1.2rem; }
+.tray-remove:hover { background: #f3d7ce; }
+.typing-workstation :is(.border-poke-black, .border-poke-gray) { border-color: #b3c5b8; }
+.typing-workstation select { border-width: 1px; border-radius: .3rem; box-shadow: none !important; color: var(--ink); }
+.printed-label { max-width: 470px; border-top: 5px solid #305f4d; border-bottom: 1px dashed #728278; background: #fffef4; box-shadow: 0 4px 10px #2e41342b; transform-origin: top; }
+.printed-label::after { content: ''; display: block; width: 4.5rem; height: .55rem; margin-top: .7rem; background: repeating-linear-gradient(90deg, #476252 0 2px, transparent 2px 3px, #476252 3px 4px, transparent 4px 6px); }
+.receiving-workstation .border-poke-black { border-color: #9eb5a5; }
+.receiving-workstation button.border-poke-black, .typing-workstation button.border-poke-black { border-width: 1px; border-radius: .38rem; }
+.collection-desk { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; align-items: start; }
+.collection-action { justify-self: start; }
+.counter-conversation { display: grid; gap: .85rem; max-width: 800px; margin: 0 auto; padding: 1rem 0; }
+.patient-dialogue { display: flex; gap: .85rem; align-items: flex-start; }
+.conversation-avatar { flex: none; }
+.conversation-bubble { position: relative; padding: 1.15rem; border-radius: 0 .75rem .75rem .75rem; background: #dce9dd; color: var(--ink); }
+.conversation-bubble h2 { margin-top: .35rem; font-weight: 750; font-size: clamp(1.15rem, 3vw, 1.6rem); letter-spacing: -.02em; line-height: 1.3; }
+.conversation-bubble h2:focus { outline: none; }
+.conversation-reply:not(:disabled):hover { background: #e8f3e7; border-color: #72a18a; }
+.conversation-label, .conversation-progress { font-weight: 750; color: var(--muted); font-size: .82rem; }
+@media (max-width: 600px) {
+  .collection-desk { grid-template-columns: minmax(0, 1fr); }
+  .workstation-title h1 { font-size: clamp(1.72rem, 7vw, 2.5rem); }
+  .pharmacy-queue { flex: none; }
+}
+
+.scene-typing .pharmacy-art, .scene-picking .pharmacy-art {
+  background-image: url('/pharmacy-dispensary.webp');
+  background-position: 65% 50%;
+}
+.scene-picking .pharmacy-art { background-size: 112% auto; background-position: 80% 49%; }
+.shift-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #102821ab;
+  display: grid;
+  place-items: center;
+  padding: clamp(.65rem, 3vw, 1.75rem);
+}
+.shift-modal {
+  width: min(100%, 720px);
+  max-height: min(92svh, 880px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 3vw, 2rem);
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: .7rem;
+  box-shadow: 0 18px 70px #081c157a;
+}
+.shift-modal:focus { outline: none; }
+.shift-modal-title { font-weight: 800; font-size: clamp(1.3rem, 4vw, 1.85rem); margin: .1rem 3rem 1rem 0; letter-spacing: -.03em; }
+.shift-modal-close {
+  position: absolute;
+  top: .65rem;
+  right: .65rem;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: .4rem;
+  color: var(--ink);
+}
+.shift-modal-close:hover { background: #e3ebe1; }
+.shift-modal :is(p, li) { line-height: 1.5; }
+.pharmacy-lobby .shift-modal :is(p, li) { font-size: .91rem; }
+.shift-modal .border-4 { border-width: 1px; border-radius: .35rem; }
+.workstation :is(button, select) { scroll-margin: .6rem; }
+.workstation button:not(.tray-remove) { min-height: 44px; }
+.workstation :is(.btn, .arcade-button, .conversation-reply, .collection-action) { font-size: 1rem; letter-spacing: normal; }
+.workstation .preceptor-note p { font-size: 1rem; line-height: 1.45; }
+.workstation .preceptor-note:focus { outline: none; }
+.workstation .preceptor-note { scroll-margin-top: 1rem; }
+.workstation .intake-steps > div { min-height: 34px; }
+.receiving-workstation .pixel-title { letter-spacing: .02em; }
+.collection-desk ul { line-height: 1.5; }
+
+@media (max-width: 600px) {
+  .scene-typing .pharmacy-art, .scene-picking .pharmacy-art { background-size: cover; }
+  .workstation .container-custom { padding-inline: .85rem; }
+  .workstation .intake-steps > div { padding-inline: .55rem; }
+}
+
+.patient-id, .prescription-slip {
+  padding: clamp(.9rem, 2vw, 1.2rem);
+  border: 1px solid #c9a9a4;
+  border-radius: .55rem;
+  background: linear-gradient(145deg, #f9e7e5, #fdf9ef);
+}
+.prescription-slip { background: #fffdf6; border-color: var(--line); }
+.patient-id-heading { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.patient-id h4, .prescription-slip h4 { font-size: 1.02rem; font-weight: 800; }
+.patient-id small { margin-left: auto; font-size: .7rem; font-weight: 750; color: #574a47; }
+.patient-id dl, .prescription-slip dl { display: grid; gap: .65rem; margin-top: .75rem; border-top: 1px solid #d4c6bb; padding-top: .75rem; }
+.patient-id dt, .prescription-slip dt { font-size: .79rem; color: #514f49; }
+.patient-id dd, .prescription-slip dd { font-weight: 750; font-size: 1rem; overflow-wrap: anywhere; }
+
+.shift-summary { align-items: flex-start; flex-direction: column; }
+.shift-summary h2 { display: flex; align-items: center; gap: .5rem; line-height: 1.2; }
+.shift-summary h2 svg { flex: none; color: #36705c; }
+.shift-summary dl { display: flex; gap: 1.75rem; }
+.shift-summary dt { color: var(--muted); font-size: .85rem; }
+.shift-summary dd { font-size: 1.65rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.about-shift { display: grid; gap: 1rem; line-height: 1.55; }
+.about-shift .station-route { background: var(--paper); }
+.about-shift h2 { font-size: 1.45rem; font-weight: 800; }
+.about-shift ul { display: grid; gap: .65rem; }
+.about-shift ul li { display: flex; gap: .55rem; align-items: baseline; }
+.about-shift ul svg { flex: none; color: #36705c; }
+
+.shift-guide { display: grid; gap: 1.05rem; }
+.shift-guide h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: .45rem; }
+.shift-guide ol { padding-left: 1.35rem; list-style: decimal; display: grid; gap: .35rem; }
+.shift-guide dl { display: grid; gap: .4rem; margin-top: .6rem; font-size: .91rem; }
+.shift-guide dl > div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: .5rem; }
+.shift-guide dt { font-weight: 800; font-variant-numeric: tabular-nums; }

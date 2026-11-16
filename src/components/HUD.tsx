@@ -1,151 +1,69 @@
-import React, { useState } from 'react';
-import { useGameStore } from '../store/gameStore';
-import { Heart, Star, Home, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowUpRight, House } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useGameStore } from '../store/gameStore';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { PharmacyArt, StationRoute, stations } from './PharmacyScene';
 
 interface HUDProps {
   onBackToHome: () => void;
+  caseCount: number;
 }
 
-export const HUD: React.FC<HUDProps> = ({ onBackToHome }) => {
-  const { currentStage, score, rxPoints, playerLevel } = useGameStore();
+export function HUD({ onBackToHome, caseCount }: HUDProps) {
+  const { currentStage, currentLevel, currentYear, currentPrescription, score, rxPoints, playerLevel } = useGameStore();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  const stageName = {
-    receiving: '📥 Receiving',
-    typing: '⌨️ Typing',
-    picking: '📦 Picking',
-    dispensing: '💊 Dispensing',
-  }[currentStage];
-
-  const handleHomeClick = () => {
-    setShowConfirmModal(true);
-  };
-
-  const handleConfirmHome = () => {
-    setShowConfirmModal(false);
-    onBackToHome();
-  };
-
-  // Calculate health/lives based on score (just visual, max 5 hearts)
-  const hearts = Math.min(5, Math.floor(score / 100) + 3);
+  const station = stations[currentStage];
+  const queueNumber = 'P' + String(100 + currentLevel);
+  const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
 
   return (
     <>
-      {/* Pokemon Red Style HUD */}
-      <div className="poke-menu p-3 sm:p-4 mb-4 relative overflow-hidden" style={{ background: '#FFFFFF' }}>
-        <div className="container-custom mx-auto relative z-10">
-          <div className="grid grid-cols-1 gap-3">
-            {/* Top Row: Stage & Home */}
-            <div className="flex items-center gap-3">
-              <motion.button
-                onClick={handleHomeClick}
-                className="bg-poke-red text-poke-white px-4 py-3 text-base font-bold flex items-center gap-2 flex-shrink-0 min-h-[56px] border-4 border-poke-black"
-                whileTap={{ scale: 0.98 }}
-                style={{
-                  boxShadow: 'inset -2px -2px 0 0 #C80000, inset 2px 2px 0 0 #FF4444, 4px 4px 0 0 rgba(0,0,0,0.3)'
-                }}
-              >
-                <Home size={16} />
-                <span className="hidden xs:inline">HOME</span>
-              </motion.button>
-
-              <div
-                className="flex-1 poke-textbox px-4 py-3 min-h-[56px] flex items-center"
-
-              >
-                <div className="flex items-center gap-3 w-full">
-                  <span className="text-poke-black">▶</span>
-                  <span className="font-bold text-poke-black text-sm sm:text-base truncate">
-                    {stageName}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Row: Stats - Pokemon Style */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-3">
-              {/* Score Display */}
-              <div
-                className="border-2 border-poke-black px-1 sm:px-3 py-2 flex flex-col gap-1 col-span-1"
-                style={{ background: '#FFFFFF' }}
-              >
-                <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start">
-                  <Star className="text-poke-dark-yellow w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" />
-                  <p className="text-poke-black text-[10px] sm:text-xs leading-tight font-bold hidden xs:block">SCORE</p>
-                </div>
-                <p className="font-bold text-poke-black text-xs sm:text-lg leading-tight text-center sm:text-left">{score}</p>
-              </div>
-
-              {/* Rx Points Display */}
-              <div
-                className="border-2 border-poke-black px-1 sm:px-3 py-2 flex flex-col gap-1 col-span-1"
-                style={{ background: '#FFFFFF' }}
-              >
-                <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start">
-                  <Zap className="text-poke-blue w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" />
-                  <p className="text-poke-black text-[10px] sm:text-xs leading-tight font-bold hidden xs:block">Rx</p>
-                </div>
-                <p className="font-bold text-poke-black text-xs sm:text-lg leading-tight text-center sm:text-left">{rxPoints}</p>
-              </div>
-
-              {/* Hearts Display */}
-              <div className="border-2 border-poke-black px-1 sm:px-3 py-2 flex items-center justify-center col-span-1" style={{ background: '#FFFFFF' }}>
-                <div className="flex gap-0.5 sm:gap-1">
-                  {[...Array(Math.min(3, hearts))].map((_, i) => (
-                    <Heart
-                      key={i}
-                      className="text-poke-red w-3 h-3 sm:w-4 sm:h-4"
-                      fill="currentColor"
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Player Level */}
-              <div
-                className="border-2 border-poke-black px-1 sm:px-2 py-2 flex flex-col justify-center col-span-1"
-                style={{ background: '#FFFFFF' }}
-              >
-                <p className="text-poke-black text-[8px] sm:text-[9px] leading-tight font-bold text-center mb-0.5 hidden xs:block">RANK</p>
-                <p className="font-bold text-poke-black text-[9px] sm:text-[11px] leading-tight text-center break-words line-clamp-2">
-                  {playerLevel}
-                </p>
-              </div>
-            </div>          </div>
+      <header className="shift-hud">
+        <div className="shift-bar">
+          <button type="button" className="shift-home" onClick={() => setShowConfirmModal(true)}>
+            <House size={17} aria-hidden="true" /> <span>Pharm Life</span>
+          </button>
+          <span className="shift-rank">{playerLevel}</span>
+          <dl className="shift-totals">
+            <div><dt>Case score</dt><dd>{score}</dd></div>
+            <div><dt>Rx points</dt><dd>{rxPoints}</dd></div>
+          </dl>
         </div>
-      </div>
+        <div className={`workstation-scene scene-${currentStage}`}>
+          <PharmacyArt />
+          <motion.div
+            key={`${currentStage}-${currentLevel}`}
+            className="workstation-title"
+            initial={{ opacity: 0, y: 9 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <p className="scene-kicker">Year {currentYear} <span aria-hidden="true">/</span> Case {currentLevel} of {caseCount}</p>
+            <h1>{station.place}</h1>
+            {currentPrescription && <p className="workstation-patient">{currentPrescription.patientName}</p>}
+          </motion.div>
+          <div className="pharmacy-queue">
+            <div className="queue-display" aria-label={counter ? 'Pharmacy queue display' : 'Current queue ticket'}>
+              <span>Queue no.</span>{counter && <span>Counter</span>}
+              <strong>{queueNumber}</strong>{counter && <strong>{counter}</strong>}
+            </div>
+            <a href="#workstation" className="workstation-jump">Go to task <ArrowUpRight size={16} aria-hidden="true" /></a>
+          </div>
+        </div>
+        <StationRoute activeStage={currentStage} />
+      </header>
 
-      {/* Confirmation Modal */}
-      <Modal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        title="Return to Main Menu?"
-      >
+      <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)} title="Leave the shift?">
         <div className="space-y-4">
-          <p className="text-gray-600">
-            Your current progress will be lost. Are you sure you want to return to the main menu?
-          </p>
+          <p>Returning to the main menu resets your current case. Your Rx points stay with you for this session.</p>
           <div className="flex gap-3">
-            <Button
-              variant="danger"
-              onClick={handleConfirmHome}
-              fullWidth
-            >
-              Yes, Go Home
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setShowConfirmModal(false)}
-              fullWidth
-            >
-              Cancel
-            </Button>
+            <Button variant="danger" onClick={onBackToHome} fullWidth>Leave shift</Button>
+            <Button variant="secondary" onClick={() => setShowConfirmModal(false)} fullWidth>Stay on shift</Button>
           </div>
         </div>
       </Modal>
     </>
   );
-};
+}

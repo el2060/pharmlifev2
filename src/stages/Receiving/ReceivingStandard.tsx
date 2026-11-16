@@ -1,3 +1,5 @@
+import { PatientIdentityCard } from './PatientIdentityCard';
+import { PreceptorNote } from '../../components/PharmacyScene';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, User, Shield, FileText, MousePointer2 } from 'lucide-react';
@@ -106,86 +108,11 @@ export const ReceivingStandard: React.FC = () => {
 
     return (
         <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1400px]">
-            {/* Pharmacy Scene Background */}
-            <div className="mb-4 sm:mb-6 relative">
-                <motion.div
-                    className="pharmacy-counter rounded-t-xl p-3 sm:p-8 relative overflow-hidden"
-                    initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                >
-                    {/* Pharmacy Counter Scene */}
-                    <div className="flex justify-between items-end mb-2 sm:mb-4 h-[120px] sm:h-auto">
-                        {/* Pharmacist Character */}
-                        <motion.div
-                            className="relative scale-90 sm:scale-100 origin-bottom-left"
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            <div className="character-pharmacist" />
-                            <motion.div
-                                className="speech-bubble mt-2 absolute -right-2 top-0 transform translate-x-full w-[120px] sm:static sm:w-auto sm:max-w-xs text-[9px] sm:text-xs leading-tight sm:leading-normal z-10"
-                                initial={{ scale: 0, originX: 0, originY: 1 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.6, type: 'spring' }}
-                            >
-                                {step === 'identity' && 'Welcome! Let\'s verify identity.'}
-                                {step === 'validation' && 'Checking prescription...'}
-                                {step === 'complete' && 'Done! Next stage.'}
-                            </motion.div>
-                        </motion.div>
-
-                        {/* Patient Character */}
-                        <motion.div
-                            className="relative scale-90 sm:scale-100 origin-bottom-right"
-                            initial={{ x: 20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                        >
-                            <div className="character-patient" />
-                            <motion.div
-                                className="absolute -top-6 sm:-top-8 right-0 text-2xl sm:text-3xl"
-                                animate={{
-                                    y: [0, -5, 0],
-                                }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            >
-                                💊
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    {/* Decorative Pharmacy Elements */}
-                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-60">
-                        <motion.span
-                            className="text-xl sm:text-3xl"
-                            animate={{ rotate: [0, 10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
-                            ⚕️
-                        </motion.span>
-                    </div>
-                </motion.div>
-
-                {/* Shelves Background */}
-                <div className="pharmacy-shelf h-12 sm:h-20 rounded-b-xl relative flex items-center justify-around px-2 sm:px-8">
-                    {[...Array(5)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="medicine-box w-6 h-6 sm:w-12 sm:h-12 rounded"
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2 * i }}
-                            whileHover={{ scale: 1.1, y: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <div className="w-full h-full flex items-center justify-center text-sm sm:text-2xl">
-                                {['💊', '💉', '🧪', '🩹', '💊'][i]}
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
+            <PreceptorNote step={step}>
+                {step === 'identity' && 'Compare the patient’s ID with the prescription, then check for drug allergies.'}
+                {step === 'validation' && 'Review the prescription details before sending it to the label station.'}
+                {step === 'complete' && 'The prescription check is complete.'}
+            </PreceptorNote>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -193,8 +120,9 @@ export const ReceivingStandard: React.FC = () => {
                 className="space-y-4 sm:space-y-6"
             >
                 {/* Step Indicator */}
-                <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+                <div className="intake-steps flex flex-wrap gap-2 mb-4">
                     <motion.div
+                        aria-current={step === 'identity' ? 'step' : undefined}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'identity'
                             ? 'bg-blue-500 text-white border-blue-700 shadow-lg scale-105 sm:scale-110'
                             : 'bg-gray-100 text-gray-400 border-gray-300'
@@ -204,7 +132,7 @@ export const ReceivingStandard: React.FC = () => {
                     >
                         <User size={16} className="sm:hidden" />
                         <User size={20} className="hidden sm:block" />
-                        <span className="font-semibold text-xs sm:text-base">1. IDENTITY CHECK</span>
+                        <span className="font-semibold text-xs sm:text-base">1. Identity check</span>
                         {step !== 'identity' && identityChecked && (
                             <motion.span
                                 initial={{ scale: 0 }}
@@ -216,6 +144,7 @@ export const ReceivingStandard: React.FC = () => {
                         )}
                     </motion.div>
                     <motion.div
+                        aria-current={step === 'validation' ? 'step' : undefined}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-4 transition-all ${step === 'validation'
                             ? 'bg-purple-500 text-white border-purple-700 shadow-lg scale-105 sm:scale-110'
                             : 'bg-gray-100 text-gray-400 border-gray-300'
@@ -225,7 +154,7 @@ export const ReceivingStandard: React.FC = () => {
                     >
                         <FileText size={16} className="sm:hidden" />
                         <FileText size={20} className="hidden sm:block" />
-                        <span className="font-semibold text-xs sm:text-base">2. VALIDATION</span>
+                        <span className="font-semibold text-xs sm:text-base">2. Prescription review</span>
                     </motion.div>
                 </div>
 
@@ -242,130 +171,12 @@ export const ReceivingStandard: React.FC = () => {
                                 <div className="game-screen p-4 sm:p-6">
                                     <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3" >
                                         <User className="text-blue-500" size={24} />
-                                        <span className="hidden sm:inline">PATIENT ARRIVAL</span>
-                                        <span className="sm:hidden">PATIENT</span>
+                                        <span>Patient arrival</span>
                                     </h3>
 
                                     <div className="space-y-4">
                                         <div className="grid gap-4 lg:grid-cols-2">
-                                            {/* Singapore NRIC Card Display */}
-                                            <motion.div
-                                                className="relative overflow-hidden rounded-xl shadow-2xl"
-                                                initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
-                                                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                                                transition={{ type: 'spring', stiffness: 100 }}
-                                            >
-                                                {/* NRIC Card */}
-                                                <div className="bg-gradient-to-br from-pink-100 via-pink-50 to-white p-4 sm:p-6 border-4 border-pink-200 rounded-xl relative">
-                                                    {/* Header */}
-                                                    <div className="flex justify-between items-start mb-4">
-                                                        <div>
-                                                            <p className="text-xs sm:text-sm font-bold text-gray-700 tracking-wide">REPUBLIC OF SINGAPORE</p>
-                                                            <p className="text-[10px] sm:text-xs text-gray-600 mt-1">IDENTITY CARD NO.</p>
-                                                            <p className="text-base sm:text-xl font-bold text-gray-900 mt-1 font-mono">
-                                                                {currentPrescription.patientIC}
-                                                            </p>
-                                                        </div>
-                                                        <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0">
-                                                            <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                                                                <span className="text-xl sm:text-3xl">🦁</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Card Content */}
-                                                    <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[120px_1fr] gap-3 sm:gap-4">
-                                                        {/* Photo placeholder */}
-                                                        <div className="aspect-[3/4] bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg border-2 border-gray-400 flex items-center justify-center overflow-hidden">
-                                                            <motion.div
-                                                                animate={{ scale: [1, 1.1, 1] }}
-                                                                transition={{ duration: 2, repeat: Infinity }}
-                                                                className="text-3xl sm:text-5xl opacity-60"
-                                                            >
-                                                                👤
-                                                            </motion.div>
-                                                        </div>
-
-                                                        {/* Personal Info */}
-                                                        <div className="space-y-2 sm:space-y-3">
-                                                            <div>
-                                                                <p className="text-[10px] sm:text-xs text-gray-600">Name</p>
-                                                                <p className="text-sm sm:text-lg font-bold text-gray-900 leading-tight">
-                                                                    {currentPrescription.patientName.toUpperCase()}
-                                                                </p>
-                                                            </div>
-
-                                                            <div className="grid grid-cols-2 gap-8">
-                                                                <div>
-                                                                    <p className="text-[10px] sm:text-xs text-gray-600">Race</p>
-                                                                    <p className="text-xs sm:text-sm font-bold text-gray-900">CHINESE</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-[10px] sm:text-xs text-gray-600">Sex</p>
-                                                                    <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                                                        {currentPrescription.patientName.toLowerCase().includes('sarah') ||
-                                                                            currentPrescription.patientName.toLowerCase().includes('ms') ||
-                                                                            currentPrescription.patientName.toLowerCase().startsWith('mrs') ||
-                                                                            currentPrescription.patientName.toLowerCase().startsWith('mdm')
-                                                                            ? 'F'
-                                                                            : 'M'}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                <p className="text-[10px] sm:text-xs text-gray-600">Date of Birth</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-gray-900">
-                                                                    {currentPrescription.patientDOB || (currentPrescription.patientIC.startsWith('S') || currentPrescription.patientIC.startsWith('T')
-                                                                        ? '15-03-1985'
-                                                                        : '22-08-1992')}
-                                                                </p>
-                                                            </div>
-
-                                                            {currentPrescription.patientAddress && (
-                                                                <div className="col-span-2">
-                                                                    <p className="text-[10px] sm:text-xs text-gray-600">Address</p>
-                                                                    <p className="text-xs sm:text-sm font-bold text-gray-900 leading-tight">
-                                                                        {currentPrescription.patientAddress}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-
-                                                            <div>
-                                                                <p className="text-[10px] sm:text-xs text-gray-600">Country of Birth</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-gray-900">SINGAPORE</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Fingerprint graphic */}
-                                                    <div className="absolute bottom-3 right-3 w-10 h-10 sm:w-12 sm:h-12 opacity-30">
-                                                        <div className="w-full h-full rounded-full border-2 border-gray-400 relative">
-                                                            <div className="absolute inset-1 rounded-full border border-gray-400"></div>
-                                                            <div className="absolute inset-2 rounded-full border border-gray-400"></div>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Hologram effect */}
-                                                    <motion.div
-                                                        className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                                                        style={{
-                                                            background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)',
-                                                            backgroundSize: '200% 200%',
-                                                        }}
-                                                        animate={{
-                                                            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-                                                        }}
-                                                        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                                                    />
-                                                </div>
-
-                                                {/* Pixel border decoration */}
-                                                <div className="absolute -top-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
-                                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
-                                                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-pink-500 opacity-50" />
-                                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 opacity-50" />
-                                            </motion.div>
+                                            <PatientIdentityCard prescription={currentPrescription} />
 
                                             {/* Prescription snapshot so ID and Rx can be compared on one screen */}
                                             <motion.div
@@ -407,7 +218,7 @@ export const ReceivingStandard: React.FC = () => {
                                         {/* Identity Verification with arcade button */}
                                         <div className="mt-6 mb-3">
                                             <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
-                                                Your Tasks
+                                                At the counter
                                             </h4>
                                         </div>
                                         <motion.div
@@ -532,7 +343,7 @@ export const ReceivingStandard: React.FC = () => {
                                                     }}
                                                     transition={{ duration: 2, repeat: Infinity }}
                                                 >
-                                                    PROCEED TO PRESCRIPTION VALIDATION →
+                                                    Review prescription →
                                                 </motion.button>
                                             </motion.div>
                                         )}
@@ -556,7 +367,7 @@ export const ReceivingStandard: React.FC = () => {
                                 <p className="text-poke-black text-sm sm:text-base font-bold mb-2" >
                                     VALIDATE PRESCRIPTION
                                 </p>
-                                <p className="text-poke-black text-xs sm:text-sm" >
+                                <p className="text-poke-black text-sm sm:text-base" >
                                     Review the prescription details, then <span className="font-bold text-blue-600">tap on each task box below</span> to verify.
                                 </p>
                             </div>
@@ -597,7 +408,7 @@ export const ReceivingStandard: React.FC = () => {
 
                                     <div className="mb-2">
                                         <h4 className="text-sm sm:text-base font-bold text-gray-500 uppercase tracking-wider">
-                                            Your Tasks (Tap to Verify)
+                                            At the counter (Tap to Verify)
                                         </h4>
                                     </div>
 
@@ -618,7 +429,7 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
+                                                <p className="text-poke-black text-sm sm:text-base font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DOCTOR SIGNATURE
                                                     {!checkedFields.has('signature') && (
                                                         <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
@@ -626,7 +437,7 @@ export const ReceivingStandard: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </p>
-                                                <p className="text-poke-black text-xs sm:text-sm" >
+                                                <p className="text-poke-black text-sm sm:text-base" >
                                                     {currentPrescription.doctorName}
                                                 </p>
                                                 {currentPrescription.doctorSignature && (
@@ -680,7 +491,7 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
+                                                <p className="text-poke-black text-sm sm:text-base font-bold mb-2 flex items-center gap-2" >
                                                     ☐ PRESCRIPTION DATE
                                                     {!checkedFields.has('date') && (
                                                         <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
@@ -688,7 +499,7 @@ export const ReceivingStandard: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </p>
-                                                <p className="text-poke-black text-xs sm:text-sm" >
+                                                <p className="text-poke-black text-sm sm:text-base" >
                                                     {currentPrescription.date}
                                                 </p>
                                             </div>
@@ -722,7 +533,7 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
+                                                <p className="text-poke-black text-sm sm:text-base font-bold mb-2 flex items-center gap-2" >
                                                     ☐ PATIENT DETAILS
                                                     {!checkedFields.has('patient') && (
                                                         <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
@@ -730,7 +541,7 @@ export const ReceivingStandard: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </p>
-                                                <p className="text-poke-black text-xs sm:text-sm" >
+                                                <p className="text-poke-black text-sm sm:text-base" >
                                                     {currentPrescription.patientName}
                                                 </p>
                                                 <p className="text-gray-600 text-xs mt-1">IC: {currentPrescription.patientIC}</p>
@@ -769,7 +580,7 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
+                                                <p className="text-poke-black text-sm sm:text-base font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DOSAGE COMPLETE
                                                     {!checkedFields.has('dosage') && (
                                                         <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
@@ -829,7 +640,7 @@ export const ReceivingStandard: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <p className="text-poke-black text-xs sm:text-sm font-bold mb-2 flex items-center gap-2" >
+                                                <p className="text-poke-black text-sm sm:text-base font-bold mb-2 flex items-center gap-2" >
                                                     ☐ DRUG ALLERGIES
                                                     {!checkedFields.has('allergies') && (
                                                         <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 font-bold animate-pulse bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
@@ -837,7 +648,7 @@ export const ReceivingStandard: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </p>
-                                                <p className="text-poke-black text-xs sm:text-sm" >
+                                                <p className="text-poke-black text-sm sm:text-base" >
                                                     {currentPrescription.patientAllergies.length > 0 ? currentPrescription.patientAllergies.join(', ') : 'NIL'}
                                                 </p>
                                             </div>
@@ -891,7 +702,7 @@ export const ReceivingStandard: React.FC = () => {
                                                 Good job spotting the details. The prescription is valid.
                                             </p>
                                             <Button variant="success" onClick={handleContinue} fullWidth>
-                                                PROCEED TO PREPARATION →
+                                                Send to label station →
                                             </Button>
                                         </>
                                     ) : (

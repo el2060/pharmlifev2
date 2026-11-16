@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { MainMenu } from './screens/MainMenu';
 import { YearSelection } from './screens/YearSelection';
 import { About } from './screens/About';
@@ -90,15 +90,15 @@ function App() {
       case 'picking':
         return <Picking />;
       case 'dispensing':
-        return <Dispensing />;
+        return <Dispensing onBackToHome={handleBackToHome} />;
       default:
         return <Receiving />;
     }
   };
 
   return (
-    <div className="min-h-screen background-clinical flex">
-      <div className="flex-1 mx-auto w-full max-w-[1600px] px-3 sm:px-6 lg:px-10 xl:px-14">
+    <MotionConfig reducedMotion="user">
+      <div className="pharmacy-app">
         <AnimatePresence mode="wait">
           {currentScreen === 'menu' && (
             <motion.div
@@ -143,14 +143,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="min-h-screen space-y-6"
+              className="shift-game"
             >
               {isLevelComplete ? (
                 <SuccessScreen onBackToHome={handleBackToHome} />
               ) : (
                 <>
-                  <HUD onBackToHome={handleBackToHome} />
-                  <div className="pb-10">{renderStage()}</div>
+                  <HUD onBackToHome={handleBackToHome} caseCount={levels.filter(({ year }) => year === currentYear).length} />
+                  <main id="workstation" tabIndex={-1} className={`workstation ${currentStage}-workstation`}>{renderStage()}</main>
                 </>
               )}
             </motion.div>
@@ -159,7 +159,7 @@ function App() {
 
 
       </div>
-    </div>
+    </MotionConfig>
   );
 }
 

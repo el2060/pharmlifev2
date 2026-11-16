@@ -1,29 +1,35 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-import { CheckCircle, XCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, MessageCircle, XCircle } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
-import { Modal } from '../../components/Modal';
 import { useGameStore } from '../../store/gameStore';
 import { getMedicationById } from '../../data/medications';
 import { getQuestionsByMedicationId } from '../../data/questions';
 import { CounselingQuestion } from '../../types/game.types';
 import { ACTIVE_LEVEL_LIMIT } from '../../data/prescriptions';
 
-export const Dispensing: React.FC = () => {
-  const { currentPrescription, addScore, addRxPoints, completeLevel, resetLevel, currentYear, currentLevel } = useGameStore();
+export function Dispensing({ onBackToHome }: { onBackToHome: () => void }) {
+  const { currentPrescription, addScore, addRxPoints, completeLevel, currentYear, currentLevel } = useGameStore();
   const isLastLevel = currentLevel >= ACTIVE_LEVEL_LIMIT[currentYear];
   const [counselingStarted, setCounselingStarted] = useState(false);
   const [counselingComplete, setCounselingComplete] = useState(false);
 
-  // Counseling Modal State
-  const [showCounselingModal, setShowCounselingModal] = useState(false);
+  const [isConversing, setIsConversing] = useState(false);
   const [currentQuestions, setCurrentQuestions] = useState<CounselingQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  const conversationHeading = useRef<HTMLHeadingElement>(null);
+  const handoverButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (isConversing) conversationHeading.current?.focus();
+    if (counselingStarted) handoverButton.current?.focus();
+  }, [isConversing, currentQuestionIndex, counselingStarted]);
 
   if (!currentPrescription) {
     return <div>Loading...</div>;
@@ -40,7 +46,7 @@ export const Dispensing: React.FC = () => {
     if (allQuestions.length > 0) {
       setCurrentQuestions(allQuestions);
       setCurrentQuestionIndex(0);
-      setShowCounselingModal(true);
+      setIsConversing(true);
     } else {
       // If no questions, skip straight to complete
       setCounselingStarted(true);
@@ -70,7 +76,7 @@ export const Dispensing: React.FC = () => {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       // Finished all questions
-      setShowCounselingModal(false);
+      setIsConversing(false);
       setCounselingStarted(true);
     }
   };
@@ -86,10 +92,6 @@ export const Dispensing: React.FC = () => {
     completeLevel();
   };
 
-  const handleResetToMenu = () => {
-    resetLevel();
-  };
-
   return (
     <div className="container-custom mx-auto p-4 sm:p-6 lg:p-8 max-w-[1200px]">
       <motion.div
@@ -97,22 +99,8 @@ export const Dispensing: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-6"
       >
-        {!counselingComplete ? (
-          <>
-            {/* Stage Header */}
-            <Card className="game-screen p-8 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 100 }}
-                className="text-7xl mb-6"
-              >
-                💊
-              </motion.div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-700 mb-2 font-pixel">MEDICATIONS READY</h2>
-              <p className="text-lg text-indigo-500">Hand over the medications and counsel the patient</p>
-            </Card>
-
+        {!counselingComplete && !isConversing && (
+          <div className="collection-desk">
             {/* Patient Info Card */}
             <Card className="bg-gradient-to-r from-blue-50 to-indigo-50">
               <div className="flex items-start gap-4">
@@ -144,13 +132,13 @@ export const Dispensing: React.FC = () => {
               </p>
               <div className="text-poke-black text-sm space-y-3">
                 <p>📋 For each medication, explain:</p>
-                <ul className="ml-4 space-y-2 text-xs">
+                <ul className="ml-4 space-y-2 text-sm">
                   {currentPrescription.medications.map((med, idx) => {
                     const medication = getMedicationById(med.medicationId);
                     return (
                       <li key={idx} className="space-y-1">
                         <strong>✓ {medication?.genericName}:</strong>
-                        <div className="ml-4 text-[11px]">
+                        <div className="ml-4 text-sm">
                           • What it's for: {medication?.commonUses?.[0] || 'Use as directed'}
                         </div>
                       </li>
@@ -166,46 +154,26 @@ export const Dispensing: React.FC = () => {
               </div>
             </div>
 
-            {!counselingStarted ? (
-              <motion.button
-                onClick={handleStartCounseling}
-                className="arcade-button w-full py-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                animate={{
-                  boxShadow: [
-                    '0 0 20px rgba(34, 197, 94, 0.5)',
-                    '0 0 40px rgba(34, 197, 94, 0.8)',
-                    '0 0 20px rgba(34, 197, 94, 0.5)',
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                START COUNSELING →
-              </motion.button>
-            ) : (
-              <motion.button
-                onClick={handleCounselingComplete}
-                className="arcade-button w-full py-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                COMPLETE & HAND OVER →
-              </motion.button>
-            )}
-          </>
-        ) : (
-          /* Success Screen */
+            <button
+              type="button"
+              ref={handoverButton}
+              className="shift-button collection-action"
+              onClick={counselingStarted ? handleCounselingComplete : handleStartCounseling}
+            >
+              {counselingStarted ? 'Hand over medication' : 'Start counselling'}
+              <ArrowRight size={18} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+        {counselingComplete && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center space-y-6"
           >
             <motion.div
-              animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
               className="inline-block"
             >
               <CheckCircle size={120} className="text-pharm-green" />
@@ -236,9 +204,9 @@ export const Dispensing: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {isLastLevel ? 'FINISH LEVEL →' : 'NEXT PATIENT →'}
+                {isLastLevel ? 'Finish shift →' : 'Call the next patient →'}
               </motion.button>
-              <Button variant="secondary" onClick={handleResetToMenu} fullWidth>
+              <Button variant="secondary" onClick={onBackToHome} fullWidth>
                 Back to Menu
               </Button>
             </div>
@@ -246,32 +214,21 @@ export const Dispensing: React.FC = () => {
         )}
       </motion.div>
 
-      {/* Counseling Question Modal */}
-      <Modal
-        isOpen={showCounselingModal}
-        onClose={() => { }} // Prevent closing without answering
-        showCloseButton={false}
-        title="Patient Question"
-      >
-        {currentQuestions.length > 0 && (
-          <div className="space-y-6">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <div className="flex flex-col gap-1 mb-2">
-                <p className="text-sm text-blue-800 font-semibold">
-                  Question {currentQuestionIndex + 1} of {currentQuestions.length}
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">MEDICATION:</span>
-                  <span className="text-sm font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded border border-indigo-200">
-                    {getMedicationById(currentQuestions[currentQuestionIndex].medicationId)?.genericName}
-                  </span>
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mt-2">
-                {currentQuestions[currentQuestionIndex].question}
-              </h3>
+      {isConversing && currentQuestions.length > 0 && (
+        <motion.section
+          className="counter-conversation"
+          aria-label="Patient counselling"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="patient-dialogue">
+            <span className="conversation-avatar"><MessageCircle size={21} aria-hidden="true" /></span>
+            <div className="conversation-bubble">
+              <p className="scene-kicker">{currentPrescription.patientName} <span aria-hidden="true">·</span> {getMedicationById(currentQuestions[currentQuestionIndex].medicationId)?.genericName}</p>
+              <h2 ref={conversationHeading} tabIndex={-1}>{currentQuestions[currentQuestionIndex].question}</h2>
             </div>
-
+          </div>
+          <p className="conversation-label">Your reply</p>
             <div className="grid gap-3">
               {currentQuestions[currentQuestionIndex].options.map((option, idx) => (
                 <button
@@ -279,7 +236,7 @@ export const Dispensing: React.FC = () => {
                   onClick={() => handleAnswerSelect(idx)}
                   disabled={showFeedback}
                   className={`
-                    w-full text-left p-4 rounded-lg border-2 transition-all
+                    conversation-reply w-full text-left p-4 rounded-lg border-2 transition-all
                     ${showFeedback
                       ? idx === currentQuestions[currentQuestionIndex].correctAnswer
                         ? 'bg-green-100 border-green-500 text-green-900'
@@ -320,9 +277,9 @@ export const Dispensing: React.FC = () => {
                   )}
                   <div>
                     <h4 className={`font-bold ${isAnswerCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                      {isAnswerCorrect ? 'Correct!' : 'Incorrect'}
+                      {isAnswerCorrect ? 'Correct!' : 'What to explain instead'}
                     </h4>
-                    <p className={`text-sm mt-1 ${isAnswerCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                    <p className={`text-base leading-relaxed mt-1 ${isAnswerCorrect ? 'text-green-700' : 'text-red-700'}`}>
                       {currentQuestions[currentQuestionIndex].explanation}
                     </p>
                   </div>
@@ -330,24 +287,23 @@ export const Dispensing: React.FC = () => {
 
                 <div className="mt-4 flex justify-end">
                   <Button onClick={handleNextQuestion}>
-                    {currentQuestionIndex < currentQuestions.length - 1 ? 'Next Question' : 'Complete Counseling'}
+                    {currentQuestionIndex < currentQuestions.length - 1 ? 'Continue conversation' : 'Finish counselling'}
                   </Button>
                 </div>
               </motion.div>
             )}
 
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 h-2 rounded-full mt-6">
+            <p className="conversation-progress">Topic {currentQuestionIndex + 1} of {currentQuestions.length}</p>
+            <div className="w-full bg-gray-200 h-2 rounded-full" aria-hidden="true">
               <div
-                className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                className="bg-emerald-700 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentQuestionIndex + (showFeedback ? 1 : 0)) / currentQuestions.length) * 100}%` }}
               />
             </div>
-          </div>
-        )}
-      </Modal>
+        </motion.section>
+      )}
 
 
     </div >
   );
-};
+}

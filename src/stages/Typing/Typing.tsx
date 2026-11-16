@@ -288,16 +288,17 @@ export const Typing: React.FC = () => {
           >
             <h3 className="text-base sm:text-lg font-bold mb-4 flex items-center gap-2 text-poke-black" >
               <Printer className="text-poke-blue" size={20} />
-              LABEL BUILD
+              Label printer
             </h3>
 
             <div className="space-y-4">
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" >
+                <label htmlFor="label-quantity" className="block text-sm font-bold text-poke-black mb-2">
                   QUANTITY:
                 </label>
                 <select
+                  id="label-quantity"
                   value={labelData.quantity}
                   onChange={(e) => setLabelData({ ...labelData, quantity: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
@@ -319,10 +320,11 @@ export const Typing: React.FC = () => {
 
               {/* Dosage Form */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" >
+                <label htmlFor="label-dosageForm" className="block text-sm font-bold text-poke-black mb-2">
                   FORM:
                 </label>
                 <select
+                  id="label-dosageForm"
                   value={labelData.dosageForm}
                   onChange={(e) => setLabelData({ ...labelData, dosageForm: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
@@ -342,10 +344,11 @@ export const Typing: React.FC = () => {
 
               {/* Frequency */}
               <div>
-                <label className="block text-sm font-bold text-poke-black mb-2" >
+                <label htmlFor="label-frequency" className="block text-sm font-bold text-poke-black mb-2">
                   FREQUENCY:
                 </label>
                 <select
+                  id="label-frequency"
                   value={labelData.frequency}
                   onChange={(e) => setLabelData({ ...labelData, frequency: e.target.value })}
                   className="w-full p-3 text-base border-4 border-poke-black focus:outline-none min-h-[56px] text-poke-black font-bold"
@@ -380,20 +383,22 @@ export const Typing: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="poke-textbox p-4"
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="printed-label p-4"
+                  aria-label="Medication label preview"
                 >
-                  <p className="text-xs text-poke-black mb-3 font-bold" >PREVIEW:</p>
+                  <p className="text-xs text-poke-black mb-3 font-bold" >Label preview · {currentPrescription.patientName}</p>
                   <p className="font-bold text-sm text-poke-black mb-2" >
                     {medication.genericName}
                   </p>
                   <p className="text-xs text-poke-black mb-2" >
                     {medication.strength}
                   </p>
-                  Take {labelData.quantity}{
+                  <p className="text-sm font-medium">Take {labelData.quantity}{
                     ['liquid', 'syrup'].includes(labelData.dosageForm) ? 'ml'
                       : (labelData.dosageForm === 'inhaler' ? ` puff${Number(labelData.quantity) > 1 ? 's' : ''}`
                         : ` ${labelData.dosageForm}${Number(labelData.quantity) > 1 ? 's' : ''}`)
-                  } {labelData.frequency}
+                  } {labelData.frequency}</p>
                   {specialInstructionLabel && (
                     <p className="text-xs text-poke-black mt-2" >{specialInstructionLabel}</p>
                   )}
