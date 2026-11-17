@@ -63,7 +63,9 @@ export function Dispensing() {
     return <div>Loading...</div>;
   }
 
-  const replies = currentQuestions[currentQuestionIndex]?.options.map((option, index) => ({ option, index })) ?? [];
+  const question = currentQuestions[currentQuestionIndex];
+  const questionOrder = currentPrescription.medications.find(order => order.medicationId === question?.medicationId);
+  const replies = question?.options.map((option, index) => ({ option, index })) ?? [];
   const replyOffset = replies.length ? (currentLevel + currentQuestionIndex) % replies.length : 0;
   const visibleReplies = [...replies.slice(replyOffset), ...replies.slice(0, replyOffset)];
 
@@ -247,7 +249,7 @@ export function Dispensing() {
         )}
       </motion.div>
 
-      {isConversing && currentQuestions.length > 0 && (
+      {isConversing && question && (
         <motion.section
           className="counter-conversation"
           aria-label="Patient counselling"
@@ -258,10 +260,16 @@ export function Dispensing() {
           <div className="patient-dialogue">
             <span className="conversation-avatar"><MessageCircle size={21} aria-hidden="true" /></span>
             <div className="conversation-bubble">
-              <p className="scene-kicker">{currentPrescription.patientName} <span aria-hidden="true">·</span> {getMedicationById(currentQuestions[currentQuestionIndex].medicationId)?.genericName}</p>
-              <h2 ref={conversationHeading} data-scene-task={showFeedback ? undefined : true} tabIndex={-1}>{currentQuestions[currentQuestionIndex].question}</h2>
+              <p className="scene-kicker">{currentPrescription.patientName} <span aria-hidden="true">·</span> {getMedicationById(question.medicationId)?.genericName}</p>
+              <h2 ref={conversationHeading} data-scene-task={showFeedback ? undefined : true} tabIndex={-1}>{question.question}</h2>
             </div>
           </div>
+          {questionOrder && (
+            <details className="label-reference conversation-reference">
+              <summary>Check the prescription</summary>
+              <p>{questionOrder.dosageInstruction} {questionOrder.frequency} {questionOrder.specialInstructions}{questionOrder.duration ? ` × ${questionOrder.duration}` : ''}</p>
+            </details>
+          )}
           <p className="conversation-label">{showFeedback ? 'Replies' : 'Choose your reply'}</p>
             <div className="grid gap-3">
               {visibleReplies.map(({ option, index: idx }) => (
@@ -272,7 +280,7 @@ export function Dispensing() {
                   className={`
                     conversation-reply w-full text-left p-4 rounded-lg border-2 transition-all
                     ${showFeedback
-                      ? idx === currentQuestions[currentQuestionIndex].correctAnswer
+                      ? idx === question.correctAnswer
                         ? 'bg-green-100 border-green-500 text-green-900'
                         : idx === selectedAnswer
                           ? 'bg-red-100 border-red-500 text-red-900'
@@ -285,11 +293,11 @@ export function Dispensing() {
                 >
                   <div className="flex items-center justify-between">
                     <span>{option}</span>
-                    {showFeedback && idx === currentQuestions[currentQuestionIndex].correctAnswer && (
-                      <CheckCircle className="text-green-600" size={20} aria-label="Correct reply" />
+                    {showFeedback && idx === question.correctAnswer && (
+                      <span className="reply-verdict"><CheckCircle size={17} aria-hidden="true" /> {idx === selectedAnswer ? 'Your correct reply' : 'Better reply'}</span>
                     )}
-                    {showFeedback && idx === selectedAnswer && idx !== currentQuestions[currentQuestionIndex].correctAnswer && (
-                      <XCircle className="text-red-600" size={20} aria-label="Your reply" />
+                    {showFeedback && idx === selectedAnswer && idx !== question.correctAnswer && (
+                      <span className="reply-verdict"><XCircle size={17} aria-hidden="true" /> Your reply</span>
                     )}
                   </div>
                 </button>
@@ -314,7 +322,7 @@ export function Dispensing() {
                       {isAnswerCorrect ? 'That’s right' : 'What to explain instead'}
                     </h3>
                     <p className={`text-base leading-relaxed mt-1 ${isAnswerCorrect ? 'text-green-700' : 'text-red-700'}`}>
-                      {currentQuestions[currentQuestionIndex].explanation}
+                      {question.explanation}
                     </p>
                   </div>
                 </div>

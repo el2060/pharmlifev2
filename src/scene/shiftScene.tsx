@@ -5,7 +5,7 @@ export function getPharmacyQueueNumber(caseNumber: number) {
   return `P${100 + caseNumber}`;
 }
 
-export type SceneGesture = 'talk' | 'nod' | 'consider' | 'print' | 'pack' | 'handover';
+export type SceneGesture = 'talk' | 'nod' | 'consider' | 'print' | 'printed' | 'pack' | 'basket-match' | 'basket-review' | 'handover';
 
 export interface SceneProduct {
   id: string;

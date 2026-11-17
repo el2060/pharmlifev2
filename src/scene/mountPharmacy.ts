@@ -51,6 +51,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   let lastFrame = 0;
   let gestureStarted = 0;
   let lastMoment: SceneMoment | undefined;
+  let lastActionAvailable = false;
   let frame = 0;
   let visible = true;
   let lost = false;
@@ -95,7 +96,8 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     if (!visible || lost || width < 2 || height < 2) return;
     const changed = view !== state.view || caseNumber !== state.caseNumber;
     const rotated = state.rotationRequest !== lastRotationRequest;
-    if (!snap && !changed && !rotated && state.moment === lastMoment && state.deskInset === lastDeskInset && reducedMotion.matches && !firstFrame) {
+    const actionAvailable = state.view === state.activeStage && Boolean(state.stationAction);
+    if (!snap && !changed && !rotated && actionAvailable === lastActionAvailable && state.moment === lastMoment && state.deskInset === lastDeskInset && reducedMotion.matches && !firstFrame) {
       projectMarkers();
       lastFrame = now;
       return;
@@ -137,7 +139,8 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
     camera.lookAt(look);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld();
-    world.animate(still ? 0 : now / 1000, state.view, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber, state.activeStage);
+    lastActionAvailable = actionAvailable;
+    world.animate(still ? 0 : now / 1000, state.view, state.moment, still ? 2 : (now - gestureStarted) / 1000, caseNumber, state.activeStage, actionAvailable);
     renderer.render(scene, camera);
 
     projectMarkers();

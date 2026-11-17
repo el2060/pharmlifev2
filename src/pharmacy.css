@@ -869,6 +869,14 @@
 .shift-restart { flex: none; color: #e4f0e8; white-space: nowrap; }
 .shift-restart:hover, .shift-restart:focus-visible { color: var(--action); }
 .shift-restart:focus-visible { outline-color: var(--action); }
+.shift-sound { display: grid; place-items: center; width: 44px; height: 44px; flex: none; color: #e4f0e8; border: 1px solid #6e8e80; border-radius: .4rem; }
+.shift-sound:hover, .shift-sound[aria-pressed='true'] { color: var(--action); background: #ffffff10; }
+.shift-sound:focus-visible { outline-color: var(--action); }
+.reply-verdict { display: inline-flex; flex: none; align-items: center; gap: .3rem; font-size: .81rem; font-weight: 800; }
+.reply-verdict svg { flex: none; }
+.conversation-reply > div { flex-wrap: wrap; gap: .35rem .65rem; }
+.conversation-reference { margin-top: 0; }
+.conversation-reference p { margin-top: .4rem; color: var(--muted); }
 .shift-summary-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .85rem 1.3rem; }
 .shift-summary-back { color: #245747; }
 .shift-summary-back:hover { text-decoration: underline; }

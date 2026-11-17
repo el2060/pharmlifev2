@@ -209,6 +209,13 @@ export function buildPharmacy(scene: THREE.Scene) {
     }
     box(screen, [0.40, 0.33, 0.09], [0, 1.17, 0.61], colors.dark);
     textPanel(screen, [0, 1.17, 0.66], 0.35, 0.28, counter, '#1d4b4a', '#ffffff');
+    return indicator(screen, [0, 1.36, 0.65], [0.28, 0.033, 0.028]);
+  }
+
+  function indicator(parent: THREE.Object3D, position: Point, size: Point) {
+    const material = new THREE.MeshBasicMaterial({ color: 0x385755 });
+    shape(unitBox, parent, size, position, material);
+    return material.color;
   }
 
   const staffBoundary = group(scene, [0.17, 0, 1.13]);
@@ -232,7 +239,7 @@ export function buildPharmacy(scene: THREE.Scene) {
   const intake = consoleDesk(-4.45, 1.03, 3.9, colors.pine);
   textPanel(intake, [0, 0.63, 0.524], 2.45, 0.36, '01  PRESCRIPTION CHECK', '#225e53', '#fff0c0');
   monitor(intake, -0.94, -0.15, true);
-  privacyDivider(intake, 1.86, '01');
+  const intakeLamp = privacyDivider(intake, 1.86, '01');
   const slip = envelope(intake, [0.18, 1.22, 0.37], colors.paper);
   envelope(intake, [0.74, 1.217, 0.23], 0xedc6c3).rotation.y = -0.23;
 
@@ -245,7 +252,8 @@ export function buildPharmacy(scene: THREE.Scene) {
   box(labels, [0.44, 0.047, 0.04], [0.67, 1.4, 0.255], colors.dark);
   const printout = envelope(labels, [0.67, 1.36, 0.30], colors.paper);
   printout.rotation.x = 1.18;
-  box(labels, [0.055, 0.035, 0.025], [0.88, 1.48, 0.257], 0x59d097);
+  const printerLamp = indicator(labels, [0.88, 1.48, 0.257], [0.071, 0.045, 0.028]);
+  const printerDisplay = textPanel(labels, [0.66, 1.338, 0.255], 0.42, 0.072, 'READY', '#203d4a', '#c5f2de');
   envelope(labels, [-0.13, 1.215, 0.36], colors.paper);
 
   const stock = group(scene, [3.65, 0, -3.74]);
@@ -269,6 +277,10 @@ export function buildPharmacy(scene: THREE.Scene) {
   box(stock, [5.42, 0.34, 0.29], [0, 3.54, -0.16], colors.pine);
   textPanel(stock, [0, 3.54, -0.012], 3.6, 0.29, 'MEDICINE STOCK', '#286557', '#fff0c0');
   const packing = consoleDesk(3.1, -1.67, 2.7, colors.jade);
+  box(packing, [0.45, 0.08, 0.27], [-0.62, 1.245, 0.12], colors.metal);
+  box(packing, [0.12, 0.21, 0.09], [-0.62, 1.35, 0.12], colors.dark);
+  box(packing, [0.93, 0.29, 0.12], [-0.62, 1.53, 0.12], colors.dark);
+  const trayDisplay = textPanel(packing, [-0.62, 1.53, 0.182], 0.85, 0.22, 'PICKING TRAY', '#203d4a', '#c5f2de');
   box(packing, [0.83, 0.075, 0.62], [0.24, 1.23, 0.15], colors.blue);
   for (const x of [-0.18, 0.66]) box(packing, [0.06, 0.15, 0.62], [x, 1.27, 0.15], colors.blue);
   for (const z of [-0.13, 0.44]) box(packing, [0.83, 0.15, 0.05], [0.24, 1.27, z], colors.blue);
@@ -283,7 +295,7 @@ export function buildPharmacy(scene: THREE.Scene) {
   const dispensing = consoleDesk(4.67, 1.24, 3.75, colors.pine);
   textPanel(dispensing, [0, 0.63, 0.524], 2.72, 0.36, '02  MEDICINE COLLECTION', '#225e53', '#fff0c0');
   monitor(dispensing, 0.99, -0.16, true);
-  privacyDivider(dispensing, -1.78, '02');
+  const collectionLamp = privacyDivider(dispensing, -1.78, '02');
   box(dispensing, [1.09, 0.11, 0.52], [1.06, 0.89, 0.67], colors.light);
   const bag = group(dispensing, [-0.37, 1.2, 0.24]);
   box(bag, [0.49, 0.65, 0.29], [0, 0.325, 0], colors.sand);
@@ -292,6 +304,18 @@ export function buildPharmacy(scene: THREE.Scene) {
   const handle = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.025, 8, 16, Math.PI), surface(colors.sand));
   handle.position.set(0, 0.65, 0);
   bag.add(handle);
+  const interactionRing = new THREE.Mesh(
+    new THREE.RingGeometry(0.38, 0.42, 42),
+    new THREE.MeshBasicMaterial({ color: 0xffd381, transparent: true, opacity: 0.85, depthWrite: false }),
+  );
+  interactionRing.rotation.x = -Math.PI / 2;
+  const interactionSurface = new THREE.Mesh(
+    new THREE.CircleGeometry(0.42, 32),
+    new THREE.MeshBasicMaterial({ color: 0xffd381, transparent: true, opacity: 0.11, depthWrite: false }),
+  );
+  interactionSurface.position.z = -0.002;
+  interactionRing.add(interactionSurface);
+  scene.add(interactionRing);
 
   function waitingSeat(x: number) {
     const seat = group(scene, [x, 0, 4.19]);
@@ -437,8 +461,9 @@ export function buildPharmacy(scene: THREE.Scene) {
   const waitSpot: Waypoint = [-1.2, 3.18];
   const pickupSpot: Waypoint = [4.62, 2.38];
   const staffRoute: Waypoint[] = [[-0.25, -1.38], [0.89, -1.45], [1.05, -2.51]];
-  const returnToPrinter = staffRoute.slice().reverse();
   const printerSpot = [staffRoute[0]];
+  const routeToCollection: Waypoint[] = [staffRoute[staffRoute.length - 1], [1.35, -0.63], [3.38, -0.55], [4.02, 0.15]];
+  const returnToPrinter = [...routeToCollection.slice(1).reverse(), staffRoute[1], staffRoute[0]];
   const patientRoutes: Record<GameStage, Waypoint[]> = {
     receiving: [[-6.2, 4.48], [-5.26, 3.32], intakeSpot],
     typing: [intakeSpot, [-4.48, 3.12], waitSpot],
@@ -454,6 +479,8 @@ export function buildPharmacy(scene: THREE.Scene) {
   const handPosition = new THREE.Vector3();
   const ease = (value: number) => THREE.MathUtils.smoothstep(value, 0, 1);
   let queueStatus = '';
+  let printerStatus = '';
+  let trayStatus = '';
   let previousStage: GameStage | undefined;
   let previousCase = -1;
   let stageStarted = 0;
@@ -507,7 +534,12 @@ export function buildPharmacy(scene: THREE.Scene) {
     });
   }
 
-  function animate(time: number, stage: PharmacyView, moment: SceneMoment | undefined, gestureElapsed: number, caseNumber: number, activeStage: GameStage) {
+  function illuminate(color: THREE.Color, active: boolean, elapsed: number, still: boolean) {
+    color.setHex(active ? 0xffd786 : 0x385755);
+    if (active && !still && elapsed < 1.2) color.multiplyScalar(0.78 + 0.22 * Math.cos(elapsed * 15));
+  }
+
+  function animate(time: number, stage: PharmacyView, moment: SceneMoment | undefined, gestureElapsed: number, caseNumber: number, activeStage: GameStage, actionAvailable: boolean) {
     const still = time === 0;
     const stageChanged = previousStage !== activeStage || previousCase !== caseNumber;
     if (stageChanged) {
@@ -519,12 +551,26 @@ export function buildPharmacy(scene: THREE.Scene) {
     }
     const inStage = still ? 10 : time - stageStarted;
     const ticket = getPharmacyQueueNumber(caseNumber);
-    const status = activeStage === 'dispensing' ? `${ticket}   →   02`
+    const currentMoment = moment?.stage === activeStage ? moment : undefined;
+    const gesture = currentMoment?.gesture;
+    const handover = gesture === 'handover';
+    const status = handover ? `${ticket}   ·   COLLECTED`
+      : activeStage === 'dispensing' ? `${ticket}   →   02`
       : activeStage === 'receiving' ? `${ticket}   →   01`
         : `${ticket}   ·   PLEASE WAIT`;
     if (queueStatus !== status) {
       queueStatus = status;
       showQueue?.(status);
+    }
+    illuminate(intakeLamp, activeStage === 'receiving', inStage, still);
+    illuminate(collectionLamp, activeStage === 'dispensing' && !handover, inStage, still);
+    interactionRing.visible = actionAvailable && stage !== 'picking' && stage !== 'overview';
+    if (interactionRing.visible) {
+      if (stage === 'receiving') interactionRing.position.set(-4.27, 1.239, 1.40);
+      else if (stage === 'typing') interactionRing.position.set(-0.59, 1.214, -2.56);
+      else interactionRing.position.set(4.30, 1.215, 1.59);
+      const pulse = still || inStage > 2.5 ? 1 : 1 + 0.1 * Math.sin(inStage * 7);
+      interactionRing.scale.setScalar(pulse);
     }
 
     inventory.visible = stage === 'picking' && visibleProducts.length > 0;
@@ -539,9 +585,6 @@ export function buildPharmacy(scene: THREE.Scene) {
     }
     const client = patients[(Math.max(1, caseNumber) - 1) % patients.length];
     patients.forEach(patient => { patient.actor.visible = false; });
-    const currentMoment = moment?.stage === activeStage ? moment : undefined;
-    const gesture = currentMoment?.gesture;
-    const handover = gesture === 'handover';
     const departing = handover && gestureElapsed > 1.05;
     const patientFacing = activeStage === 'receiving' ? 2.38 : activeStage === 'dispensing' ? 2.32 : -1.4;
     const patientStride = departing
@@ -551,10 +594,13 @@ export function buildPharmacy(scene: THREE.Scene) {
     pose(client, time, 1.8, patientStride);
 
     const atShelves = activeStage === 'picking';
+    const delivering = activeStage === 'dispensing' && !handover;
     const technicianStride = atShelves
       ? walk(technician, staffRoute, inStage, 1.95, 0.86)
       : activeStage === 'dispensing'
-        ? walk(technician, returnToPrinter, inStage, 1.95, -2.83)
+        ? inStage < 2.75
+          ? walk(technician, routeToCollection, inStage, 2.3, 1.2)
+          : walk(technician, returnToPrinter, inStage - 2.75, 2.8, -2.83)
         : walk(technician, printerSpot, inStage, 1, -2.83);
     pose(technician, time, 2.5, technicianStride);
     pose(pharmacist, time, 0.2);
@@ -585,12 +631,20 @@ export function buildPharmacy(scene: THREE.Scene) {
     pharmacist.arms[1].elbow.rotation.x -= 0.62 * presenting;
 
     const printing = gesture === 'print';
+    const printed = gesture === 'printed';
     if (printing) {
       technician.arms[0].shoulder.rotation.x -= 0.94;
       technician.arms[0].elbow.rotation.x -= 0.34;
       technician.head.rotation.x += 0.2;
     }
-    const feed = printing ? ease((gestureElapsed - 0.13) / 0.86) : 0;
+    const printerMessage = printing ? 'PRINTING' : printed ? 'LABEL READY' : 'READY';
+    if (printerMessage !== printerStatus) {
+      printerStatus = printerMessage;
+      printerDisplay?.(printerMessage);
+    }
+    printerLamp.setHex(printing ? 0xffc265 : printed ? 0x77efad : 0x568577);
+    if (printing && !still) printerLamp.multiplyScalar(0.73 + Math.sin(gestureElapsed * 26) * 0.27);
+    const feed = printed ? 1 : printing ? ease((gestureElapsed - 0.13) / 0.86) : 0;
     printout.position.z = 0.30 + feed * 0.32;
     printout.position.y = 1.36 - feed * 0.085;
     printout.rotation.x = 1.18 - feed * 0.58;
@@ -629,6 +683,13 @@ export function buildPharmacy(scene: THREE.Scene) {
     packedCartons.forEach((carton, index) => {
       carton.visible = index < previousSelection.length && (!transferring || index !== transferSlot);
     });
+    const trayMessage = gesture === 'basket-match' ? 'BASKET CHECKED'
+      : gesture === 'basket-review' ? 'CHECK PRESCRIPTION'
+        : previousSelection.length ? `${previousSelection.length} IN TRAY` : 'PICKING TRAY';
+    if (trayMessage !== trayStatus) {
+      trayStatus = trayMessage;
+      trayDisplay?.(trayMessage);
+    }
 
     const offered = handover ? ease((gestureElapsed - 0.03) / 0.7) : 0;
     const reach = offered * (1 - ease((gestureElapsed - 0.87) / 0.38));
@@ -637,9 +698,17 @@ export function buildPharmacy(scene: THREE.Scene) {
     dispenser.body.rotation.x += reach * 0.19;
     client.arms[0].shoulder.rotation.x -= offered * (departing && !still ? 0.14 : 0.79);
     client.arms[0].elbow.rotation.x -= offered * 0.49;
-    bag.visible = client.actor.visible || !handover;
+    bag.visible = activeStage === 'dispensing' && (client.actor.visible || !handover);
     bag.position.set(-0.37, 1.2 + Math.sin(offered * Math.PI) * 0.24, 0.24 + offered * 0.75);
     bag.rotation.z = 0;
+    if (delivering && !still && inStage < 2.65) {
+      const carry = 1 - ease((inStage - 2.13) / 0.52);
+      technician.arms[1].elbow.rotation.x -= 0.72 * carry;
+      technician.arms[1].hand.getWorldPosition(handPosition);
+      handPosition.y -= 0.66;
+      bag.position.lerp(dispensing.worldToLocal(handPosition), carry);
+      bag.rotation.z = Math.sin(time * 13) * 0.09 * carry;
+    }
     if (departing && !still) {
       client.arms[0].hand.getWorldPosition(handPosition);
       bag.position.lerp(dispensing.worldToLocal(handPosition), ease((gestureElapsed - 1.05) / 0.22));
@@ -650,9 +719,10 @@ export function buildPharmacy(scene: THREE.Scene) {
 
   function hitsStationAction(raycaster: THREE.Raycaster, stage: GameStage) {
     const patient = patients.find(({ actor }) => actor.visible);
-    const targets = stage === 'receiving' ? [slip, ...(patient ? [patient.body] : [])]
+    const targets: THREE.Object3D[] = stage === 'receiving' ? [slip, ...(patient ? [patient.body] : [])]
       : stage === 'typing' ? [printer]
         : stage === 'dispensing' ? [bag, ...(patient ? [patient.body] : [])] : [];
+    if (interactionRing.visible) targets.push(interactionRing);
     return raycaster.intersectObjects(targets.filter(target => target.visible), true).length > 0;
   }
   function dispose() {

@@ -52,7 +52,7 @@ export const Picking: React.FC = () => {
       ? isCorrect ? 'The items match the prescription.' : 'Compare the medication names and strengths with the prescription.'
       : 'Check the name and strength on each carton before you put it in the basket.',
     actionLabel: 'Open picking workstation',
-    gesture: showResult ? isCorrect ? 'nod' : 'consider' : 'pack',
+    gesture: showResult ? isCorrect ? 'basket-match' : 'basket-review' : 'pack',
     products: sceneProducts,
   }, undefined, handleSelectMedication);
 

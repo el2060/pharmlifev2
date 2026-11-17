@@ -49,8 +49,9 @@ export const Typing: React.FC = () => {
     stage: 'typing',
     speaker: showPatientDialogue ? currentPrescription?.patientName : 'Pharmacy technician',
     speakerRole: showPatientDialogue ? 'patient' : 'staff',
-    caption: showPatientDialogue ? patientQuestion : isPrinting ? 'Printing the label…' : 'I’ll set up the printer. Enter the directions from the prescription.',
-    gesture: isPrinting ? 'print' : 'talk',
+    caption: showPatientDialogue ? patientQuestion : isPrinting ? 'Printing the label…'
+      : result === 'printed' ? 'The label is ready.' : 'Use the prescription to prepare the label.',
+    gesture: isPrinting ? 'print' : result === 'printed' ? 'printed' : showPatientDialogue ? 'consider' : 'talk',
     actionLabel: printerReady ? 'Print medication label' : 'Open label workstation',
     canActFromScene: printerReady,
   }, () => {

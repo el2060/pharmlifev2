@@ -1,9 +1,10 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, ArrowRight, House, Map, RotateCcw, RotateCw, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, House, Map, RotateCcw, RotateCw, Volume2, VolumeX, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { getPharmacyQueueNumber, useShiftScene } from '../scene/shiftScene';
 import type { PharmacyView } from '../scene/pharmacyWorld';
+import { useShiftAudio } from '../scene/useShiftAudio';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { StationRoute, stations } from './PharmacyScene';
@@ -41,7 +42,8 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
   const counter = currentStage === 'receiving' ? '01' : currentStage === 'dispensing' ? '02' : null;
   const taskLabel = moment?.actionLabel ?? (currentStage === 'receiving' ? 'Open patient file' : 'Open workstation');
   const shelfProducts = pickingLayout ? moment?.products : undefined;
-  const basketCount = shelfProducts?.filter(({ selected }) => selected).length ?? 0;
+  const basketCount = moment?.products?.filter(({ selected }) => selected).length ?? 0;
+  const audio = useShiftAudio(currentStage, currentLevel, moment?.gesture, basketCount);
 
   useEffect(() => {
     sceneRef.current?.querySelector('h1')?.focus({ preventScroll: true });
@@ -80,8 +82,10 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
 
   useEffect(() => {
     if (deskRef.current) deskRef.current.scrollTop = 0;
-    if (previousStep.current !== step && window.matchMedia('(max-width: 850px)').matches) {
-      sceneRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    if (previousStep.current !== step) {
+      if (window.matchMedia('(max-width: 850px)').matches) {
+        sceneRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      }
       sceneRef.current?.querySelector('h1')?.focus({ preventScroll: true });
     }
     previousStep.current = step;
@@ -133,6 +137,11 @@ export function HUD({ onBackToHome, onRestart, caseCount, children }: HUDProps) 
             <div><dt>Case score</dt><dd>{score}</dd></div>
             <div><dt>Rx points</dt><dd>{rxPoints}</dd></div>
           </dl>
+          {audio.supported && (
+            <button type="button" className="shift-sound" aria-label="Shift sounds" aria-pressed={audio.enabled} title={audio.enabled ? 'Mute shift sounds' : 'Enable shift sounds'} onClick={audio.toggle}>
+              {audio.enabled ? <Volume2 size={18} aria-hidden="true" /> : <VolumeX size={18} aria-hidden="true" />}
+            </button>
+          )}
           <button type="button" className="shift-restart" aria-label="Restart shift" onClick={onRestart}>
             <RotateCcw size={17} aria-hidden="true" /> <span>Restart<span className="shift-restart-word"> shift</span></span>
           </button>
