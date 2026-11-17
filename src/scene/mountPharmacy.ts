@@ -10,6 +10,7 @@ interface ViewState {
   caseNumber: number;
   markers: Partial<Record<GameStage, HTMLButtonElement>>;
   ambient: boolean;
+  lobbyPreview: boolean;
   rotationRequest: number;
   stationAction?: () => void;
   moment?: SceneMoment;
@@ -56,24 +57,30 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
   let visible = true;
   let lost = false;
   let firstFrame = true;
+  let introStarted: number | undefined;
   let previousPointer: number | null = null;
   let startPointer: { x: number; y: number } | null = null;
   let lastProduct: SceneProduct | undefined;
 
-  function updateView() {
+  function updateView(now: number, still: boolean) {
     const viewWidth = Math.max(width - state.deskInset, width * 0.4);
     const overview = state.view === 'overview';
     const preset = overview ? null : stationViews[state.view as GameStage];
-    goal.set(...(preset?.target ?? [0.05, 1.15, -0.15]));
+    goal.set(...(preset?.target ?? [0.05, state.lobbyPreview ? 1.3 : 1.15, -0.15]));
     if (overview) {
       goalOffset.set(8.8, 12, 17.2);
-      desiredZoom = Math.max(6.95, 9.4 * height / width);
+      desiredZoom = Math.max(state.lobbyPreview ? 6.8 : 6.95, 9.4 * height / width);
+      if (state.lobbyPreview && !still && introStarted !== undefined) {
+        const opening = 1 - THREE.MathUtils.smoothstep(now - introStarted, 0, 1800);
+        goalOffset.applyAxisAngle(THREE.Object3D.DEFAULT_UP, -0.29 * opening);
+        desiredZoom *= 1 + opening * 0.09;
+      }
     } else if (state.view === 'picking') {
       goalOffset.set(1.1, 2.7, 9.8);
       desiredZoom = Math.max(stationViews.picking.zoom, 3.18 * height / viewWidth);
     } else {
       goalOffset.set(4.6, state.view === 'dispensing' ? 4.3 : 5.1, 9.8);
-      desiredZoom = Math.max(preset!.zoom, 3.2 * height / viewWidth);
+      desiredZoom = Math.max(preset!.zoom, (state.lobbyPreview ? 4 : 3.2) * height / viewWidth);
     }
     const viewAngle = state.view === 'picking' ? angle * 0.46 : angle;
     goalOffset.applyAxisAngle(THREE.Object3D.DEFAULT_UP, viewAngle);
@@ -103,6 +110,7 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       return;
     }
     if (changed) {
+      if (view !== undefined) introStarted = -1800;
       view = state.view;
       caseNumber = state.caseNumber;
       angle = 0;
@@ -119,8 +127,9 @@ export function mountPharmacy(host: HTMLElement, state: ViewState, onAvailable: 
       hover(undefined);
     }
 
-    updateView();
     const still = reducedMotion.matches;
+    introStarted ??= now;
+    updateView(now, still);
     const delta = Math.min((now - lastFrame) / 1000, 0.09);
     lastFrame = now;
     const blend = snap || still || firstFrame ? 1 : 1 - Math.exp(-6 * delta);

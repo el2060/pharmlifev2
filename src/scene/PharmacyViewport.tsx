@@ -12,6 +12,8 @@ const locations = {
   dispensing: { name: 'Counselling counter', action: 'Speak with the patient' },
 } satisfies Record<GameStage, { name: string; action: string }>;
 
+export type PharmacyRenderer = 'pending' | 'webgl' | 'unavailable';
+
 interface PharmacyViewportProps {
   stage?: GameStage;
   view?: PharmacyView;
@@ -24,17 +26,21 @@ interface PharmacyViewportProps {
   onTask?: () => void;
   onChoose?: (id: string) => void;
   moment?: SceneMoment;
+  lobbyPreview?: boolean;
+  onRendererChange?: (renderer: PharmacyRenderer) => void;
 }
 
-export default function PharmacyViewport({ stage, view = stage ?? 'overview', deskInset = 0, rotationRequest = 0, showTaskMarker = true, taskMarkerLabel, caseNumber = 1, onTask, onChoose, onVisit, moment }: PharmacyViewportProps) {
-  const [renderer, setRenderer] = useState<'pending' | 'webgl' | 'unavailable'>('pending');
+export default function PharmacyViewport({ stage, view = stage ?? 'overview', deskInset = 0, rotationRequest = 0, showTaskMarker = true, taskMarkerLabel, caseNumber = 1, onTask, onChoose, onVisit, moment, lobbyPreview = false, onRendererChange }: PharmacyViewportProps) {
+  const [renderer, setRenderer] = useState<PharmacyRenderer>('pending');
   const ready = renderer === 'webgl';
   const [hoveredProduct, setHoveredProduct] = useState<SceneProduct>();
   const [inspectedId, setInspectedId] = useState<string>();
   const inspectedProduct = view === 'picking' ? moment?.products?.find(({ id }) => id === inspectedId) : undefined;
   const host = useRef<HTMLDivElement>(null);
   const stationAction = showTaskMarker ? onTask : undefined;
-  const scene = useRef({ view, deskInset, rotationRequest, stationAction, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
+  const scene = useRef({ view, deskInset, rotationRequest, stationAction, activeStage: stage ?? 'receiving', caseNumber, moment, choose: (id: string) => onChoose?.(id), ambient: !stage, lobbyPreview, markers: {} as Partial<Record<GameStage, HTMLButtonElement>> });
+
+  useEffect(() => onRendererChange?.(renderer), [onRendererChange, renderer]);
 
   useEffect(() => {
     scene.current.view = view;

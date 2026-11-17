@@ -1,0 +1,129 @@
+.lobby-scene {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: clamp(570px, 77svh, 860px);
+  background: #102b27;
+}
+.lobby-scene::after {
+  z-index: 0;
+  background: linear-gradient(90deg, #0b2522 0%, #102b27 28%, #102b2794 43%, transparent 65%);
+  pointer-events: none;
+}
+.lobby-visual {
+  position: absolute;
+  isolation: isolate;
+  inset: 0 0 0 34%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 65% 37%, #597763 0%, #304e40 42%, #102b27 78%);
+  mask-image: linear-gradient(90deg, transparent, #000 15%);
+}
+.lobby-visual .pharmacy-art { background: none; z-index: 0; }
+.lobby-visual .pharmacy-world { inset: 0; }
+.lobby-visual .pharmacy-world[data-renderer='webgl'] { animation: lobby-fade-in .9s cubic-bezier(.22, .6, .36, 1) both; }
+.lobby-visual[data-renderer-state='unavailable'] .pharmacy-art {
+  background: linear-gradient(90deg, #102b27db, #102b272e 72%), url('/pharmacy-interior.webp') center / cover;
+}
+@keyframes lobby-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.lobby-preview-caption {
+  position: absolute;
+  z-index: 1;
+  right: clamp(1.3rem, 4vw, 4.5rem);
+  bottom: clamp(1.1rem, 3vw, 2.7rem);
+  display: flex;
+  align-items: center;
+  gap: .2rem .85rem;
+  padding-inline: .8rem;
+  border: 1px solid #9bb2a26b;
+  border-radius: .4rem;
+  background: #102823f2;
+  color: #e4ece2;
+  font-size: .87rem;
+}
+.lobby-preview-caption p { padding-block: .55rem; animation: lobby-fade-in .28s ease-out both; }
+.lobby-preview-caption button { display: inline-flex; min-height: 44px; align-items: center; gap: .38rem; color: #ffdfa0; }
+.lobby-preview-caption button:hover { text-decoration: underline; }
+.lobby-header {
+  position: relative;
+  z-index: 1;
+  padding-block: 1.55rem .75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .9rem;
+  font-weight: 650;
+  color: #edf2eb;
+}
+.lobby-content {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  align-self: center;
+  width: min(52%, 950px);
+  padding-right: .5rem;
+  padding-block: 1rem clamp(2rem, 5vh, 4.5rem);
+}
+.lobby-content .scene-kicker { font-size: .81rem; letter-spacing: .13em; }
+.lobby-content h1 {
+  font-family: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(3.65rem, 6.6vw, 7.1rem);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.062em;
+  margin: .18em 0 .17em;
+}
+.lobby-content h1 span { color: var(--action); }
+.lobby-subtitle { font-size: clamp(1.35rem, 2.05vw, 1.95rem); font-weight: 650; letter-spacing: -.035em; }
+.lobby-description { max-width: 34ch; color: #e6eee7; margin-top: .85rem; line-height: 1.55; font-size: clamp(1.08rem, 1.4vw, 1.3rem); }
+.lobby-actions { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; align-items: center; margin-top: 1.45rem; }
+.lobby-actions .shift-button { font-size: 1.1rem; box-shadow: 0 4px 0 #bd9147; }
+.lobby-actions .shift-button svg { transition: transform .2s ease; }
+.lobby-actions .shift-button:hover svg { transform: translateX(3px); }
+.lobby-actions .shift-button:active { transform: translateY(2px); box-shadow: 0 1px 0 #bd9147; }
+.lobby-shift-details { margin-top: .8rem; color: #e6eee7; font-size: .94rem; }
+.lobby-workflow {
+  display: grid;
+  grid-template-columns: minmax(175px, .9fr) minmax(0, 3.2fr);
+  align-items: center;
+  gap: .75rem 1.6rem;
+  padding-block: 1.25rem;
+  background: #f7f2e6;
+  border-top: 2px solid #edcd87;
+}
+.lobby-workflow h2 { font-size: 1.45rem; font-weight: 800; letter-spacing: -.035em; }
+.lobby-workflow p { color: var(--muted); font-size: 1rem; margin-top: .2rem; }
+.lobby-workflow .station-route li { padding: 0; }
+.lobby-workflow .station-route li:not(:has(button)),
+.lobby-workflow .station-route button {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  gap: .6rem;
+  padding: .55rem .7rem;
+  width: 100%;
+  text-align: left;
+}
+.lobby-workflow .station-route button { transition: background .2s ease; }
+.lobby-workflow .station-route button:hover { background: #eee8d7; }
+.lobby-workflow .station-route button[aria-pressed='true'] { background: #e9e2cc; box-shadow: inset 0 -3px #8a6537; }
+.lobby-workflow .station-route button[aria-pressed='true'] .station-route-icon { background: #2e5a4b; color: white; }
+
+@media (max-width: 950px) {
+  .lobby-workflow { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .lobby-scene { min-height: auto; grid-template-rows: auto auto auto; }
+  .lobby-scene::after { content: none; }
+  .lobby-visual { position: relative; inset: auto; min-height: clamp(237px, 56vw, 420px); mask-image: none; }
+  .lobby-visual::after { content: ''; position: absolute; inset: auto 0 0; height: 17%; background: linear-gradient(transparent, #102b27); pointer-events: none; }
+  .lobby-preview-caption { bottom: .25rem; right: 1.3rem; }
+  .lobby-header { padding-block: .8rem .35rem; }
+  .lobby-header p { max-width: 19ch; }
+  .lobby-content { width: 100%; padding-inline: max(1.3rem, 5vw); padding-block: .7rem 2rem; }
+  .lobby-content h1 { font-size: clamp(3.4rem, 11vw, 5.2rem); }
+  .lobby-description { margin-top: .6rem; }
+  .lobby-actions { margin-top: 1.05rem; }
+  .lobby-workflow .station-route { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lobby-actions .shift-button:hover, .lobby-actions .shift-button:hover svg, .lobby-actions .shift-button:active { transform: none; }
+}

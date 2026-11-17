@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import { ArrowRight, BookOpen, Info, MapPin } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { ArrowRight, BookOpen, Info, MapPin, Maximize2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { Modal } from '../components/Modal';
 import { Button } from '../components/Button';
-import { NPLogo, PharmacyArt, StationRoute } from '../components/PharmacyScene';
+import { NPLogo, PharmacyArt, StationRoute, stations } from '../components/PharmacyScene';
+import type { PharmacyRenderer } from '../scene/PharmacyViewport';
+import type { PharmacyView } from '../scene/pharmacyWorld';
+import type { GameStage } from '../types/game.types';
 
 interface MainMenuProps {
   caseCount: number;
@@ -15,15 +18,39 @@ interface MainMenuProps {
 export function MainMenu({ caseCount, onStartGame, onShowAbout }: MainMenuProps) {
   const { rxPoints, playerLevel } = useGameStore();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [preview, setPreview] = useState<PharmacyView>('overview');
+  const [renderer, setRenderer] = useState<PharmacyRenderer>('pending');
+  const visual = useRef<HTMLDivElement>(null);
+
+  function previewStation(stage: GameStage) {
+    setPreview(current => current === stage ? 'overview' : stage);
+    if (window.matchMedia('(max-width: 760px)').matches) {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      visual.current?.scrollIntoView({ block: 'nearest', behavior: reduced ? 'instant' : 'smooth' });
+    }
+  }
 
   return (
     <main className="pharmacy-lobby">
       <section className="lobby-scene" aria-labelledby="game-title">
-        <PharmacyArt />
         <header className="lobby-header">
           <NPLogo />
           <p>Diploma in Pharmaceutical Science</p>
         </header>
+        <div ref={visual} className="lobby-visual" data-renderer-state={renderer} tabIndex={-1} role="region" aria-label="3D pharmacy preview">
+          <PharmacyArt view={preview} onRendererChange={setRenderer} />
+          {renderer === 'webgl' && (
+            <div className="lobby-preview-caption">
+              <p aria-live="polite" key={preview}>{preview === 'overview' ? 'Pharmacy overview' : stations[preview].place}</p>
+              {preview !== 'overview' && (
+                <button type="button" onClick={() => {
+                  setPreview('overview');
+                  visual.current?.focus({ preventScroll: true });
+                }}><Maximize2 size={15} aria-hidden="true" /> Overview</button>
+              )}
+            </div>
+          )}
+        </div>
         <motion.div
           className="lobby-content"
           initial={{ opacity: 0, y: 16 }}
@@ -33,7 +60,7 @@ export function MainMenu({ caseCount, onStartGame, onShowAbout }: MainMenuProps)
           <p className="scene-kicker"><MapPin size={15} aria-hidden="true" /> Polyclinic pharmacy · Singapore</p>
           <h1 id="game-title">Pharm Life<span>.</span></h1>
           <p className="lobby-subtitle">The Prescription Quest</p>
-          <p className="lobby-description">Step behind the counter, review prescriptions, and help patients use their medicines safely.</p>
+          <p className="lobby-description">Take a shift in a 3D polyclinic pharmacy. Review prescriptions, prepare medicines, and counsel patients.</p>
           <div className="lobby-actions">
             <button type="button" className="shift-button" aria-describedby="shift-details" onClick={onStartGame}>
               Start your shift <ArrowRight size={19} aria-hidden="true" />
@@ -45,12 +72,12 @@ export function MainMenu({ caseCount, onStartGame, onShowAbout }: MainMenuProps)
           <p className="lobby-shift-details" id="shift-details">Year 1 Foundations · {caseCount} patient cases</p>
         </motion.div>
       </section>
-      <section className="lobby-workflow">
+      <section className="lobby-workflow" aria-labelledby="lobby-workflow-title">
         <div className="lobby-workflow-heading">
-          <h2>Your pharmacy route</h2>
-          <p>Review, label, pack, and counsel at four stations.</p>
+          <h2 id="lobby-workflow-title">Explore the pharmacy</h2>
+          <p>{renderer === 'webgl' ? 'Select a station for a closer look.' : 'Four stations in your shift.'}</p>
         </div>
-        <StationRoute />
+        <StationRoute viewedStage={preview === 'overview' ? undefined : preview} onVisit={renderer === 'webgl' ? previewStation : undefined} />
       </section>
       <footer className="lobby-footer">
         <p><strong>{playerLevel}</strong><span aria-hidden="true"> / </span>{rxPoints} Rx points</p>

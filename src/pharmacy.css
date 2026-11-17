@@ -26,47 +26,12 @@
   z-index: -1;
   background: linear-gradient(90deg, #0c2622f7, #0c2622e3 23%, #0c262271 50%, #0c262213 78%);
 }
-.lobby-scene {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: clamp(520px, 70svh, 790px);
-}
-.lobby-scene .pharmacy-art { animation: lobby-arrive 1.35s cubic-bezier(.22, .6, .36, 1) both; }
-@keyframes lobby-arrive {
-  from { transform: scale(1.055); }
-  to { transform: scale(1); }
-}
 .lobby-header, .lobby-content, .selection-title, .lobby-workflow, .lobby-footer {
   padding-inline: max(clamp(1.3rem, 5vw, 6rem), calc((100vw - 1520px) / 2));
 }
-.lobby-header {
-  padding-block: 1.4rem .65rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: .76rem;
-  font-weight: 650;
-  letter-spacing: .025em;
-  color: #edf2eb;
-}
 .np-logo { display: block; width: clamp(112px, 13vw, 158px); height: auto; flex: none; }
-.lobby-content { padding-block: 2rem clamp(2.6rem, 6vh, 5.5rem); }
 .scene-kicker { display: flex; align-items: center; gap: .45rem; font-size: .69rem; font-weight: 800; text-transform: uppercase; letter-spacing: .15em; }
 .lobby-scene .scene-kicker, .workstation-title .scene-kicker { color: #f4dba9; }
-.lobby-content h1 {
-  font-family: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.8rem, 5vw, 5.75rem);
-  line-height: 1;
-  letter-spacing: -.055em;
-  margin: .24em 0 .18em;
-}
-.lobby-content h1 span { color: var(--action); }
-.lobby-subtitle { font-size: clamp(1.35rem, 2.05vw, 1.95rem); font-weight: 650; letter-spacing: -.04em; }
-.lobby-description { max-width: 35ch; color: #e6eee7; margin-top: .75rem; line-height: 1.55; font-size: clamp(1.12rem, 1.4vw, 1.3rem); }
-.lobby-actions { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; align-items: center; margin-top: 1.5rem; }
-.lobby-shift-details { margin-top: .65rem; color: #e6eee7; font-size: .94rem; }
 .shift-button, .lobby-link, .shift-home, .workstation-jump {
   display: inline-flex;
   align-items: center;
@@ -81,16 +46,6 @@
 .lobby-link { color: white; font-size: 1rem; }
 .lobby-link:hover, .workstation-jump:hover { text-decoration: underline; text-underline-offset: .28em; }
 .lobby-scene :focus-visible, .selection-scene :focus-visible, .workstation-scene :focus-visible { outline-color: #fff3cd; }
-.lobby-workflow {
-  display: grid;
-  grid-template-columns: minmax(210px, .95fr) minmax(0, 3fr);
-  align-items: center;
-  gap: .75rem 1.7rem;
-  padding-block: 1.45rem;
-  background: var(--paper);
-}
-.lobby-workflow h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.035em; }
-.lobby-workflow p { color: var(--muted); font-size: 1.03rem; margin-top: .2rem; }
 .station-route { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; }
 .station-route li {
   display: flex;
@@ -191,15 +146,7 @@
   background: #e0ebe0;
   color: #285340;
 }
-@media (max-width: 950px) {
-  .lobby-workflow { grid-template-columns: 1fr; }
-}
 @media (max-width: 600px) {
-  .lobby-scene { min-height: 620px; }
-  .lobby-scene .pharmacy-art { background-position: 70% 45%; }
-  .lobby-scene::after { background: linear-gradient(0deg, #0b2723 0%, #0b2723e8 36%, #0b27235e 80%), linear-gradient(90deg, #0b272380, transparent); }
-  .lobby-header p { max-width: 17ch; }
-  .lobby-content { padding-bottom: 2.2rem; }
   .station-route { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .station-route li { border-bottom: 1px solid var(--line); }
   .station-route small { font-size: .7rem; }
@@ -517,13 +464,12 @@
 .shift-layout .patient-id dl > div:nth-child(4) { grid-column: 1 / -1; }
 .shift-layout .collection-desk { grid-template-columns: minmax(0, 1fr); }
 
-.lobby-scene .pharmacy-art:has([data-renderer='webgl']),
 .selection-scene .pharmacy-art:has([data-renderer='webgl']) {
   background: radial-gradient(ellipse at 66% 43%, #52766a 0%, #263f3b 53%, #0b2724 95%);
 }
 .pharmacy-art .pharmacy-world { inset: 0 0 0 35%; pointer-events: none; opacity: 0; background: none; }
 .pharmacy-art .pharmacy-world[data-renderer='webgl'] { opacity: 1; }
-.lobby-scene:has([data-renderer='webgl'])::after, .selection-scene:has([data-renderer='webgl'])::after {
+.selection-scene:has([data-renderer='webgl'])::after {
   background: linear-gradient(90deg, #102926 4%, #102926ef 24%, #102926a4 36%, transparent 66%);
 }
 .selection-scene .pharmacy-art .pharmacy-world { inset: -3rem 0 -4rem 46%; }
@@ -542,9 +488,6 @@
   .shift-layout .workstation { scroll-margin-top: .5rem; }
 }
 @media (max-width: 600px) {
-  .lobby-scene:has([data-renderer='webgl']) { min-height: 720px; }
-  .lobby-scene .pharmacy-art .pharmacy-world { inset: 3rem 0 auto; height: 300px; }
-  .lobby-scene:has([data-renderer='webgl'])::after { background: linear-gradient(0deg, #0d2824 0%, #0d2824 48%, #0d282425 69%, #0d282440 100%); }
   .selection-scene .pharmacy-art .pharmacy-world { inset: -2rem -2rem auto 30%; height: 240px; }
   .selection-scene:has([data-renderer='webgl'])::after { background: linear-gradient(0deg, #0d2824 7%, #0d2824c0 43%, #0d282420 80%); }
   .shift-game .station-route li { justify-content: start; padding-block: .38rem; }
@@ -855,8 +798,6 @@
   .shift-layout[data-picking='true'] .play-scene { height: clamp(375px, 55svh, 485px); }
 }
 
-.lobby-content .scene-kicker { font-size: .86rem; letter-spacing: .12em; }
-.lobby-actions .shift-button { font-size: 1.1rem; }
 .shift-restart, .shift-summary-back {
   display: inline-flex;
   justify-content: center;
@@ -892,9 +833,6 @@
 }
 
 @media (max-width: 600px) {
-  .lobby-header { font-size: .88rem; }
-  .lobby-scene:has([data-renderer='webgl']) { min-height: 670px; }
-  .lobby-content .scene-kicker { font-size: .78rem; }
   .station-route small { font-size: .82rem; }
   .shift-game .shift-bar { flex-wrap: wrap; gap: .15rem .6rem; }
   .shift-restart-word { display: none; }

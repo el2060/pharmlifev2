@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { ArrowDownToLine, Check, ClipboardList, MessageCircle, Printer } from 'lucide-react';
 import type { GameStage } from '../types/game.types';
+import type { PharmacyView } from '../scene/pharmacyWorld';
+import type { PharmacyRenderer } from '../scene/PharmacyViewport';
 
 export const stations = {
   receiving: { name: 'Receiving', place: 'Prescription counter', icon: ClipboardList },
@@ -30,17 +32,17 @@ export function StationRoute({ activeStage, viewedStage, onVisit }: StationRoute
             <span className="station-route-icon"><Icon size={19} aria-hidden="true" /></span>
             <span>
               <strong>{stations[stage].name}</strong>
-              <small>{preview ? 'Preview' : stations[stage].place}</small>
+              <small>{preview && activeStage !== undefined ? 'Preview' : stations[stage].place}</small>
             </span>
             {onVisit && (
-              <span className="sr-only">{active ? 'Active task' : complete ? 'Complete, preview station' : 'Upcoming, preview station'}</span>
+              <span className="sr-only">{activeStage === undefined ? 'Preview station' : active ? 'Active task' : complete ? 'Complete, preview station' : 'Upcoming, preview station'}</span>
             )}
           </>
         );
 
         return (
           <li key={stage} aria-current={active ? 'step' : undefined} className={complete ? 'station-done' : undefined} data-preview={preview || undefined}>
-            {onVisit ? <button type="button" onClick={() => onVisit(stage)}>{content}</button> : content}
+            {onVisit ? <button type="button" aria-pressed={activeStage === undefined ? preview : undefined} onClick={() => onVisit(stage)}>{content}</button> : content}
           </li>
         );
       })}
@@ -50,10 +52,10 @@ export function StationRoute({ activeStage, viewedStage, onVisit }: StationRoute
 
 const PharmacyViewport = lazy(() => import('../scene/PharmacyViewport'));
 
-export function PharmacyArt() {
+export function PharmacyArt({ view, onRendererChange }: { view?: PharmacyView; onRendererChange?: (renderer: PharmacyRenderer) => void } = {}) {
   return (
     <div className="pharmacy-art" aria-hidden="true">
-      <Suspense fallback={null}><PharmacyViewport /></Suspense>
+      <Suspense fallback={null}><PharmacyViewport view={view} onRendererChange={onRendererChange} lobbyPreview={view !== undefined} /></Suspense>
     </div>
   );
 }
